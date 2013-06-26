@@ -1,7 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
+//#include "mpi.h"
 
-struct options
-{
-	int     num;            /* Number of threads                              */
-	int     method;         /* Gauss Seidel or Jacobi method of iteration     */
-};
+#include "askparam.h"

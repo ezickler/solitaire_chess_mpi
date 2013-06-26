@@ -1,9 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-
-#include "main.h"
 #include "askparam.h" 
 
 
@@ -11,7 +5,7 @@ void AskParams( struct options* options, int argc, char** argv )
 {
 	printf ( "\n");
 	printf ( "===============================================================\n" );
-	printf ( "Program for calculate all Posible Solutions of Solitaire Chess \n" );
+	printf ( "Program for calculate all possible solutions of Solitaire Chess\n" );
 	printf ( "===============================================================\n" );
 	printf ( "    Kira Duwe\n");
 	printf ( "    Enno Zickler\n");
@@ -19,9 +13,10 @@ void AskParams( struct options* options, int argc, char** argv )
 	
 	
 	
-	if (strcmp("help",(char *)argv[1])==0 || strcmp("-h",(char *)argv[1])==0 ||
-		strcmp("-?",  (char *)argv[1])==0 || strcmp("?", (char *)argv[1])==0 ||
-		argc < 2)
+	if (argc != 3 ||
+		strcmp("help",(char *)argv[1])==0 || strcmp("-h",(char *)argv[1])==0 ||
+		strcmp("-?",  (char *)argv[1])==0 || strcmp("?", (char *)argv[1])==0 
+		)
 	{
 		printf("\nUsage:\n");
 		printf("%s [num][method] \n", argv[0]);
@@ -32,9 +27,9 @@ void AskParams( struct options* options, int argc, char** argv )
 		exit(0);
 	}
 		
-	if(argc == 2)
+	if(argc == 3)
 	{
-		sscanf( argv[1],"%d", &(options->num));
+		sscanf( argv[1],"%d", &(options->num ));
 		sscanf( argv[2],"%d", &(options->method));
 	}
 }

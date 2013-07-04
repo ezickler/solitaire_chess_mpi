@@ -28,7 +28,7 @@ Repräsentation der Spielfiguren auf dem Brett:
 	4 Springer	100
 	5 König		101
 	6 Dame		110
-**/
+*/
 
 #import "spielfeld.h"
 
@@ -44,13 +44,13 @@ long long * _folgeSpielbretter; // wie groß muss der allocierte Speicher sein?
 /**
  * Wird auf gerufen um die möglichen Nachfolgebretter eines Spielbrettes zu errechnen
  *
- * @param:  ein Spielbrett in dem oben beschrieben Format
+ * @param spielbrett  ein Spielbrett in dem oben beschrieben Format
  * 
- * @return: gibt eine Array der nachfolgenden Spielbretter zurück
-**/
-long long * _berechneSpielbrett(long long Spielbrett)
+ * @return gibt eine Array der nachfolgenden Spielbretter zurück
+ */
+long long * _berechneSpielbrett(long long spielbrett)
 {
-	_startSpielbrett = Spielbrett;
+	_startSpielbrett = spielbrett;
 	
 	
 	//TODO berechnung der möglichen Züge und ablage der daraus Entstehenden spielbretter in _folgeSpielbretter
@@ -64,7 +64,7 @@ long long * _berechneSpielbrett(long long Spielbrett)
 /**
  * Prüft welche möglichen Züge ein Bauer auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneBauer(int pos)
@@ -75,7 +75,7 @@ void _berechneBauer(int pos)
 /**
  * Prüft welche möglichen Züge ein Turm auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneTurm(int pos)
@@ -86,7 +86,7 @@ void _berechneTurm(int pos)
 /**
  * Prüft welche möglichen Züge ein Läufer auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneLaeufer(int pos)
@@ -97,7 +97,7 @@ void _berechneLaeufer(int pos)
 /**
  * Prüft welche möglichen Züge ein Springer auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneSpringer(int pos)
@@ -108,7 +108,7 @@ void _berechneSpringer(int pos)
 /**
  * Prüft welche möglichen Züge ein König auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneKoenig(int pos)
@@ -119,7 +119,7 @@ void _berechneKoenig(int pos)
 /**
  * Prüft welche möglichen Züge eine Dame auf einer bestimmten Position hat.
  *
- * @param Die Position der zu ermittelnden Figur.
+ * @param pos Die Position der zu ermittelnden Figur.
  *
  */
 void _berechneDame(int pos)

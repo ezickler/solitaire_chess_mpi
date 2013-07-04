@@ -3,8 +3,6 @@
 #include <string.h>
 
 
-
-
 #ifndef ASKPARAMS_H_
 #define ASKPARAMS_H_
 

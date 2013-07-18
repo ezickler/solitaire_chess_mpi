@@ -8,7 +8,7 @@
 
 struct options
 {
-	int     num;            /* Number of threads                              */
+	int     num;            /* Anzahl der Threads                             */
 	int     method;         /* Gauss Seidel or Jacobi method of iteration     */
 };
 

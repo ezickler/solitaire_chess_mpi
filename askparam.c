@@ -5,7 +5,7 @@ void AskParams( struct options* options, int argc, char** argv )
 {
 	printf ( "\n");
 	printf ( "===============================================================\n" );
-	printf ( "Program to calculate all possible solutions of Solitaire Chess \n" );
+	printf ( "Programm zur Berechnung aller lösbaren Spielbretter\n" );
 	printf ( "===============================================================\n" );
 	printf ( "    Kira Duwe\n");
 	printf ( "    Enno Zickler\n");

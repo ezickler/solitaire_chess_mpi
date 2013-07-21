@@ -30,7 +30,7 @@ Repräsentation der Spielfiguren auf dem Brett:
 	6 Dame		110
 */
 
-#import "spielfeld.h"
+#import "spielbrett.h"
 
 
 
@@ -69,7 +69,29 @@ long long * _berechneSpielbrett(long long spielbrett)
  */
 void _berechneBauer(int pos)
 {
-	//TODO Bauer
+	// Zu überprüfende Position bekommt man aus dem Speilbrett durch Division durch (8 * pos)
+	// Es soll das Feld recht unterhalb von pos überprüft werden
+	// also muss +1 für den schrit nach recht und + Spielbrettbreite gerechnet werden
+	// um die zuz Prüfende Position zu erreichen.
+	// Anschließend wir Modulo 8 gerechnet um die Belegung dieser Position zu bestimmen.
+	if((_startSpielbrett/((pos+1+SpielbrettBreite)*8))%8 != 0 ){
+		//TODO add folge spielbretter
+	}
+	
+	// Analog für unten links
+	if((_startSpielbrett/((pos-1+SpielbrettBreite)*8))%8 != 0 ){
+		//TODO add folge spielbretter
+	}
+	
+	// Analog für oben Recht
+	if((_startSpielbrett/((pos+1-SpielbrettBreite)*8))%8 != 0 ){
+		//TODO add folge spielbretter
+	}
+	
+	//Analogo für oben Link
+	if((_startSpielbrett/((pos-1-SpielbrettBreite)*8))%8 != 0 ){
+		//TODO add folge spielbretter
+	}
 }
 
 /**

@@ -1,8 +1,16 @@
 #include "main.h"
 #include <glib.h>
+#include <stdbool.h>
 
 #define SpielbrettBreite	4
 #define SpielbrettHoehe		4
+#define DarstellungLeer	    0
+#define DarstellungBauer    1
+#define	DarstellungTurm	    2
+#define DarstellungLaeufer  3
+#define DarstellungSpringer 4
+#define DarstellungKoenig   5
+#define DarstellungDame     6
 
 GHashTable* _hashtable[11]; 
 
@@ -16,17 +24,26 @@ void erzeugeHashtables(){
 	}
 }
 
+bool feldBelegt(int* position, long long* spielbrett)
+{
+	return (*spielbrett >> (*position * 3)) % 8 == DarstellungLeer;
+}
+
+
+
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
  *
  */
 void erzeugeSpielbretter(){
-
-	long long *spielbretter;
-
-	int *spielbrett;
-
+	long long spielbrett;
 	int anzFiguren;
+	int posDame, 
+		posKoenig, 
+		posSpringer1, posSpringer2, 
+		posLaeufer1, posLaeufer2,
+		posTurm1, posTurm2,
+		posBauer1, posBauer2;
 
 
 	/** Anzahl der Felder, über die iteriert werden muss */
@@ -34,94 +51,104 @@ void erzeugeSpielbretter(){
 
 	/*Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
 	/* für alle anderen Figuren analog!*/
-	for(int dame=0; dame<=anzFelder; dame++){
+	for(posDame=0; posDame<=anzFelder; posDame++){
 		anzFiguren=10;
-		/* Im Letzten Iterationsschtritt keine Dame setzen*/
-		if(dame<anzFelder && spielbrett[dame]==0){
-			//Hier steht Pseudocode! Gearbeitet wird eigentlich mit Repräsentation über long long
-			//TODO Dame auf Position dame setzen z.B spielbrett[dame] = 6
+		/* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
+		if(posDame<anzFelder && feldBelegt(&posDame, &spielbrett)){
+			spielbrett += posDame *8* DarstellungDame; 
 		}
+		/* Keine Dame gesetzt worden*/
 		else{
 			anzFiguren--;
 		}
 
 		/* Iteration für den König */
-		for(int koenig=0; koenig<=anzFelder; koenig++){
-			if(koenig<anzFelder && spielbrett[koenig]==0){
-				//TODO König auf Position koenig setzen z.B spielbrett[koenig] = 5
+		for(posKoenig=0; posKoenig<=anzFelder; posKoenig++){
+			if(posKoenig<anzFelder && feldBelegt(&posKoenig, &spielbrett)){
+				spielbrett += posKoenig *8* DarstellungKoenig; 
 			}
 			else{
 				anzFiguren--;
 			}
+			
 			/* Iteration für den Springer */
-			for(int springer1=0; springer1<=anzFelder; springer1++){
-				if(springer1<anzFelder && spielbrett[springer1]==0){
-					//TODO Springer1 auf Position springer1 setzen z.B spielbrett[springer1] = 4
+			for(posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++){
+				if(posSpringer1<anzFelder && feldBelegt(&posSpringer1, &spielbrett)){
+					spielbrett += posSpringer1 *8* DarstellungSpringer; 
 				}
 				else{
 					anzFiguren--;
 				}
+				
 				/* Iteration für den Springer2 
 				/* geänderte Startposition, um Duplikate zu vermeiden
 				/* analog für andere doppelte Figuren */
-				for(int springer2=springer1+1; springer2<=anzFelder; springer2++){
-					if(springer1<anzFelder && spielbrett[springer1]==0){
-						//TODO Springer2 auf Position springe2 setzen z.B spielbrett[springer2] = 4
+				for(posSpringer2=posSpringer1+1; posSpringer2<=anzFelder; posSpringer2++){
+					if(posSpringer2<anzFelder && feldBelegt(&posSpringer2, &spielbrett)){
+						spielbrett += posSpringer2 *8* DarstellungSpringer; 
 					}
 					else{
 						anzFiguren--;
 					}
-
-					for(int laeufer1=0; laeufer1<=anzFelder; laeufer1++){
-						if(laeufer1<anzFelder && spielbrett[laeufer1]==0){
-							//TODO Läufer1 auf Position laeufer1 setzen z.B spielbrett[laeufer1] = 3
+					
+					/* Iteration für den Laeufer1 */
+					for(posLaeufer1=0; posLaeufer1<=anzFelder; posLaeufer1++){
+						if(posLaeufer1<anzFelder && feldBelegt(&posLaeufer1, &spielbrett)){
+							spielbrett += posLaeufer1 *8* DarstellungLaeufer;
 						}
 						else{
 							anzFiguren--;
 						}
 
-						for(int laeufer2=laeufer1+1; laeufer2<=anzFelder; laeufer2++){
-							if(laeufer2<anzFelder && spielbrett[laeufer2]==0){
-								//TODO Läufer2 auf Position laeufer2 setzen z.B spielbrett[laeufer2] = 3
+						/* Iteration für den Laeufer2 */
+						for(posLaeufer2=posLaeufer1+1; posLaeufer2<=anzFelder; posLaeufer2++){
+							if(posLaeufer2<anzFelder && feldBelegt(&posLaeufer2, &spielbrett)){
+								spielbrett += posLaeufer2 *8* DarstellungLaeufer;
 							}
 							else{
 								anzFiguren--;
 							}
 
-							for(int turm1=0; turm1<=anzFelder; turm1++){
-								if(turm1<anzFelder && spielbrett[turm1]==0){
-									//TODO Läufer2 auf Position turm1 setzen z.B spielbrett[turm1] = 2
+							/* Iteration für den Turm1 */
+							for(posTurm1=0; posTurm1<=anzFelder; posTurm1++){
+								if(posTurm1<anzFelder && feldBelegt(&posTurm1, &spielbrett)){
+									spielbrett += posTurm1 *8* DarstellungTurm;
 								}
 								else{
 									anzFiguren--;
 								}
-
-								for(int turm2=turm1+1; turm2<=anzFelder; turm2++){
-									if(turm2<anzFelder && spielbrett[turm2]==0){
-										//TODO Turm2 auf Position turm2 setzen z.B spielbrett[turm2] = 2
+								
+								/* Iteration für den Turm2 */
+								for(posTurm2=posTurm1+1; posTurm2<=anzFelder; posTurm1++){
+									if(posTurm2<anzFelder && feldBelegt(&posTurm2, &spielbrett)){
+										spielbrett += posTurm2 *8* DarstellungTurm;
 									}
 									else{
 										anzFiguren--;
 									}
-
-									for(int bauer1=0; bauer1<=anzFelder; bauer1++){
-										if(bauer1<anzFelder && spielbrett[bauer1]==0){
-											//TODO Bauer1 auf Position bauer1 setzen z.B spielbrett[bauer1] = 1
+									
+									/* Iteration für den Bauer1 */
+									for(posBauer1=0; posBauer1<=anzFelder; posBauer1++){
+										if(posBauer1<anzFelder && feldBelegt(&posBauer1, &spielbrett)){
+											spielbrett += posBauer1 *8* DarstellungBauer;
 										}
 										else{
 											anzFiguren--;
 										}
 
-										for(int bauer2=bauer1+1; bauer2<=anzFelder; bauer2++){
-											if(bauer2<anzFelder  && spielbrett[bauer2]==0){
-												//TODO Bauer2 auf Position bauer2 setzen z.B spielbrett[bauer2] = 1
+										/* Iteration für den Bauer2 */
+										for(posBauer2=posBauer1+1; posBauer2<=anzFelder; posBauer2++){
+											if(posBauer2<anzFelder  && feldBelegt(&posBauer2, &spielbrett)){
+												spielbrett += posBauer2 *8* DarstellungBauer;
 											}
 											else{
 												anzFiguren--;
 											}
 
 											if (anzFiguren > 1){
-												//TODO Füge spielbrett zu spielbretter hinzu.
+											//Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
+											// TODO: gpointer übergeben??
+											// TODO: g_hash_table_insert(_hashtable[anzFiguren], spielbrett, 0 ); 
 											}
 
 										}

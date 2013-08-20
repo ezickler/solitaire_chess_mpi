@@ -9,7 +9,9 @@
 struct options
 {
 	int     num;            /* Anzahl der Threads                             */
-	int     method;         /* Gauss Seidel or Jacobi method of iteration     */
+	int     method;         /* Sequentiel / MPI                               */
+    int     spielbrettBreit;/* SpeilbrettBreite                               */
+    int     spielbrettHoehe;/* SpielbrettHoehe                                */
 };
 
 void AskParams( struct options*, int, char** );

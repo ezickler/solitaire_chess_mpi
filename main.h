@@ -3,7 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-//#include "mpi.h"
+//#include <mpi.h>
 
 #include "askparam.h"
+#include "spielbretter"s
 

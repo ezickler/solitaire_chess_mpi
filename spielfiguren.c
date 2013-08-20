@@ -1,20 +1,34 @@
 #import "spielfiguren.h"
+/**
+Spielbrett:
 
+Links-Oben 0:0 nach x:y
+
+  0, 1, 2, 3
+  4, 5, 6, 7
+  8, 9,10,11
+ 12,13,14,15
+ */
 
 /**
  * Prüft welche möglichen Züge ein Bauer auf einer bestimmten Position hat.
- *
+ *  
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneBauer(int pos)
+int berechneBauer(int pos)
 {
 	// Zu überprüfende Position bekommt man aus dem Speilbrett durch Division durch (8 * pos)
 	// Es soll das Feld recht unterhalb von pos überprüft werden
 	// also muss +1 für den schrit nach recht und + Spielbrettbreite gerechnet werden
 	// um die zuz Prüfende Position zu erreichen.
 	// Anschließend wir Modulo 8 gerechnet um die Belegung dieser Position zu bestimmen.
-	if((_startSpielbrett/((pos+1+SpielbrettBreite)*8))%8 != 0 ){
+	int new_pos;
+		
+		
+	// ICH ARBEITE NOCH DRAN (Enno)	
+	new_pos = ((pos+SpielbrettBreite+1));
+	if((new_pos > (((pos/4)*4)+SpielbretBreite) && new_pos < ((pos%4)) && ((_startSpielbrett/(new_pos*8))%8 != 0)){
 		//TODO add folge spielbretter
 	}
 	
@@ -40,7 +54,7 @@ void _berechneBauer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneTurm(int pos)
+int berechneTurm(int pos)
 {
 	//TODO Turm 
 }
@@ -51,9 +65,9 @@ void _berechneTurm(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneLaeufer(int pos)
+int berechneLaeufer(int pos)
 {
-	//TODO Läufer
+	//TODO Läufer0
 }
 
 /**
@@ -62,7 +76,7 @@ void _berechneLaeufer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneSpringer(int pos)
+int berechneSpringer(int pos)
 {
 	//TODO Springer
 }
@@ -73,7 +87,7 @@ void _berechneSpringer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneKoenig(int pos)
+int berechneKoenig(int pos)
 {
 	//TODO König
 }
@@ -84,13 +98,8 @@ void _berechneKoenig(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-void _berechneDame(int pos)
+int berechneDame(int pos)
 {
 	//TODO Dame
 }
-
-
-
-
-
 

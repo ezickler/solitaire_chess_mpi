@@ -16,7 +16,7 @@ Links-Oben 0:0 nach x:y
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneBauer(int pos)
+int berechneBauer(int x, int y)
 {
     /*
 	// Zu überprüfende Position bekommt man aus dem Speilbrett durch Division durch (8 * pos)
@@ -24,7 +24,7 @@ int berechneBauer(int pos)
 	// also muss +1 für den schrit nach recht und + Spielbrettbreite gerechnet werden
 	// um die zuz Prüfende Position zu erreichen.
 	// Anschließend wir Modulo 8 gerechnet um die Belegung dieser Position zu bestimmen.
-    */
+    
 	int new_pos;
 		
 		
@@ -48,6 +48,7 @@ int berechneBauer(int pos)
 	if((_startSpielbrett/((pos-1-SpielbrettBreite)*8))%8 != 0 ){
 		//TODO add folge spielbretter
 	}
+	* */
 }
 
 /**
@@ -56,9 +57,11 @@ int berechneBauer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneTurm(int pos)
+int berechneTurm(int x, int y)
 {
 	//TODO Turm 
+	
+	return 0;
 }
 
 /**
@@ -67,7 +70,7 @@ int berechneTurm(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneLaeufer(int pos)
+int berechneLaeufer(int x, int y)
 {
 	//TODO Läufer0
 }
@@ -78,7 +81,7 @@ int berechneLaeufer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneSpringer(int pos)
+int berechneSpringer(int x, int y)
 {
 	//TODO Springer
 }
@@ -89,7 +92,7 @@ int berechneSpringer(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneKoenig(int pos)
+int berechneKoenig(int x, int y)
 {
 	//TODO König
 }
@@ -100,7 +103,7 @@ int berechneKoenig(int pos)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneDame(int pos)
+int berechneDame(int x, int y)
 {
 	//TODO Dame
 }

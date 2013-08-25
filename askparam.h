@@ -9,10 +9,10 @@
 struct options
 {
 	int     num;            /* Anzahl der Threads                             */
-	int     method;         /* Sequentiel / MPI                               */
-    int     spielbrettBreit;/* SpeilbrettBreite                               */
+	int     method;         /* Sequentiell / MPI                               */
+    int     spielbrettBreite;/* SpielbrettBreite                               */
     int     spielbrettHoehe;/* SpielbrettHoehe                                */
-};
+} options;
 
 void AskParams( struct options*, int, char** );
 

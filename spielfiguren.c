@@ -18,11 +18,13 @@ Links-Oben 0:0 nach x:y
  */
 int berechneBauer(int pos)
 {
+    /*
 	// Zu überprüfende Position bekommt man aus dem Speilbrett durch Division durch (8 * pos)
 	// Es soll das Feld recht unterhalb von pos überprüft werden
 	// also muss +1 für den schrit nach recht und + Spielbrettbreite gerechnet werden
 	// um die zuz Prüfende Position zu erreichen.
 	// Anschließend wir Modulo 8 gerechnet um die Belegung dieser Position zu bestimmen.
+    */
 	int new_pos;
 		
 		

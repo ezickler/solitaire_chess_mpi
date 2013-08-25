@@ -1,6 +1,6 @@
 #include "main.h"
-#include <glib.h>
-#include <stdbool.h>
+
+
 
 #define SpielbrettBreite	options.spielbrettBreite
 #define SpielbrettHoehe		options.spielbrettHoehe
@@ -18,7 +18,7 @@
 
 // Array fuer die Pointer auf die Hashtabelen fuer 2-10 Figuren.
 // Die Felder 0 und 1 werden nicht benutzt.
-GHashTable* _hashtable[11]; 
+GHashTable* _spielbretterHashtables[11]; 
 
 
 // Array fuer das gerade zuberechnende Spielfeld
@@ -30,7 +30,7 @@ char _spielfeld[4][4];
 void erzeugeHashtables(){
 	int figurenAnzahl;
 	for(figurenAnzahl=2; figurenAnzahl<=10; figurenAnzahl++){
-		_hashtable[figurenAnzahl] = g_hash_table_new ( g_direct_hash(), g_direct_equal());
+		_spielbretterHashtables[figurenAnzahl] = g_hash_table_new ( g_direct_hash(), g_direct_equal());
 	}
 }
 
@@ -38,14 +38,13 @@ void erzeugeHashtables(){
  * Berechnet alle Spielbretter aus den Hashtabellen
  *
  */
-void brechneSpielbretter(){
+void berechneSpielbretter(){
     int anzahlFiguren;
-    // Reihenfolge der zu berchnenden Speilbrette nach Anzahl der Figuren (aufsteigend)
-    for(anzhalfiguren = 2; anzahlFiguren <= 10; anzhalFiguren++){
+    // Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)
+    for(anzahlfiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
         //TODO  erweiterte for-Schleife ueber die Hashtabelle _hashtable[figurenAnzahl]
-        {
-            berechneSpielbrett(spielbrett);
-        }
+        
+        g_hash_table_foreach(_spielbretterHashtables, berechneSpielbrett(), 0);
     }
 }
 
@@ -54,8 +53,9 @@ void brechneSpielbretter(){
  * Berechnet ein einzelnes Spielbrett.
  * Funktioniert nur, wenn die Spielbretter mit weniger Figuren bereits berechnet 
  * sind!
+ * Signatur nach GHRFunc() aus der gnome library 
  */
-void brerchneSpielbrett(long long spielbrett){
+void berechneSpielbrett(long long* spielbrett, int* loesbar, int* notUsed){
      int pos; // Position auf dem Spielbrett die gerade betrachtet wird
      int x, y;
      // UMSTELLUNG AUF ARRAY (noch in abriet)

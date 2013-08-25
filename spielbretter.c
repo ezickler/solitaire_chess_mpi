@@ -165,7 +165,7 @@ void erzeugeSpielbretter(){
 											    // Mischung, die if Abfrage kommt frueher und spart Schleifen durchgaenge, es enstehen
 											    // aber trotzdem Bretter mit nur einer Figur.
 											    // TODO: gpointer übergeben??
-											    g_hash_table_insert(_hashtable[anzFiguren], spielbrett, 0 ); 
+											    g_hash_table_insert(_spielbretterHashtables[anzFiguren], spielbrett, 0 ); 
 											    }
 										}
 									}

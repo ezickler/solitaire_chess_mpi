@@ -9,46 +9,102 @@ Links-Oben 0:0 nach x:y
   8, 9,10,11
  12,13,14,15
  */
+ 
+ long long einser_Bitmaske >> 64;
+ 
+ /**
+  * Hilfsmethode zum Setzen einer Figur von pos auf neue_pos 
+  */
+ void schlageFigur(long long* spielbrett, long long* neues_spielbrett, int DarstellungFigur, int* pos, int* neue_pos){
+	/* Spielfiguren, geschlagene und schlagende, von Spielbrett löschen */
+	/* Von der Bitmaske wird "(7 << pos*3)" abgezogen, um an dieser Stelle 0 zu erzeugen */
+	neues_spielbrett = *spielbrett & ( einser_Bitmaske - (7 << pos*3) - (7 << neue_pos*3));
+	/* nach Schlagen Spielfigur neu  setzen */
+	neues_spielbrett += (DarstellungBauer << neue_pos*3);
+ }
+ 
 
 /**
- * Prüft welche möglichen Züge ein Bauer auf einer bestimmten Position hat.
+ * Prüft, ob ein Zug mit dieser Figur möglich ist und ein lösbares Spielbrett entsteht.
  *  
  * @param pos Die Position der zu ermittelnden Figur.
+ * 
+ * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  *
  */
-int berechneBauer(int x, int y)
-{
-    /*
-	// Zu überprüfende Position bekommt man aus dem Speilbrett durch Division durch (8 * pos)
-	// Es soll das Feld recht unterhalb von pos überprüft werden
-	// also muss +1 für den schrit nach recht und + Spielbrettbreite gerechnet werden
-	// um die zuz Prüfende Position zu erreichen.
-	// Anschließend wir Modulo 8 gerechnet um die Belegung dieser Position zu bestimmen.
-    
-	int new_pos;
+//TODO array übergabe korrekt ?
+int berechneBauer(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+
+	int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	long long neues_spielbrett;
+	
+	
+	/*
+	 * Bauer schlägt nach links oben
+	 */
+	if((x-1)>0 && (y-1)>0 && (spielbrett[x-1][y-1] != 0)){
 		
+		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
 		
-	// ICH ARBEITE NOCH DRAN (Enno)	
-	new_pos = ((pos+SpielbrettBreite+1));
-	if((new_pos > (((pos/4)*4)+SpielbretBreite) && new_pos < ((pos%4)) && ((_startSpielbrett/(new_pos*8))%8 != 0)){
-		//TODO add folge spielbretter
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, &pos, &neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
 	}
 	
-	// Analog für unten links
-	if((_startSpielbrett/((pos-1+SpielbrettBreite)*8))%8 != 0 ){
-		//TODO add folge spielbretter
+	
+	/*
+	 * Bauer schlägt nach links unten
+	 */	
+	if((x-1)>0 && (y+1)>0 && (spielbrett[x-1][y+1] != 0)){
+		
+		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, &pos, &neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
 	}
 	
-	// Analog für oben Recht
-	if((_startSpielbrett/((pos+1-SpielbrettBreite)*8))%8 != 0 ){
-		//TODO add folge spielbretter
+	
+	/*
+	 * Bauer schlägt nach rechts oben
+	 */
+	if((x+1)>0 && (y-1)>0 && (spielbrett[x+1][y-1] != 0)){
+	
+		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
+		
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, &pos, &neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
 	}
 	
-	//Analogo für oben Link
-	if((_startSpielbrett/((pos-1-SpielbrettBreite)*8))%8 != 0 ){
-		//TODO add folge spielbretter
+	
+	/*
+	 * Bauer schlägt nach rechts unten
+	 */
+	if((x+1)>0 && (y+1)>0 && (spielbrett[x+1][y+1] != 0)){
+		
+		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, &pos, &neue_pos);
+		
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
 	}
-	* */
+	
+	
+	return 0;    
 }
 
 /**
@@ -57,7 +113,7 @@ int berechneBauer(int x, int y)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneTurm(int x, int y)
+int berechneTurm(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
 	//TODO Turm 
 	
@@ -70,9 +126,10 @@ int berechneTurm(int x, int y)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneLaeufer(int x, int y)
+int berechneLaeufer(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
 	//TODO Läufer0
+	return 0;
 }
 
 /**
@@ -81,9 +138,10 @@ int berechneLaeufer(int x, int y)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneSpringer(int x, int y)
+int berechneSpringer(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
 	//TODO Springer
+	return 0;
 }
 
 /**
@@ -92,9 +150,9 @@ int berechneSpringer(int x, int y)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneKoenig(int x, int y)
-{
+int berechneKoenig(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 	//TODO König
+	return 0;
 }
 
 /**
@@ -103,8 +161,9 @@ int berechneKoenig(int x, int y)
  * @param pos Die Position der zu ermittelnden Figur.
  *
  */
-int berechneDame(int x, int y)
+int berechneDame(char*** spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
 	//TODO Dame
+	return 0;
 }
 

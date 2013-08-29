@@ -1,13 +1,5 @@
 #include "main.h"
 
-int berechneDame(int x, int y);
-
-int berechneKoenig(int x, int y);
-int berechneSpringer(int x, int y);
-int berechneLaeufer(int x, int y);
-int berechneTurm(int x, int y);
-int berechneBauer(int x, int y);
-
 
 #define SpielbrettBreite	options.spielbrettBreite
 #define SpielbrettHoehe		options.spielbrettHoehe
@@ -22,7 +14,7 @@ GHashTable* _spielbretterHashtables[11];
 
 
 // Array fuer das gerade zuberechnende Spielfeld
-char _spielbrett[4][4];
+char _spielbrett_array[4][4];
 
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
@@ -45,45 +37,42 @@ void erzeugeHashtables(){
  * 
  * @param spielbrett gpointer (eigentlich long long *)
  * @param loesbar gpointer (eigentlich int*)
- * @param notUsed gpointer ( fuer GHFunktion vorgeschrieben hier aber nicht benutzt) 
+ * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-void berechneSpielbrett(gpointer spielbrett, gpointer loesbar, gpointer notUsed){
+void berechneSpielbrett(gpointer spielbrett, gpointer loesbar, gpointer anzahlFiguren){
   
      int x, y;
-     // UMSTELLUNG AUF ARRAY (noch in arbeit)
      for(x=0; x<4; x++){
         for(y=0; y<4; y++){
-            _spielbrett[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
+            _spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
         }
     }
 
-     int geloest= 0; // wird gesezt, wenn ein Nachfolger gefunden ist     
-     for(x=0; x<4 && geloest == 0; x++){
-		for(y=0; y<4 && geloest == 0; y++){
-			switch(_spielbrett[x][y]){
+          
+     for(x=0; x<4 && *loesbar == 0; x++){
+		for(y=0; y<4 && *loesbar == 0; y++){
+			/*
+			switch(_spielbrett_array[x][y]){
 				case DarstellungBauer:
-					geloest = berechneBauer(x, y);
+					*loesbar = berechneBauer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
 				case DarstellungTurm:
-					geloest = berechneTurm(x, y);
+					*loesbar = berechneTurm(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
 				case DarstellungLaeufer:
-					geloest = berechneLaeufer(x, y);
+					*loesbar = berechneLaeufer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
 				case DarstellungSpringer:
-					geloest = berechneSpringer(x, y);
+					*loesbar = berechneSpringer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
 				case DarstellungKoenig:
-					geloest = berechneKoenig(x, y);
+					*loesbar = berechneKoenig(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
 				case DarstellungDame:
-					geloest = berechneDame(x, y);
+					*loesbar = berechneDame(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
 					break;
-				default:
-					//TODO müssen irgendwelche Dinge für jeden Fall gemacht werden?
-					break;
-			}
+			}*/
 		}
 	}
 }
@@ -97,9 +86,7 @@ void berechneSpielbretter(){
     int anzahlFiguren;
     // Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)
     for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
-        //TODO  erweiterte for-Schleife ueber die Hashtabelle _hashtable[figurenAnzahl]
-        
-        g_hash_table_foreach(_spielbretterHashtables[anzahlFiguren], berechneSpielbrett, 0);
+        g_hash_table_foreach(_spielbretterHashtables[anzahlFiguren], berechneSpielbrett, &anzahlFiguren);
     }
 }
 
@@ -119,7 +106,7 @@ int main(int argc, char ** argv){
 	erzeugeHashtables();
 	erzeugeSpielbretter();
 	
-	// berechneSpielbretter();
+	berechneSpielbretter();
 	
 	return EXIT_SUCCESS;	
 }

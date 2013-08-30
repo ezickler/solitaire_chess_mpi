@@ -1,3 +1,5 @@
+#include "spielbretter.h"
+
 /**
 
 Spielbrett:
@@ -30,7 +32,7 @@ Repräsentation der Spielfiguren auf dem Brett:
 	6 Dame		110
 */
 
-#import "spielbretter.h"
+
 
 /**
  * Hilfsfunktion die bestimmt ob auf auf einem uebergebenen Brett an einer uebergeben Posistion eine Figur steht.

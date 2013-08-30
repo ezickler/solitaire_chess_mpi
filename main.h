@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <glib-2.0/glib.h>
+#include <stdint.h>
 
 //#include <mpi.h>
 

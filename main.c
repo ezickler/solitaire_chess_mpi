@@ -1,20 +1,7 @@
 #include "main.h"
 
 
-#define SpielbrettBreite	options.spielbrettBreite
-#define SpielbrettHoehe		options.spielbrettHoehe
-#define SpielfelderAnzahl  16 //TODO in define rechnung aus anderen defines moeglich SpielbrettBreite*SpielbrettHoehe
 
-
-
-
-// Array fuer die Pointer auf die Hashtabelen fuer 2-10 Figuren.
-// Die Felder 0 und 1 werden nicht benutzt.
-GHashTable* _spielbretterHashtables[11]; 
-
-
-// Array fuer das gerade zuberechnende Spielfeld
-char _spielbrett_array[4][4];
 
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
@@ -26,6 +13,27 @@ void erzeugeHashtables(){
 	}
 }
 
+char** init_spielbrett_array(int hoehe, int breite)
+{
+	int n;
+	char** tmp_array;
+	tmp_array = calloc(hoehe, sizeof(char*));
+	for(n = 0; n < hoehe; n++)
+	{
+		tmp_array[n] = calloc(breite, sizeof(char));
+	}
+	return tmp_array;
+}
+
+void destruct_spielbrett_array(char** array, int hoehe)
+{	//TODO: valgrind Speicherleck durch free? (eigtl nicht)s
+	int n;
+	for(n = 0 ;n < hoehe;n ++)
+	{
+	 free(array[n]);
+	}
+	free(array);
+}
 
 
 
@@ -40,39 +48,42 @@ void erzeugeHashtables(){
  * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-void berechneSpielbrett(gpointer spielbrett, gpointer loesbar, gpointer anzahlFiguren){
-  
-     int x, y;
-     for(x=0; x<4; x++){
+void berechneSpielbrett(gpointer spielbrett, gpointer loesbar, gpointer anzahlFiguren ){
+	
+	// TODO: auf struct umstellen!
+	
+	int *geloest = (int*) loesbar;
+    int x, y;
+    for(x=0; x<4; x++){
         for(y=0; y<4; y++){
             _spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
         }
     }
+      
 
-          
-     for(x=0; x<4 && *loesbar == 0; x++){
-		for(y=0; y<4 && *loesbar == 0; y++){
-			/*
+     for(x=0; x<4 && *geloest == 0; x++){
+		for(y=0; y<4 && *geloest == 0; y++){
 			switch(_spielbrett_array[x][y]){
 				case DarstellungBauer:
-					*loesbar = berechneBauer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+				//TODO: Parameterübergabe überprüfen! 
+					*geloest= berechneBauer(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
 				case DarstellungTurm:
-					*loesbar = berechneTurm(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+					*geloest = berechneTurm(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
 				case DarstellungLaeufer:
-					*loesbar = berechneLaeufer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+					*geloest = berechneLaeufer(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
 				case DarstellungSpringer:
-					*loesbar = berechneSpringer(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+					*geloest = berechneSpringer(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
 				case DarstellungKoenig:
-					*loesbar = berechneKoenig(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+					*geloest = berechneKoenig(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
 				case DarstellungDame:
-					*loesbar = berechneDame(&_spielbrett_array, spielbrett, x, y, &anzahlFiguren);
+					*geloest = berechneDame(_spielbrett_array, spielbrett, x, y, anzahlFiguren);
 					break;
-			}*/
+			}
 		}
 	}
 }
@@ -82,7 +93,8 @@ void berechneSpielbrett(gpointer spielbrett, gpointer loesbar, gpointer anzahlFi
  * Berechnet alle Spielbretter aus den Hashtabellen
  *
  */
-void berechneSpielbretter(){
+void berechneSpielbretter(GHashTable spielbretter){
+	//TODO: WO soll die eigentlich mal hin? Datei?
     int anzahlFiguren;
     // Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)
     for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
@@ -105,8 +117,9 @@ int main(int argc, char ** argv){
 	
 	erzeugeHashtables();
 	erzeugeSpielbretter();
+	_spielbrett_array = init_spielbrett_array(SpielbrettHoehe, SpielbrettBreite);
 	
-	berechneSpielbretter();
-	
+	berechneSpielbretter(_spielbretterHashtables);
+	destruct_spielbrett_array(_spielbrett_array, SpielbrettHoehe);
 	return EXIT_SUCCESS;	
 }

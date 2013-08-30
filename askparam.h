@@ -9,8 +9,8 @@
 struct options
 {
 	int     num;            /* Anzahl der Threads                             */
-	int     method;         /* Sequentiell / MPI                               */
-    int     spielbrettBreite;/* SpielbrettBreite                               */
+	int     method;         /* Sequentiell / MPI                              */
+    int     spielbrettBreite;/* SpielbrettBreite                              */
     int     spielbrettHoehe;/* SpielbrettHoehe                                */
 } options;
 

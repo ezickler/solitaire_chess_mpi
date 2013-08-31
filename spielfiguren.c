@@ -38,13 +38,15 @@ Links-Oben 0:0 nach x:y
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  *
  */
-//TODO array übergabe korrekt ?
-int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren){
+int berechneBauer(figuren_param_t *param, int x, int y){
 
 	
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
+	int anzahlFiguren;
+	anzahlFiguren = param->anzahlFiguren;
+	
 	
 	
 	/*
@@ -52,14 +54,14 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	 */
 	 //TODO: Stimmt die Ifabfrage? Müsste nicht sowas 0<(x-1)<SpielbrettBreite && 0<(y-1)<SpielbrettHoehe richtig sein?
 	 // für alle anderen Überprüfungen natürlich ebenso
-	if((x-1)>0 && (y-1)>0 && (spielbrett_array[x-1][y-1] != 0)){
+	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0)){
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
 		
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+		if( *((int*) g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
 			return 1;
 		}
 	}
@@ -68,14 +70,14 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach links unten
 	 */	
-	if((x-1)>0 && (y+1)>0 && (spielbrett_array[x-1][y+1] != 0)){
+	if((x-1)>0 && (y+1)>0 && (param->spielbrett_array[x-1][y+1] != 0)){
 		
 		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 		
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
 			return 1;
 		}
 	}
@@ -84,14 +86,14 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach rechts oben
 	 */
-	if((x+1)>0 && (y-1)>0 && (spielbrett_array[x+1][y-1] != 0)){
+	if((x+1)>0 && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0)){
 	
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
 			return 1;
 		}
 	}
@@ -100,14 +102,14 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach rechts unten
 	 */
-	if((x+1)>0 && (y+1)>0 && (spielbrett_array[x+1][y+1] != 0)){
+	if((x+1)>0 && (y+1)>0 && (param->spielbrett_array[x+1][y+1] != 0)){
 		
 		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 		
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
 		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+		if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
 			return 1;
 		}
 	}
@@ -126,24 +128,28 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
  * @param anzahlFiguren Anzahl der noch vorhandenen Figuren auf dem Brett
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  */
-int berechneTurm(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+int berechneTurm(figuren_param_t *param, int x, int y)
 {
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
 	int n;
+	int anzahlFiguren; 
+	anzahlFiguren = param->anzahlFiguren;
+
+	
 
 	/*Turm schlägt nach rechts */
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
 	// for-schleife mit mehreren if-abfragen möglich? 	for(n = 1; 0<(x-n)<4 && (spielbrett_array[x-n][y] != 0); n++)
-	for(n = 1; 0<(x+n)<4 ; n++)
+	for(n = 1; (x+n) < 4 ; n++)
 	{
-		if(spielbrett_array[x+n][y] != 0)
+		if(param->spielbrett_array[x+n][y] != 0)
 		{	
 			neue_pos = (x+1)+((y)*SpielbrettBreite);
-			schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
 			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-			if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1)
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1)
 			{
 				return 1;
 			}
@@ -152,37 +158,45 @@ int berechneTurm(char **spielbrett_array, long long* spielbrett, int x, int y, i
 	
 	/*Turm schlägt nach links*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(x-n)<4 && (spielbrett_array[x-n][y] != 0); n++)
-	{
-		neue_pos = (x+1)+((y)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+	for(n = 1; 0 < (x-n) ; n++)
+	{	if (param->spielbrett_array[x-n][y] != 0)
+		{
+			neue_pos = (x+1)+((y)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
 	/*Turm schlägt nach unten */
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(y+n)<4 && (spielbrett_array[x][y+n] != 0); n++)
+	for(n = 1; (y+n) < 4 ; n++)
 	{
-		neue_pos = (x+1)+((y)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+		if(param->spielbrett_array[x][y+n] != 0)
+		{
+			neue_pos = (x+1)+((y)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
 	/*Turm schlägt nach oben*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(y-n)<4 && (spielbrett_array[x][y-n] != 0); n++)
+	for(n = 1; 0 < (y-n) ; n++)
 	{
-		neue_pos = (x+1)+((y)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+		if(param->spielbrett_array[x][y-n] != 0)
+		{
+			neue_pos = (x+1)+((y)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
@@ -200,58 +214,65 @@ int berechneTurm(char **spielbrett_array, long long* spielbrett, int x, int y, i
  * @param anzahlFiguren Anzahl der noch vorhandenen Figuren auf dem Brett
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  */
-int berechneLaeufer(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+int berechneLaeufer(figuren_param_t *param, int x, int y)
 {
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
 	int n;
+	int anzahlFiguren;
+	anzahlFiguren = param->anzahlFiguren;
+	
 	
 	/*Läufer schlägt nach links oben*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(x-n)<4 && 0<(y-n)<4 && (spielbrett_array[x-n][y-n] != 0); n++)
-	{
-		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+	for(n = 1; (0 < (x-n)) && (0 < (y-n)); n++)
+	{	if(param->spielbrett_array[x-n][y-n] != 0){
+			neue_pos = (x-1)+((y-1)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
 	/*Läufer schlägt nach links unten*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(x-n)<4 && 0<(y+n)<4 && (spielbrett_array[x-n][y+n] != 0); n++)
-	{
-		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+	for(n = 1; (0 < (x-n)) && ((y+n) < 4) ; n++)
+	{	if(param->spielbrett_array[x-n][y+n] != 0){
+			neue_pos = (x-1)+((y+1)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
 	/*Läufer schlägt nach rechts oben*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(x+n)<4 && 0<(y-n)<4 && (spielbrett_array[x+n][y-n] != 0); n++)
-	{
-		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+	for(n = 1; ((x+n) < 4) && (0 < (y-n)); n++)
+	{	if(param->spielbrett_array[x+n][y-n] != 0){
+			neue_pos = (x+1)+((y-1)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
 	/*Läufer schlägt nach rechts unten*/
 	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0<(x+n)<4 && 0<(+-n)<4 && (spielbrett_array[x+n][y+n] != 0); n++)
-	{
-		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
-		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
-		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
-			return 1;
+	for(n = 1; ((x+n) < 4) && ((y+n) < 4) ; n++)
+	{	if(param->spielbrett_array[x+n][y+n] != 0){
+			neue_pos = (x+1)+((y+1)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+				return 1;
+			}
 		}
 	}
 	
@@ -268,7 +289,7 @@ int berechneLaeufer(char **spielbrett_array, long long* spielbrett, int x, int y
  * @param anzahlFiguren Anzahl der noch vorhandenen Figuren auf dem Brett
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  */
-int berechneSpringer(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+int berechneSpringer(figuren_param_t *param, int x, int y)
 {
 	//TODO Springer
 	return 0;
@@ -284,7 +305,7 @@ int berechneSpringer(char **spielbrett_array, long long* spielbrett, int x, int 
  * @param anzahlFiguren Anzahl der noch vorhandenen Figuren auf dem Brett
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  */
-int berechneKoenig(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+int berechneKoenig(figuren_param_t *param, int x, int y)
 {
 	//TODO König
 	return 0;
@@ -300,9 +321,8 @@ int berechneKoenig(char **spielbrett_array, long long* spielbrett, int x, int y,
  * @param anzahlFiguren Anzahl der noch vorhandenen Figuren auf dem Brett
  * @return gibt 1 zurück, wenn ein lösbares Spielbrett ensteht, sonst 0
  */
-int berechneDame(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
+int berechneDame(figuren_param_t *param, int x, int y)
 {
 	//TODO Dame
 	return 0;
 }
-

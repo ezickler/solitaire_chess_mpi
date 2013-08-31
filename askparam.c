@@ -13,7 +13,7 @@ void AskParams( struct options* options, int argc, char** argv )
 	
 	
 	
-	if (argc != 3 ||
+	if (argc != 5 ||
 		strcmp("help",(char *)argv[1])==0 || strcmp("-h",(char *)argv[1])==0 ||
 		strcmp("-?",  (char *)argv[1])==0 || strcmp("?", (char *)argv[1])==0 
 		)
@@ -29,7 +29,7 @@ void AskParams( struct options* options, int argc, char** argv )
 		exit(0);
 	}
 		
-	if(argc == 3)
+	if(argc == 5)
 	{
 		sscanf( argv[1],"%d", &(options->num ));
 		sscanf( argv[2],"%d", &(options->method));

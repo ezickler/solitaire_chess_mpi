@@ -1,4 +1,7 @@
 #include "spielbretter.h"
+#include "spielfiguren.h"
+#include <stdbool.h>
+
 
 /**
 
@@ -47,10 +50,53 @@ bool feldBelegt(int* position, long long* spielbrett)
 }
 
 /**
+ * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
+ */
+ void erzeugeHashtables(spielbretter_t *bretter){
+	int figurenAnzahl;
+	for(figurenAnzahl=2; figurenAnzahl<=10; figurenAnzahl++){
+		bretter->spielbretterHashtables[figurenAnzahl] = g_hash_table_new ( g_direct_hash, g_direct_equal);
+	}
+}
+
+void spielbretter_destruct(spielbretter_t* bretter)
+{
+	free(bretter);
+}
+
+/**
+ * Alloziert das Array zum Zwischenspeichern des Brettes.
+ */
+char** spielbretterArrayCreate(int hoehe, int breite)
+{
+	int n;
+	char** tmp_array;
+	tmp_array = calloc(hoehe, sizeof(char*));
+	for(n = 0; n < hoehe; n++)
+	{
+		tmp_array[n] = calloc(breite, sizeof(char));
+	}
+	return tmp_array;
+}
+
+/**
+ * Gibt den Speicher des zweidimensionalen Arrays frei.
+ */
+void spielbretterArrayDestruct(char** array, int hoehe)
+{
+	int n;
+	for(n = 0 ;n < hoehe;n ++)
+	{
+	 free(array[n]);
+	}
+	free(array);
+}
+
+/**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
  *
  */
-void erzeugeSpielbretter(){
+spielbretter_t* spielbretter_create(){
 	long long spielbrett;
 	int anzFiguren;
 	int posDame, 
@@ -59,13 +105,20 @@ void erzeugeSpielbretter(){
 		posLaeufer1, posLaeufer2,
 		posTurm1, posTurm2,
 		posBauer1, posBauer2;
+	spielbretter_t *bretter;
+
 
 
 	/** Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
+	
+	bretter = malloc(sizeof(spielbretter_t));
+	
+	erzeugeHashtables(bretter);
+	
 
-	/*Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
-	/* für alle anderen Figuren analog!*/
+	/* Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
+	 * für alle anderen Figuren analog!*/
 	for(posDame=0; posDame<=anzFelder; posDame++){
 		anzFiguren=10;
 		/* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
@@ -96,8 +149,8 @@ void erzeugeSpielbretter(){
 				}
 				
 				/* Iteration für den Springer2 
-				/* geänderte Startposition, um Duplikate zu vermeiden
-				/* analog für andere doppelte Figuren */
+				 * geänderte Startposition, um Duplikate zu vermeiden
+				 * analog für andere doppelte Figuren */
 				for(posSpringer2=posSpringer1+1; posSpringer2<=anzFelder; posSpringer2++){
 					if(posSpringer2<anzFelder && feldBelegt(&posSpringer2, &spielbrett)){
 						spielbrett += posSpringer2 *8* DarstellungSpringer; 
@@ -167,7 +220,8 @@ void erzeugeSpielbretter(){
 											    // Mischung, die if Abfrage kommt frueher und spart Schleifen durchgaenge, es enstehen
 											    // aber trotzdem Bretter mit nur einer Figur.
 											    // TODO: gpointer übergeben??
-											    g_hash_table_insert(_spielbretterHashtables[anzFiguren], spielbrett, 0 ); 
+											    g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren], &spielbrett, 0 ); 
+											    //TODO:  spielbrett = 0; setzen NOTWENDIG?
 											    }
 										}
 									}
@@ -179,7 +233,76 @@ void erzeugeSpielbretter(){
 			}
 		}
 	}
+	return bretter;
 }
 
 
+/**
+ * Berechnet ein einzelnes Spielbrett.
+ * Funktioniert nur, wenn die Spielbretter mit weniger Figuren bereits berechnet 
+ * sind!
+ * Signatur nach GHRFunc() aus der gnome library 
+ * 
+ * @param spielbrett gpointer (eigentlich long long *)
+ * @param loesbar gpointer (eigentlich int*)
+ * @param anzahlSpielfiguren gpointer (eigentlich *int) 
+ * 
+ */
+void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
+	
+	int *geloest = (int*) loesbar;
+	spielbretter_t *bretter = (spielbretter_t*) bretter_ptr;
+    int x, y;
+    figuren_param_t param;
+    
+    memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
+    param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
+  
+    for(x=0; x<4; x++){
+        for(y=0; y<4; y++){
+            param.spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
+        }
+    }
+      
 
+     for(x=0; x<4 && *geloest == 0; x++){
+		for(y=0; y<4 && *geloest == 0; y++){
+			switch(param.spielbrett_array[x][y]){
+				case DarstellungBauer:
+					*geloest= berechneBauer(&param, x, y);
+					break;
+				case DarstellungTurm:
+					*geloest = berechneTurm(&param, x, y);
+					break;
+				case DarstellungLaeufer:
+					*geloest = berechneLaeufer(&param, x, y);
+					break;
+				case DarstellungSpringer:
+					*geloest = berechneSpringer(&param, x, y);
+					break;
+				case DarstellungKoenig:
+					*geloest = berechneKoenig(&param, x, y);
+					break;
+				case DarstellungDame:
+					*geloest = berechneDame(&param, x, y);
+					break;
+			}
+		}
+	}
+	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
+}
+
+
+/**
+ * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
+ *
+ */
+void spielbretter_berechne(spielbretter_t *bretter){
+	
+    int anzahlFiguren;
+    /* Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)*/
+    for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
+		bretter->anzahlFiguren = anzahlFiguren;
+        g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
+    }
+}

@@ -50,6 +50,8 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach links oben
 	 */
+	 //TODO: Stimmt die Ifabfrage? Müsste nicht sowas 0<(x-1)<SpielbrettBreite && 0<(y-1)<SpielbrettHoehe richtig sein?
+	 // für alle anderen Überprüfungen natürlich ebenso
 	if((x-1)>0 && (y-1)>0 && (spielbrett_array[x-1][y-1] != 0)){
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
@@ -66,7 +68,7 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach links unten
 	 */	
-	if((x-1)>0 && (y+1)>0 && (spielbrett[x-1][y+1] != 0)){
+	if((x-1)>0 && (y+1)>0 && (spielbrett_array[x-1][y+1] != 0)){
 		
 		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 		
@@ -82,7 +84,7 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach rechts oben
 	 */
-	if((x+1)>0 && (y-1)>0 && (spielbrett[x+1][y-1] != 0)){
+	if((x+1)>0 && (y-1)>0 && (spielbrett_array[x+1][y-1] != 0)){
 	
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		
@@ -98,7 +100,7 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
 	/*
 	 * Bauer schlägt nach rechts unten
 	 */
-	if((x+1)>0 && (y+1)>0 && (spielbrett[x+1][y+1] != 0)){
+	if((x+1)>0 && (y+1)>0 && (spielbrett_array[x+1][y+1] != 0)){
 		
 		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 		
@@ -126,7 +128,64 @@ int berechneBauer(char **spielbrett_array, long long* spielbrett, int x, int y, 
  */
 int berechneTurm(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
-	//TODO Turm 
+	int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	long long neues_spielbrett;
+	int n;
+
+	/*Turm schlägt nach rechts */
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	// for-schleife mit mehreren if-abfragen möglich? 	for(n = 1; 0<(x-n)<4 && (spielbrett_array[x-n][y] != 0); n++)
+	for(n = 1; 0<(x+n)<4 ; n++)
+	{
+		if(spielbrett_array[x+n][y] != 0)
+		{	
+			neue_pos = (x+1)+((y)*SpielbrettBreite);
+			schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1)
+			{
+				return 1;
+			}
+		}
+	}
+	
+	/*Turm schlägt nach links*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(x-n)<4 && (spielbrett_array[x-n][y] != 0); n++)
+	{
+		neue_pos = (x+1)+((y)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*Turm schlägt nach unten */
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(y+n)<4 && (spielbrett_array[x][y+n] != 0); n++)
+	{
+		neue_pos = (x+1)+((y)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*Turm schlägt nach oben*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(y-n)<4 && (spielbrett_array[x][y-n] != 0); n++)
+	{
+		neue_pos = (x+1)+((y)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
 	
 	return 0;
 }
@@ -143,7 +202,59 @@ int berechneTurm(char **spielbrett_array, long long* spielbrett, int x, int y, i
  */
 int berechneLaeufer(char **spielbrett_array, long long* spielbrett, int x, int y, int* anzahlFiguren)
 {
-	//TODO Läufer0
+	int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	long long neues_spielbrett;
+	int n;
+	
+	/*Läufer schlägt nach links oben*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(x-n)<4 && 0<(y-n)<4 && (spielbrett_array[x-n][y-n] != 0); n++)
+	{
+		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*Läufer schlägt nach links unten*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(x-n)<4 && 0<(y+n)<4 && (spielbrett_array[x-n][y+n] != 0); n++)
+	{
+		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*Läufer schlägt nach rechts oben*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(x+n)<4 && 0<(y-n)<4 && (spielbrett_array[x+n][y-n] != 0); n++)
+	{
+		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*Läufer schlägt nach rechts unten*/
+	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
+	for(n = 1; 0<(x+n)<4 && 0<(+-n)<4 && (spielbrett_array[x+n][y+n] != 0); n++)
+	{
+		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
+		schlageFigur(spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if((int) *(g_hash_table_lookup (_spielbretterHashtables[*anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
 	return 0;
 }
 

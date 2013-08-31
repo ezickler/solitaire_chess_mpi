@@ -1,0 +1,21 @@
+Quelltextkonventionen_C
+-----------------------------------------
+
+Header:
+-includes so wenig wie möglich
+-nur Nichtstandardtypen dort hin
+
+-Rest in zugehörige .c-Datei:
+
+denn du willst:
+a.) dass jede .c-Datei auch eigenständig nutzbar ist
+b.) dass immer möglichst wenig inkludiert wird
+c.) dass eindeutig ist, welche includes auch vom Aufrufer der  
+Funktionen der .c Datei benötigt werden und welche nicht
+
+-Includes im Gegensatz zu imports setzen wirklich nur den Text einer  Datei in eine andere ein. Ein import wie in Java sorgt dafür, dass etwas anderes "sichtbar" bzw. benutzbar wird und kümmert sich um alles mögliche andere, aber ein include setzt stumpf ein, was in der anderen datei steht und zwar vor dem Kompilieren, wie alles was mit # beginnt.
+
+-Erst selbstgeschriebene lokale Header includieren dann Systemheader.
+So stellst du sicher, dass du nicht doch irgendwelche Systemheader  
+schon im eigenen gebraucht hättest.
+

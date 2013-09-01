@@ -54,6 +54,9 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 	 */
 	 //TODO: Stimmt die Ifabfrage? Müsste nicht sowas 0<(x-1)<SpielbrettBreite && 0<(y-1)<SpielbrettHoehe richtig sein?
 	 // für alle anderen Überprüfungen natürlich ebenso
+	 // Ja, prinzipiell schon. Wir können aber davon ausgehen das x und y korekkte werte sind und wir bei subtraktion 
+	 // nur die unter und bei addition nur die obere grenze prüfen müssen.
+	 // überarbeitet. Diskutieren????
 	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0)){
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
@@ -70,7 +73,7 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 	/*
 	 * Bauer schlägt nach links unten
 	 */	
-	if((x-1)>0 && (y+1)>0 && (param->spielbrett_array[x-1][y+1] != 0)){
+	if((x-1)>0 && (y+1)<=SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0)){
 		
 		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 		
@@ -86,7 +89,7 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 	/*
 	 * Bauer schlägt nach rechts oben
 	 */
-	if((x+1)>0 && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0)){
+	if((x+1)<=SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0)){
 	
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		
@@ -102,7 +105,7 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 	/*
 	 * Bauer schlägt nach rechts unten
 	 */
-	if((x+1)>0 && (y+1)>0 && (param->spielbrett_array[x+1][y+1] != 0)){
+	if((x+1)<=SpielbrettBreite && (y+1)<=SpielbrettHoehe && (param->spielbrett_array[x+1][y+1] != 0)){
 		
 		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 		
@@ -140,9 +143,8 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	
 
 	/*Turm schlägt nach rechts */
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
 	// for-schleife mit mehreren if-abfragen möglich? 	for(n = 1; 0<(x-n)<4 && (spielbrett_array[x-n][y] != 0); n++)
-	for(n = 1; (x+n) < 4 ; n++)
+	for(n = 1; (x+n) <= SpielbrettBreite ; n++)
 	{
 		if(param->spielbrett_array[x+n][y] != 0)
 		{	
@@ -157,8 +159,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Turm schlägt nach links*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0 < (x-n) ; n++)
+	for(n = 1; (x-n) > 0 ; n++)
 	{	if (param->spielbrett_array[x-n][y] != 0)
 		{
 			neue_pos = (x+1)+((y)*SpielbrettBreite);
@@ -171,8 +172,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Turm schlägt nach unten */
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; (y+n) < 4 ; n++)
+	for(n = 1; (y+n) < SpielbrettHoehe ; n++)
 	{
 		if(param->spielbrett_array[x][y+n] != 0)
 		{
@@ -186,8 +186,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Turm schlägt nach oben*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; 0 < (y-n) ; n++)
+	for(n = 1; (y-n) > 0; n++)
 	{
 		if(param->spielbrett_array[x][y-n] != 0)
 		{
@@ -225,8 +224,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	
 	
 	/*Läufer schlägt nach links oben*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; (0 < (x-n)) && (0 < (y-n)); n++)
+	for(n = 1; ((x-n) > 0) && ((y-n) > 0); n++)
 	{	if(param->spielbrett_array[x-n][y-n] != 0){
 			neue_pos = (x-1)+((y-1)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
@@ -238,8 +236,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Läufer schlägt nach links unten*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; (0 < (x-n)) && ((y+n) < 4) ; n++)
+	for(n = 1; ((x-n) >0) && ((y+n) < SpielbrettHoehe) ; n++)
 	{	if(param->spielbrett_array[x-n][y+n] != 0){
 			neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
@@ -251,8 +248,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Läufer schlägt nach rechts oben*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; ((x+n) < 4) && (0 < (y-n)); n++)
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n) > 0); n++)
 	{	if(param->spielbrett_array[x+n][y-n] != 0){
 			neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
@@ -264,8 +260,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Läufer schlägt nach rechts unten*/
-	//TODO: 4 durch SpielbrettBreite / SpielbrettHoehe ersetzen
-	for(n = 1; ((x+n) < 4) && ((y+n) < 4) ; n++)
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y+n) < SpielbrettHoehe) ; n++)
 	{	if(param->spielbrett_array[x+n][y+n] != 0){
 			neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
@@ -291,8 +286,140 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
  */
 int berechneSpringer(figuren_param_t *param, int x, int y)
 {
-	//TODO Springer
-	return 0;
+	int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	long long neues_spielbrett;
+	int anzahlFiguren;
+	anzahlFiguren = param->anzahlFiguren;
+	
+	
+	/*
+	 * Springer schlägt nach oben links
+	 */
+	if((x-1)>0 && (y-2)>0 && (param->spielbrett_array[x-1][y-2] != 0)){
+		
+		neue_pos = (x-1)+((y-2)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*) g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*
+	 * Springer schlägt nach oben rechts
+	 */
+	if((x+1)<=SpielbrettBreite && (y-2)>0 && (param->spielbrett_array[x+1][y-2] != 0)){
+		
+		neue_pos = (x+1)+((y-2)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*) g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * Springer schlägt nach links oben
+	 */	
+	if((x-2)>0 && (y+1)<=SpielbrettHoehe && (param->spielbrett_array[x-2][y+1] != 0)){
+		
+		neue_pos = (x-2)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * Springer schlägt nach links unten
+	 */	
+	if((x-2)>0 && (y-1)>0 && (param->spielbrett_array[x-2][y-1] != 0)){
+		
+		neue_pos = (x-2)+((y-1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * Springer schlägt nach unten links
+	 */
+	if((x-1)>0 && (y+2)<=SpielbrettHoehe && (param->spielbrett_array[x-1][y+2] != 0)){
+	
+		neue_pos = (x-1)+((y+2)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	/*
+	 * Springer schlägt nach unten rechts
+	 */
+	if((x+1)>=SpielbrettBreite && (y+2)<=SpielbrettHoehe && (param->spielbrett_array[x+1][y+2] != 0)){
+	
+		neue_pos = (x+1)+((y+2)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * Springer schlägt nach rechts unten
+	 */
+	if((x+2)<=SpielbrettBreite && (y+1)<=SpielbrettHoehe && (param->spielbrett_array[x+2][y+1] != 0)){
+		
+		neue_pos = (x+2)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * Springer schlägt nach rechts oben
+	 */
+	if((x+2)<=SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+2][y-1] != 0)){
+		
+		neue_pos = (x+2)+((y-1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	return 0;    
 }
 
 /**
@@ -307,8 +434,86 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
  */
 int berechneKoenig(figuren_param_t *param, int x, int y)
 {
-	//TODO König
-	return 0;
+
+	int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	long long neues_spielbrett;
+	int anzahlFiguren;
+	anzahlFiguren = param->anzahlFiguren;
+
+
+
+	// Der König kann die 4 Züge des Bauerns auch ausfúhren
+	if(berechneBauer(param, x, y) == 1){
+		return 1;
+	}
+
+	
+	/*
+	 * König schlägt nach oben
+	 */
+	if((y-1)>0 && (param->spielbrett_array[x][y-1] != 0)){
+		
+		neue_pos = (x)+((y-1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*) g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * König schlägt nach links
+	 */	
+	if((x-1)>0 && (param->spielbrett_array[x-1][y] != 0)){
+		
+		neue_pos = (x-1)+((y)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * König schlägt nach unten
+	 */
+	if((y+1)<=SpielbrettHoehe && (param->spielbrett_array[x][y+1] != 0)){
+	
+		neue_pos = (x)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( *((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	/*
+	 * König schlägt nach rechts 
+	 */
+	if((x+1)<=SpielbrettBreite && (param->spielbrett_array[x+1][y] != 0)){
+		
+		neue_pos = (x+1)+((y)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if(*((int*)g_hash_table_lookup (param->spielbretterHashtables[anzahlFiguren-1], &neues_spielbrett)) == 1){
+			return 1;
+		}
+	}
+	
+	
+	return 0; 
 }
 
 /**
@@ -323,6 +528,16 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
  */
 int berechneDame(figuren_param_t *param, int x, int y)
 {
-	//TODO Dame
+	
+	// Die Dame kann die gleichen zu wie ein Turm ausführen
+	if(berechneTurm(param, x, y) == 1){
+		return 1;
+	}
+	
+	// Die Dame kann die gleichen zu wie ein Läufer ausführen
+	if(berechneLaeufer(param, x, y) == 1){
+		return 1;
+	}
+	
 	return 0;
 }

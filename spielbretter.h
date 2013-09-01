@@ -19,10 +19,14 @@ typedef struct spielbretter
  *
  */
 void spielbretter_berechne(spielbretter_t *bretter);
+
+
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
  */
 spielbretter_t* spielbretter_create();
+
+
 /**
  * Löscht alle übergebenen Spielbretter.
  */ 

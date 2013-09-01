@@ -256,6 +256,10 @@ void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_
     figuren_param_t param;
     
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
+    
+    // Ist es geschickt den speicher für jedes spielbrett neu zu allozieren? 
+    // Iss einmal(bzw 10 mal) in erechne Spielbretter besser oder zu viele prarameter? 
+    // Spielbrett Array wird erstellt und Allloziert
     param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
   
     for(x=0; x<4; x++){
@@ -289,6 +293,8 @@ void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_
 			}
 		}
 	}
+	
+	//Spielbrett Array wir wieder freigegeben
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
 }
 

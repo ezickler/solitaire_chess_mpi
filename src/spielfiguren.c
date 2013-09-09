@@ -1,6 +1,5 @@
 #include "spielfiguren.h"
 
-
 /**
 Spielbrett:
 
@@ -52,11 +51,6 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 	/*
 	 * Bauer schlägt nach links oben
 	 */
-	 //TODO: Stimmt die Ifabfrage? Müsste nicht sowas 0<(x-1)<SpielbrettBreite && 0<(y-1)<SpielbrettHoehe richtig sein?
-	 // für alle anderen Überprüfungen natürlich ebenso
-	 // Ja, prinzipiell schon. Wir können aber davon ausgehen das x und y korekkte werte sind und wir bei subtraktion 
-	 // nur die unter und bei addition nur die obere grenze prüfen müssen.
-	 // überarbeitet. Diskutieren????
 	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0)){
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);

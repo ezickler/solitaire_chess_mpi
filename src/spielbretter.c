@@ -25,7 +25,7 @@ z.B.: 000....000010 bedeutet ein Turm auf Feld 0 (also links oben).
 
 
 Repräsentation der Spielfiguren auf dem Brett:
-	Dez			Code	
+	Dez			Binär	
 	0 Frei		000
 	1 Bauer		001
 	2 Turm		010
@@ -38,29 +38,34 @@ Repräsentation der Spielfiguren auf dem Brett:
 
 
 /**
- * Hilfsfunktion die bestimmt ob auf auf einem uebergebenen Brett an einer uebergeben Posistion eine Figur steht.
+ * Hilfsfunktion, die bestimmt, ob auf auf einem übergebenen Brett an einer übergeben Posistion eine Figur steht.
  *
  * @param position *int 
  * @param spielbrett *long long
  * @return bool
  */
-bool feldBelegt(int* position, long long* spielbrett)
+bool feldFrei(int* position, long long* spielbrett)
 {
-	return (*spielbrett >> (*position * 3)) % 8 == DarstellungLeer;
+	return (((*spielbrett >> (*position * 3)) % 8) == DarstellungLeer);
 }
 
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
  */
  void erzeugeHashtables(spielbretter_t *bretter){
+	 printf("Beginn erzeugeHashtables\n");
 	int figurenAnzahl;
-	for(figurenAnzahl=2; figurenAnzahl<=10; figurenAnzahl++){
-		bretter->spielbretterHashtables[figurenAnzahl] = g_hash_table_new ( g_direct_hash, g_direct_equal);
+	for(figurenAnzahl=0; figurenAnzahl<=10; figurenAnzahl++){
+		bretter->spielbretterHashtables[figurenAnzahl] = g_hash_table_new(g_direct_hash, g_direct_equal);
 	}
 }
 
+/**
+ * Gibt den Speicher des Parameters frei.
+ */
 void spielbretter_destruct(spielbretter_t* bretter)
 {
+	printf("Beginn spielbretter_destruct\n");
 	free(bretter);
 }
 
@@ -97,132 +102,210 @@ void spielbretterArrayDestruct(char** array, int hoehe)
  *
  */
 spielbretter_t* spielbretter_create(){
-	long long spielbrett;
-	int anzFiguren;
-	int posDame, 
+	
+	//TODO: Spielbretter mit einer Figur in Hashtable als gelöst abspeichern!
+	printf("Beginn spielbretter_create\n");
+	/* Spielbrettvariablen, für die verschiedenen Ebenen der for-Schleifen, 
+	 * da jede Schleife eigene lokale Variablen braucht, um Überschreiben zu verhindern
+	 * Alternative: Zurückrechnen, am Ende der jeweiligen Schleife - aufwendiger */
+	long long spielbrett_Leer,
+			  spielbrett_Dame,
+			  spielbrett_Koenig,
+			  spielbrett_Springer1, spielbrett_Springer2,
+			  spielbrett_Laeufer1, spielbrett_Laeufer2,
+			  spielbrett_Turm1, spielbrett_Turm2,
+			  spielbrett_Bauer1, spielbrett_Bauer2;
+			  
+	/*Anzahl der maximal noch setzbaren Figuren
+	 * verschiedene Ebenen der for-Schleifen brauchen eigene lokale Variablen, um Überschreiben zu verhindern */
+	int anzFiguren_Start,
+		anzFiguren_Dame,
+		anzFiguren_Koenig,
+		anzFiguren_Springer1, anzFiguren_Springer2,
+		anzFiguren_Laeufer1, anzFiguren_Laeufer2,
+		anzFiguren_Turm1, anzFiguren_Turm2,
+		anzFiguren_Bauer1, anzFiguren_Bauer2;
+		
+	/* Position der jeweiligen Figuren*/
+	int posDame,
 		posKoenig, 
 		posSpringer1, posSpringer2, 
 		posLaeufer1, posLaeufer2,
 		posTurm1, posTurm2,
 		posBauer1, posBauer2;
+		
+	/* hält das Array von Pointern auf die verschiedenen Hashtables sowie die Anzahl der Figuren */
 	spielbretter_t *bretter;
 
 
 
 	/** Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
-	
+	spielbrett_Leer = 0;
 	bretter = malloc(sizeof(spielbretter_t));
+	anzFiguren_Start=10;
 	
 	erzeugeHashtables(bretter);
 	
-
+	
+	
 	/* Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
 	 * für alle anderen Figuren analog!*/
-	for(posDame=0; posDame<=anzFelder; posDame++){
-		anzFiguren=10;
+	for(posDame=0; posDame<=anzFelder; posDame++)
+	{	
+		printf("setze Spielfiguren \n");
+		anzFiguren_Dame = anzFiguren_Start;
 		/* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
-		if(posDame<anzFelder && feldBelegt(&posDame, &spielbrett)){
-			spielbrett += posDame *8* DarstellungDame; 
+		if(posDame<anzFelder)
+		{
+			printf("setzeDame %d \n",posDame);
+			spielbrett_Dame = spielbrett_Leer +  (DarstellungDame << posDame*3); 
 		}
 		/* Keine Dame gesetzt worden*/
-		else{
-			anzFiguren--;
+		else
+		{
+			anzFiguren_Dame --;
 		}
+		printf("debug g_hash_table_insert Dame: %d AnzahlFiguren: %d\n", posDame, anzFiguren_Dame);
 
 		/* Iteration für den König */
-		for(posKoenig=0; posKoenig<=anzFelder; posKoenig++){
-			if(posKoenig<anzFelder && feldBelegt(&posKoenig, &spielbrett)){
-				spielbrett += posKoenig *8* DarstellungKoenig; 
+		for(posKoenig=0; posKoenig<=anzFelder; posKoenig++)
+		{	
+			anzFiguren_Koenig = anzFiguren_Dame;
+			if(posKoenig<anzFelder && feldFrei(&posKoenig, &spielbrett_Dame))
+			{
+				printf("setzeKönig %d \n", posKoenig);
+				spielbrett_Koenig = spielbrett_Dame + (DarstellungKoenig << posKoenig*3); 
 			}
-			else{
-				anzFiguren--;
+			else
+			{
+				anzFiguren_Koenig --;
 			}
+			printf("debug g_hash_table_insert König: %d AnzahlFiguren: %d\n", posKoenig, anzFiguren_Koenig);
 			
 			/* Iteration für den Springer */
-			for(posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++){
-				if(posSpringer1<anzFelder && feldBelegt(&posSpringer1, &spielbrett)){
-					spielbrett += posSpringer1 *8* DarstellungSpringer; 
+			for(posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++)
+			{
+				anzFiguren_Springer1 = anzFiguren_Koenig;
+				if(posSpringer1<anzFelder && feldFrei(&posSpringer1, &spielbrett_Koenig))
+				{
+					spielbrett_Springer1 = spielbrett_Koenig + (DarstellungSpringer << posSpringer1*3); 
 				}
-				else{
-					anzFiguren--;
+				else
+				{
+					anzFiguren_Springer1 --;
 				}
+				printf("debug g_hash_table_insert Springer1: %d AnzahlFiguren: %d\n", posSpringer1, anzFiguren_Springer1);
 				
 				/* Iteration für den Springer2 
 				 * geänderte Startposition, um Duplikate zu vermeiden
 				 * analog für andere doppelte Figuren */
-				for(posSpringer2=posSpringer1+1; posSpringer2<=anzFelder; posSpringer2++){
-					if(posSpringer2<anzFelder && feldBelegt(&posSpringer2, &spielbrett)){
-						spielbrett += posSpringer2 *8* DarstellungSpringer; 
+				for(posSpringer2=posSpringer1+1; posSpringer2<=anzFelder; posSpringer2++)
+				{
+					anzFiguren_Springer2 = anzFiguren_Springer1;
+					if(posSpringer2<anzFelder && feldFrei(&posSpringer2, &spielbrett_Springer1))
+					{
+						spielbrett_Springer2 = spielbrett_Springer1 + (DarstellungSpringer << posSpringer2*3);
 					}
-					else{
-						anzFiguren--;
+					else
+					{
+						anzFiguren_Springer2 --;
 					}
+					//printf("debug g_hash_table_insert Springer2: %d AnzahlFiguren: %d\n", posSpringer2, anzFiguren_Springer2); 
 					
-					/* Iteration für den Laeufer1 */
-					for(posLaeufer1=0; posLaeufer1<=anzFelder; posLaeufer1++){
-						if(posLaeufer1<anzFelder && feldBelegt(&posLaeufer1, &spielbrett)){
-							spielbrett += posLaeufer1 *8* DarstellungLaeufer;
+					/* Iteration für den Läufer1 */
+					for(posLaeufer1=0; posLaeufer1<=anzFelder; posLaeufer1++)
+					{
+						anzFiguren_Laeufer1 = anzFiguren_Springer2;
+						if(posLaeufer1<anzFelder && feldFrei(&posLaeufer1, &spielbrett_Springer2))
+						{
+							spielbrett_Laeufer1 = spielbrett_Springer2 + (DarstellungLaeufer << posLaeufer1*3);
+							//printf("debug g_hash_table_insert Läufer1: %d AnzahlFiguren: %d\n", posLaeufer1, anzFiguren_Laeufer1);
 						}
-						else{
-							anzFiguren--;
+						else
+						{
+							anzFiguren_Laeufer1--;
 						}
 
-						/* Iteration für den Laeufer2 */
-						for(posLaeufer2=posLaeufer1+1; posLaeufer2<=anzFelder; posLaeufer2++){
-							if(posLaeufer2<anzFelder && feldBelegt(&posLaeufer2, &spielbrett)){
-								spielbrett += posLaeufer2 *8* DarstellungLaeufer;
+						/* Iteration für den Läufer2 */
+						for(posLaeufer2=posLaeufer1+1; posLaeufer2<=anzFelder; posLaeufer2++)
+						{
+							anzFiguren_Laeufer2 = anzFiguren_Laeufer1;
+							if(posLaeufer2<anzFelder && feldFrei(&posLaeufer2, &spielbrett_Laeufer1))
+							{
+								spielbrett_Laeufer2 = spielbrett_Laeufer1 + (DarstellungLaeufer << posLaeufer2*3);
+								//printf("debug g_hash_table_insert Läufer2: %d AnzahlFiguren: %d\n", posLaeufer2, anzFiguren_Laeufer2);
 							}
-							else{
-								anzFiguren--;
+							else
+							{
+								anzFiguren_Laeufer2--;
 							}
 
 							/* Iteration für den Turm1 */
-							for(posTurm1=0; posTurm1<=anzFelder; posTurm1++){
-								if(posTurm1<anzFelder && feldBelegt(&posTurm1, &spielbrett)){
-									spielbrett += posTurm1 *8* DarstellungTurm;
+							for(posTurm1=0; posTurm1<=anzFelder; posTurm1++)
+							{
+								anzFiguren_Turm1 = anzFiguren_Laeufer2;
+								if(posTurm1<anzFelder && feldFrei(&posTurm1, &spielbrett_Laeufer2))
+								{
+									spielbrett_Turm1 = spielbrett_Laeufer2 + (DarstellungTurm << posTurm1+3);
+									//printf("debug g_hash_table_insert Turm1: %d AnzahlFiguren: %d\n", posTurm1, anzFiguren_Turm1);
 								}
-								else{
-									anzFiguren--;
+								else
+								{
+									anzFiguren_Turm1--;
 								}
 								
 								/* Iteration für den Turm2 */
-								for(posTurm2=posTurm1+1; posTurm2<=anzFelder; posTurm1++){
-									if(posTurm2<anzFelder && feldBelegt(&posTurm2, &spielbrett)){
-										spielbrett += posTurm2 *8* DarstellungTurm;
+								for(posTurm2=posTurm1+1; posTurm2<=anzFelder; posTurm2++)
+								{
+									anzFiguren_Turm2 = anzFiguren_Turm1;
+									if(posTurm2<anzFelder && feldFrei(&posTurm2, &spielbrett_Turm1))
+									{
+										spielbrett_Turm2 = spielbrett_Turm1 + (DarstellungTurm << posTurm2*3);
+										}
+									else
+									{
+										anzFiguren_Turm2--;
 									}
-									else{
-										anzFiguren--;
-									}
+									//printf("debug g_hash_table_insert Turm2: %d AnzahlFiguren: %d\n", posTurm2, anzFiguren_Turm2);
 									
 									/* Iteration für den Bauer1 */
-									for(posBauer1=0; posBauer1<=anzFelder; posBauer1++){
-										if(posBauer1<anzFelder && feldBelegt(&posBauer1, &spielbrett)){
-											spielbrett += posBauer1 *8* DarstellungBauer;
+									for(posBauer1=0; posBauer1<=anzFelder; posBauer1++)
+									{
+										anzFiguren_Bauer1 = anzFiguren_Turm2;
+										if(posBauer1<anzFelder && feldFrei(&posBauer1, &spielbrett_Turm2))
+										{
+											spielbrett_Bauer1 = spielbrett_Turm2 + (DarstellungBauer << posBauer1*3);
 										}
-										else{
-											anzFiguren--;
+										else
+										{
+											anzFiguren_Bauer1--;
 										}
+										//printf("debug g_hash_table_insert Bauer1: %d AnzahlFiguren: %d\n", posBauer1, anzFiguren_Bauer1);
                                         // Spart die innere Schleife bei zu wenigen Figuren, 
-                                        // es koennen aber trotzdem Bretter mit einer Figur erstellt
-                                        if(anzFiguren > 0){
+                                        // es können aber trotzdem Bretter mit einer Figur erstellt
+                                        if(anzFiguren_Bauer1 > 0)
+                                        {
 
 										    /* Iteration für den Bauer2 */
-										    for(posBauer2=posBauer1+1; posBauer2<=anzFelder; posBauer2++){
-											    if(posBauer2<anzFelder  && feldBelegt(&posBauer2, &spielbrett)){
-												    spielbrett += posBauer2 *8* DarstellungBauer;
-											    }
-											    else{
-												    anzFiguren--;
+										    for(posBauer2=posBauer1+1; posBauer2<=anzFelder; posBauer2++)
+										    {
+												anzFiguren_Bauer2 = anzFiguren_Bauer1;
+											    if(posBauer2<anzFelder  && feldFrei(&posBauer2, &spielbrett_Bauer1))
+											    {
+												    spielbrett_Bauer2 = spielbrett_Bauer1 + (DarstellungBauer << posBauer2*3);
+												}
+											    else
+											    {
+												    anzFiguren_Bauer2--;
 											    }
 
 											    // Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
-											    // Mischung, die if Abfrage kommt frueher und spart Schleifen durchgaenge, es enstehen
+											    // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
 											    // aber trotzdem Bretter mit nur einer Figur.
-											    // TODO: gpointer übergeben??
-											    g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren], &spielbrett, 0 ); 
-											    //TODO:  spielbrett = 0; setzen NOTWENDIG?
-											    }
+											   // printf("debug g_hash_table_insert Bauer2: %d AnzahlFiguren: %d\n", posBauer2, anzFiguren_Bauer2);
+											    g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) &spielbrett_Bauer2, (gpointer) 0 );
+											}
 										}
 									}
 								}
@@ -255,20 +338,22 @@ void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_
     int x, y;
     figuren_param_t param;
     
+    /*Kopieren des Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
     
-    // Ist es geschickt den speicher für jedes spielbrett neu zu allozieren? 
-    // Iss einmal(bzw 10 mal) in erechne Spielbretter besser oder zu viele prarameter? 
-    // Spielbrett Array wird erstellt und Allloziert
     param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
   
+	/* Berechnung der Arraydarstellung aus Oktaldarstellung
+	 * einfacher für die Überprüfung der Spielbrettgrenzen*/
     for(x=0; x<4; x++){
         for(y=0; y<4; y++){
             param.spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
         }
     }
       
-
+	
+	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
+	 * ein lösbares neues Spielbrett entsteht */
      for(x=0; x<4 && *geloest == 0; x++){
 		for(y=0; y<4 && *geloest == 0; y++){
 			switch(param.spielbrett_array[x][y]){
@@ -294,7 +379,7 @@ void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_
 		}
 	}
 	
-	//Spielbrett Array wir wieder freigegeben
+	//Spielbrett Array wird wieder freigegeben
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
 }
 
@@ -304,10 +389,11 @@ void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_
  *
  */
 void spielbretter_berechne(spielbretter_t *bretter){
-	
+	printf("Beginn spielbretter_berechne\n");
     int anzahlFiguren;
     /* Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)*/
     for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
+		printf("Berechnet Spielbretter mit %d Spielfiguren \n", anzahlFiguren);
 		bretter->anzahlFiguren = anzahlFiguren;
         g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
     }

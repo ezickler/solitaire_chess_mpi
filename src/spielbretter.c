@@ -304,7 +304,7 @@ spielbretter_t* spielbretter_create(){
 											    // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
 											    // aber trotzdem Bretter mit nur einer Figur.
 											   // printf("debug g_hash_table_insert Bauer2: %d AnzahlFiguren: %d\n", posBauer2, anzFiguren_Bauer2);
-											    g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) &spielbrett_Bauer2, (gpointer) 0 );
+											    g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], spielbrett_Bauer2, 0 );
 											}
 										}
 									}
@@ -315,6 +315,10 @@ spielbretter_t* spielbretter_create(){
 				}
 			}
 		}
+	}
+	for(int tala=0; tala <= 10; tala++)
+	{
+	printf("Hashtablegröße für Anzahl: %d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
 	}
 	return bretter;
 }
@@ -332,30 +336,39 @@ spielbretter_t* spielbretter_create(){
  * 
  */
 void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
-	
+	printf("Beginn: spielbrettBerechne \n");
 	int *geloest = (int*) loesbar;
+	printf("speicherzugriffsfehler test 1 \n");
 	spielbretter_t *bretter = (spielbretter_t*) bretter_ptr;
+	printf("speicherzugriffsfehler test 2 \n");
     int x, y;
     figuren_param_t param;
     
     /*Kopieren des Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
+    printf("speicherzugriffsfehler test 3 \n");
     
     param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
+    printf("speicherzugriffsfehler test 4 \n");
   
 	/* Berechnung der Arraydarstellung aus Oktaldarstellung
 	 * einfacher für die Überprüfung der Spielbrettgrenzen*/
-    for(x=0; x<4; x++){
-        for(y=0; y<4; y++){
+    for(x=0; x < SpielbrettBreite; x++){
+        for(y=0; y < SpielbrettHoehe; y++){
             param.spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
+            printf("speicherzugriffsfehler test 5 forschleife x: %d  y: %d \n", x,y);
         }
     }
       
-	
+	printf("arrayumrechnung fertig \n");
 	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
 	 * ein lösbares neues Spielbrett entsteht */
-     for(x=0; x<4 && *geloest == 0; x++){
-		for(y=0; y<4 && *geloest == 0; y++){
+	 //for(x=0; x < SpielbrettBreite; x ++){
+     for(x=0; x < SpielbrettBreite && *geloest == 0; x++){
+	 printf("speicherzugriffsfehler test 6 \n");
+		//for(y=0; y < SpielbrettHoehe; y ++){
+			printf("forschleifeninneres vor switch \n");			
+		for(y=0; y < SpielbrettHoehe && *geloest == 0; y++){
 			switch(param.spielbrett_array[x][y]){
 				case DarstellungBauer:
 					*geloest= berechneBauer(&param, x, y);
@@ -396,5 +409,6 @@ void spielbretter_berechne(spielbretter_t *bretter){
 		printf("Berechnet Spielbretter mit %d Spielfiguren \n", anzahlFiguren);
 		bretter->anzahlFiguren = anzahlFiguren;
         g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
+        printf("speicherzugriffsfehlertest ENDE");
     }
 }

@@ -27,7 +27,7 @@ int main(int argc, char ** argv){
 	AskParams(&options, argc, argv);
 	
 	
-	spielbretter_t *bretter = spielbretter_create();
+	spielbretter_t *bretter = spielbretter_create_figurenweise();
 	spielbretter_berechne(bretter);
 	spielbretter_destruct(bretter);
 	return EXIT_SUCCESS;	

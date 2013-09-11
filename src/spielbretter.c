@@ -46,7 +46,7 @@ Repräsentation der Spielfiguren auf dem Brett:
  * @param spielbrett *long long
  * @return bool
  */
-bool feldFrei(int* position, long long* spielbrett)
+static bool feldFrei(int* position, long long* spielbrett)
 {
 	return (((*spielbrett >> (*position * 3)) % 8) == DarstellungLeer);
 }
@@ -101,9 +101,31 @@ void spielbretterArrayDestruct(char** array, int hoehe)
 
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
- *
+ * für eine variable Spielbrettgröße.
+ * Hierbei wird figurenweise vorgegangen. Die Figuren werden auf die 
+ * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
+ * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
  */
-spielbretter_t* spielbretter_create()
+spielbretter_t* spielbretter_create_felderweise()
+{
+    /* Anzahl der Felder, über die iteriert werden muss */
+	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
+    
+    /* hält das Array von Pointern auf die verschiedenen Hashtables sowie die Anzahl der Figuren */
+	spielbretter_t *bretter;
+    
+    
+    return bretter;
+}
+
+/**
+ * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
+ * für eine variable Spielbrettgröße.
+ * Hierbei wird figurenweise vorgegangen. Die Figuren werden auf die 
+ * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
+ * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
+ */
+spielbretter_t* spielbretter_create_figurenweise()
 {
     
     /*Zähler für die anzahl der generierten Spielbretter*/
@@ -162,7 +184,7 @@ spielbretter_t* spielbretter_create()
 
 
 
-	/** Anzahl der Felder, über die iteriert werden muss */
+	/* Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
     printf("Anzahlfelder: %d \n",anzFelder);
 	spielbrett_Leer = 0;
@@ -180,9 +202,10 @@ spielbretter_t* spielbretter_create()
 	{	
 		anzFiguren_Dame = anzFiguren_Start;
         spielbrett_Dame = spielbrett_Leer;
-		/* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
+		
 		if(posDame<anzFelder)
 		{
+            /* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
             spielbrett_Dame +=  (DarstellungDame << posDame*3);
             anzFiguren_Dame ++; 
         }
@@ -279,8 +302,6 @@ spielbretter_t* spielbretter_create()
                                                                     anzFiguren_Turm2++;
                                                                 }
                                                                 
-                                                                //printf("debug g_hash_table_insert Turm2: %d AnzahlFiguren: %d\n", posTurm2, anzFiguren_Turm2);
-                                                                
                                                                 /* Iteration für den Bauer1 */
                                                                 for(posBauer1=0; posBauer1<=anzFelder; posBauer1++)
                                                                 {
@@ -294,7 +315,6 @@ spielbretter_t* spielbretter_create()
                                                                             anzFiguren_Bauer1++;
                                                                         }
                                                                     
-                                                                        //printf("debug g_hash_table_insert Bauer1: %d AnzahlFiguren: %d\n", posBauer1, anzFiguren_Bauer1);
                                                                         // Spart die innere Schleife bei zu wenigen Figuren, 
                                                                         // es können aber trotzdem Bretter mit einer Figur erstellt
 
@@ -316,9 +336,10 @@ spielbretter_t* spielbretter_create()
                                                                                 // aber trotzdem Bretter mit nur einer Figur.
                                                                                 g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2],(gpointer) spielbrett_Bauer2,(gpointer) 0 );
                                                                                 
-                                                                                //printf("Spielbrett hinzugefügt: %lo \n", spielbrett_Bauer2);
                                                                                 /* Zähler für die Statistik*/
                                                                                 zaehler_bretter++;
+                                                                                //Debugcode um jedes spielbrett auszugenben. Achtung macht vielllllll lansamer!
+                                                                                //printf("Zuletzt hinzugefügtes Spielbrett: %016llo \n", (unsigned long long) spielbrett_Bauer2);
                                                                             }
                                                                         } /* Schleife Bauer2 */
                                                                     }
@@ -349,15 +370,18 @@ spielbretter_t* spielbretter_create()
                         summe_anzahl = 0;
                         for(int tala = 0; tala <= 10; tala++)
                         {
-                            printf("Hashtablegröße für Anzahl: %d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
+                            printf("Hashtablegröße für Anzahl: %2d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
                             summe_anzahl += g_hash_table_size(bretter->spielbretterHashtables[tala]);
                         }
                         
                         printf("Neue Spielbretter in den Hashtabellen: %ld \n", summe_anzahl - summe_anzahl_vergleich);
+                        printf("Anteil der doppelt errechneten Bretter in Prozent : %f \n", ((((zaehler_bretter - zaehler_bretter_zwischenstand)-(summe_anzahl - summe_anzahl_vergleich))*100.0)/(zaehler_bretter - zaehler_bretter_zwischenstand)));
                         summe_anzahl_vergleich = summe_anzahl;
                         
-                         gettimeofday(&comp_time_1, NULL);
-                         zaehler_bretter_zwischenstand = zaehler_bretter;
+                        gettimeofday(&comp_time_1, NULL);
+                        zaehler_bretter_zwischenstand = zaehler_bretter;
+                        
+                        printf("Zuletzt hinzugefügtes Spielbrett: %016llo \n", (unsigned long long) spielbrett_Bauer2);
                     
                         printf("====================================================================== \n \n");
                         
@@ -378,12 +402,12 @@ spielbretter_t* spielbretter_create()
     summe_anzahl = 0;
 	for(int tala=0; tala <= 10; tala++)
 	{
-        printf("Hashtablegröße für Anzahl: %d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
+        printf("Hashtablegröße für Anzahl: %2d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
         summe_anzahl += g_hash_table_size(bretter->spielbretterHashtables[tala]);
 	}
     
     printf("Summe aller Bretter in den Hashtabellen: %ld\n",summe_anzahl);
-    printf("Anteil der doppelt errechneten Bretter in : %f\n", (((zaehler_bretter-summe_anzahl)*100.0)/zaehler_bretter));
+    printf("Anteil der doppelt errechneten Bretter in Prozent : %f\n", (((zaehler_bretter-summe_anzahl)*100.0)/zaehler_bretter));
     
 	return bretter;
 }

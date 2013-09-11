@@ -24,8 +24,21 @@ void spielbretter_berechne(spielbretter_t *bretter);
 
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
+ * Ist noch in Arbeit.
+ * Versuch die Spielbrett felderweise zu erzeugen, 
+ * um Mehrfacherzeugung zu vermeiden.
+ * 
  */
-spielbretter_t* spielbretter_create();
+spielbretter_t* spielbretter_create_felderweise();
+
+/**
+ * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
+ * für eine variable Spielbrettgröße.
+ * Hierbei wird figurenweise vorgegangen. Die Figuren werden auf die 
+ * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
+ * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
+ */
+spielbretter_t* spielbretter_create_figurenweise();
 
 
 /**

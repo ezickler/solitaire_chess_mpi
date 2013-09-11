@@ -38,6 +38,7 @@ Links-Oben 0:0 nach x:y
  *
  */
 int berechneBauer(figuren_param_t *param, int x, int y){
+	printf("Beginn berechneBauer x = %d y = %d \n",x,y);
 
 	
 	int pos = x+(y*SpielbrettBreite);
@@ -111,7 +112,7 @@ int berechneBauer(figuren_param_t *param, int x, int y){
 		}
 	}
 	
-	
+	printf("Ende berechneBauer x = %d y = %d \n",x,y);
 	return 0;    
 }
 
@@ -127,6 +128,7 @@ int berechneBauer(figuren_param_t *param, int x, int y){
  */
 int berechneTurm(figuren_param_t *param, int x, int y)
 {
+	printf("Beginn berechneTurm x = %d y = %d\n",x,y);
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
@@ -193,7 +195,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 		}
 	}
 	
-	
+	printf("Ende berechneTurm x = %d y = %d\n",x,y);
 	return 0;
 }
 
@@ -209,6 +211,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
  */
 int berechneLaeufer(figuren_param_t *param, int x, int y)
 {
+	printf("Beginn berechneLäufer x = %d y = %d\n",x,y);
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
@@ -265,6 +268,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 		}
 	}
 	
+	printf("Ende berechneLäufer x = %d y = %d\n",x,y);
 	return 0;
 }
 
@@ -280,6 +284,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
  */
 int berechneSpringer(figuren_param_t *param, int x, int y)
 {
+	printf("Beginn berechneSpringer x = %d y = %d\n",x,y);
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
@@ -412,7 +417,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		}
 	}
 	
-	
+	printf("Ende berechneSpringer x = %d y = %d\n",x,y);
 	return 0;    
 }
 
@@ -429,6 +434,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 int berechneKoenig(figuren_param_t *param, int x, int y)
 {
 
+	printf("Beginn berechneKönig x = %d y = %d\n",x,y);
 	int pos = x+(y*SpielbrettBreite);
 	int neue_pos;
 	long long neues_spielbrett;
@@ -506,7 +512,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		}
 	}
 	
-	
+	printf("Ende berechneKönig x = %d y = %d\n",x,y);
 	return 0; 
 }
 
@@ -522,16 +528,18 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
  */
 int berechneDame(figuren_param_t *param, int x, int y)
 {
+	printf("Beginn berechneDame x = %d y = %d\n",x,y);
 	
-	// Die Dame kann die gleichen zu wie ein Turm ausführen
+	// Die Dame kann die gleichen Züge wie ein Turm ausführen
 	if(berechneTurm(param, x, y) == 1){
 		return 1;
 	}
 	
-	// Die Dame kann die gleichen zu wie ein Läufer ausführen
+	// Die Dame kann die gleichen Züge wie ein Läufer ausführen
 	if(berechneLaeufer(param, x, y) == 1){
 		return 1;
 	}
 	
+	printf("Ende berechneDame x = %d y = %d\n",x,y);
 	return 0;
 }

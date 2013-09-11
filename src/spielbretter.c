@@ -189,7 +189,8 @@ spielbretter_t* spielbretter_create_figurenweise()
     printf("Anzahlfelder: %d \n",anzFelder);
 	spielbrett_Leer = 0;
 	bretter = malloc(sizeof(spielbretter_t));
-	anzFiguren_Start=0;
+	anzFiguren_Start = 0;
+	spielbrett_Bauer2 = 0;
 	
 	erzeugeHashtables(bretter);
 	
@@ -426,12 +427,15 @@ spielbretter_t* spielbretter_create_figurenweise()
  */
 static void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
 	printf("Beginn: spielbrettBerechne \n");
-	int *geloest = (int*) loesbar;
+	int geloest = (int) loesbar;
 	printf("speicherzugriffsfehler test 1 \n");
 	spielbretter_t *bretter = (spielbretter_t*) bretter_ptr;
 	printf("speicherzugriffsfehler test 2 \n");
     int x, y;
     figuren_param_t param;
+    long long spielbrett_test;
+    spielbrett_test = (long long) spielbrett;
+    printf("Spielbrett Oktal: %llo Wert (gelöst) %d  \n ", (unsigned long long) spielbrett_test, geloest);
     
     /*Kopieren des Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
@@ -444,43 +448,51 @@ static void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer b
 	 * einfacher für die Überprüfung der Spielbrettgrenzen*/
     for(x=0; x < SpielbrettBreite; x++){
         for(y=0; y < SpielbrettHoehe; y++){
-            param.spielbrett_array[x][y] = ((*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8);
-            printf("speicherzugriffsfehler test 5 forschleife x: %d  y: %d \n", x,y);
+			
+			param.spielbrett_array[x][y] = (spielbrett_test >> (x+(y*SpielbrettBreite) * 3)) % 8;
+            //param.spielbrett_array[x][y] = (*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8;
+            //printf("speicherzugriffsfehler test 6 forschleife x: %d  y: %d \n", x,y);
         }
     }
       
 	printf("arrayumrechnung fertig \n");
 	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
 	 * ein lösbares neues Spielbrett entsteht */
-	 //for(x=0; x < SpielbrettBreite; x ++){
-     for(x=0; x < SpielbrettBreite && *geloest == 0; x++){
-	 printf("speicherzugriffsfehler test 6 \n");
-		//for(y=0; y < SpielbrettHoehe; y ++){
-			printf("forschleifeninneres vor switch \n");			
-		for(y=0; y < SpielbrettHoehe && *geloest == 0; y++){
+     for(x=0; x < SpielbrettBreite && geloest == 0; x++){
+		printf("speicherzugriffsfehlertest 7 an x = %d \n", x);			
+		for(y=0; y < SpielbrettHoehe && geloest == 0; y++){
+			
+			printf("In der for-schleife an x = %d y = %d \n",x ,y);
 			switch(param.spielbrett_array[x][y]){
 				case DarstellungBauer:
-					*geloest= berechneBauer(&param, x, y);
+					printf("berechne Bauer an : x = %d  y = %d \n", x, y);
+					geloest= berechneBauer(&param, x, y);
 					break;
 				case DarstellungTurm:
-					*geloest = berechneTurm(&param, x, y);
+					printf("berechne Turm an : x = %d  y = %d \n", x, y);
+					geloest = berechneTurm(&param, x, y);
 					break;
 				case DarstellungLaeufer:
-					*geloest = berechneLaeufer(&param, x, y);
+					printf("berechne Läufer an : x = %d  y = %d \n", x, y);
+					geloest = berechneLaeufer(&param, x, y);
 					break;
 				case DarstellungSpringer:
-					*geloest = berechneSpringer(&param, x, y);
+					printf("berechne Springer an : x = %d  y = %d \n", x, y);
+					geloest = berechneSpringer(&param, x, y);
 					break;
 				case DarstellungKoenig:
-					*geloest = berechneKoenig(&param, x, y);
+					printf("berechne König an : x = %d  y = %d \n", x, y);
+					geloest = berechneKoenig(&param, x, y);
 					break;
 				case DarstellungDame:
-					*geloest = berechneDame(&param, x, y);
+					printf("berechne Dame an : x = %d  y = %d \n", x, y);
+					geloest = berechneDame(&param, x, y);
 					break;
 			}
 		}
 	}
 	
+	printf("berechne Figuren fertig = Ende switch \n");
 	//Spielbrett Array wird wieder freigegeben
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
 }

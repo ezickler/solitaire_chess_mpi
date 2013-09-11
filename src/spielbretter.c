@@ -46,7 +46,7 @@ Repräsentation der Spielfiguren auf dem Brett:
  * @param spielbrett *long long
  * @return bool
  */
-static bool feldFrei(int* position, long long* spielbrett)
+static inline bool feldFrei(int* position, long long* spielbrett)
 {
 	return (((*spielbrett >> (*position * 3)) % 8) == DarstellungLeer);
 }
@@ -54,8 +54,8 @@ static bool feldFrei(int* position, long long* spielbrett)
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
  */
- void erzeugeHashtables(spielbretter_t *bretter){
-	 printf("Beginn erzeugeHashtables\n");
+static void erzeugeHashtables(spielbretter_t *bretter){
+    printf("Beginn erzeugeHashtables\n");
 	int figurenAnzahl;
 	for(figurenAnzahl=0; figurenAnzahl<=10; figurenAnzahl++){
 		bretter->spielbretterHashtables[figurenAnzahl] = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -74,7 +74,7 @@ void spielbretter_destruct(spielbretter_t* bretter)
 /**
  * Alloziert das Array zum Zwischenspeichern des Brettes.
  */
-char** spielbretterArrayCreate(int hoehe, int breite)
+static char** spielbretterArrayCreate(int hoehe, int breite)
 {
 	int n;
 	char** tmp_array;
@@ -89,7 +89,7 @@ char** spielbretterArrayCreate(int hoehe, int breite)
 /**
  * Gibt den Speicher des zweidimensionalen Arrays frei.
  */
-void spielbretterArrayDestruct(char** array, int hoehe)
+static void spielbretterArrayDestruct(char** array, int hoehe)
 {
 	int n;
 	for(n = 0 ;n < hoehe;n ++)
@@ -424,7 +424,7 @@ spielbretter_t* spielbretter_create_figurenweise()
  * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
+static void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
 	printf("Beginn: spielbrettBerechne \n");
 	int *geloest = (int*) loesbar;
 	printf("speicherzugriffsfehler test 1 \n");

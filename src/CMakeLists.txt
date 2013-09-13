@@ -6,7 +6,7 @@ project(${PROJECT})
 FIND_PACKAGE(GTK2 REQUIRED)
 
 # Compiler definitions
-add_definitions(-O2 -pedantic -Wall -Wextra -std=c99)
+add_definitions(-O2 -g -pedantic -Wall -Wextra -std=c99)
 
 # Get source
 AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR} SOURCE)

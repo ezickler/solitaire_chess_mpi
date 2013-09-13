@@ -15,7 +15,7 @@ Links-Oben 0:0 nach x:y
   4, 5, 6, 7
   8, 9,10,11
  12,13,14,15
-
+g_direct_equal
 
 Repräsentation des Spielbrettbelegung in einem long long (64bit-integer)
 Pro Figur werden drei Bit benötigt.
@@ -49,6 +49,14 @@ Repräsentation der Spielfiguren auf dem Brett:
 static inline bool feldFrei(int* position, long long* spielbrett)
 {
 	return (((*spielbrett >> (*position * 3)) % 8) == DarstellungLeer);
+}
+
+/**
+ * 
+ */
+static void setzeLoesbar(gpointer key, gpointer value, gpointer hash_table)
+{
+     g_hash_table_replace((GHashTable*) hash_table, key,(gpointer) 1);
 }
 
 /**
@@ -106,17 +114,17 @@ static void spielbretterArrayDestruct(char** array, int hoehe)
  * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
  * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
  */
-spielbretter_t* spielbretter_create_felderweise()
-{
-    /* Anzahl der Felder, über die iteriert werden muss */
-	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
-    
-    /* hält das Array von Pointern auf die verschiedenen Hashtables sowie die Anzahl der Figuren */
-	spielbretter_t *bretter;
-    
-    
-    return bretter;
-}
+//~ spielbretter_t* spielbretter_create_felderweise()
+//~ {
+    //~ /* Anzahl der Felder, über die iteriert werden muss */
+	//~ //int anzFelder = SpielbrettBreite * SpielbrettHoehe;
+    //~ 
+    //~ /* hält das Array von Pointern auf die verschiedenen Hashtables sowie die Anzahl der Figuren */
+	//~ spielbretter_t *bretter;
+    //~ 
+    //~ 
+    //~ return bretter;
+//~ }
 
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
@@ -335,7 +343,7 @@ spielbretter_t* spielbretter_create_figurenweise()
                                                                                 // Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
                                                                                 // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
                                                                                 // aber trotzdem Bretter mit nur einer Figur.
-                                                                                g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2],(gpointer) spielbrett_Bauer2,(gpointer) 0 );
+                                                                                g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) spielbrett_Bauer2,(gpointer) 0 );
                                                                                 
                                                                                 /* Zähler für die Statistik*/
                                                                                 zaehler_bretter++;
@@ -394,6 +402,10 @@ spielbretter_t* spielbretter_create_figurenweise()
 	} /* Schleife Dame */
     
     
+    /* Setzen der Spielbrett mit einer Figur auf lösbar */
+    g_hash_table_foreach(bretter->spielbretterHashtables[1], setzeLoesbar, bretter->spielbretterHashtables[1]);
+    
+    
     gettimeofday(&comp_time, NULL);
     double time = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
 	printf("Berechnungszeit:    %f s \n", time);
@@ -426,36 +438,43 @@ spielbretter_t* spielbretter_create_figurenweise()
  * 
  */
 static void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer bretter_ptr ){
-	printf("Beginn: spielbrettBerechne \n");
+	
+    printf("\n===============================================\n");
 	int geloest = (int) loesbar;
-	printf("speicherzugriffsfehler test 1 \n");
 	spielbretter_t *bretter = (spielbretter_t*) bretter_ptr;
-	printf("speicherzugriffsfehler test 2 \n");
+
     int x, y;
     figuren_param_t param;
+    //TODO: dauerhaft nicht nut test
     long long spielbrett_test;
-    spielbrett_test = (long long) spielbrett;
-    printf("Spielbrett Oktal: %llo Wert (gelöst) %d  \n ", (unsigned long long) spielbrett_test, geloest);
+    spielbrett_test = ((long) spielbrett);
+    //printf("spielbrett gpointer: %016llo \n", spielbrett);
+    printf("Spielbrett mit %d Figuren. \n",bretter->anzahlFiguren);
+    printf("Spielbrett Oktal: %016llo Wert (gelöst) %d  \n", (unsigned long long) spielbrett_test, geloest);
     
-    /*Kopieren des Arrays */
+    
+    /*Kopieren des Spielbretter Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
-    printf("speicherzugriffsfehler test 3 \n");
-    
+
+    /* Speicher Allozieren für die Array darstellung des spiuelbrettes */
     param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
-    printf("speicherzugriffsfehler test 4 \n");
+
   
 	/* Berechnung der Arraydarstellung aus Oktaldarstellung
 	 * einfacher für die Überprüfung der Spielbrettgrenzen*/
-    for(x=0; x < SpielbrettBreite; x++){
-        for(y=0; y < SpielbrettHoehe; y++){
+    for(y=0; y < SpielbrettBreite; y++){
+        for(x=0; x < SpielbrettHoehe; x++){
 			
-			param.spielbrett_array[x][y] = (spielbrett_test >> (x+(y*SpielbrettBreite) * 3)) % 8;
+			param.spielbrett_array[x][y] = (spielbrett_test >> ((x+(y*SpielbrettBreite)) * 3)) % 8;
+            printf("%llo, um %d geshiftet\n",(spielbrett_test >> ((x+(y*SpielbrettBreite)) * 3)), ((x+(y*SpielbrettBreite)) * 3));
+            printf("%lld \n",(spielbrett_test >> ((x+(y*SpielbrettBreite)) * 3)) % 8);
             //param.spielbrett_array[x][y] = (*((long long*) spielbrett) >> (x+(y*SpielbrettBreite) * 3)) % 8;
             //printf("speicherzugriffsfehler test 6 forschleife x: %d  y: %d \n", x,y);
         }
+        printf("\n");
     }
       
-	printf("arrayumrechnung fertig \n");
+	
 	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
 	 * ein lösbares neues Spielbrett entsteht */
      for(x=0; x < SpielbrettBreite && geloest == 0; x++){
@@ -495,6 +514,7 @@ static void spielbrettBerechne(gpointer spielbrett, gpointer loesbar, gpointer b
 	printf("berechne Figuren fertig = Ende switch \n");
 	//Spielbrett Array wird wieder freigegeben
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
+    printf("\n===============================================\n");
 }
 
 

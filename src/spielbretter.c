@@ -454,15 +454,18 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
     
     /* Param Stuct für den Aufruf der Spielfigurenberechnung */
     figuren_param_t param;
-    /*Kopieren des Spielbretter Arrays */
+    /* Kopieren des Spielbretter Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
     /* Kopiere anzahlfiguren von bretter nach param */
     param.anzahlFiguren = bretter->anzahlFiguren;
+    /* Pointer auf spielbrett in prama speichern */
+    param.spielbrett = &spielbrett;
+    
     
     /* Zähler Variablen für die for-Scheifen */
     int x, y;
     
-
+    
     /* Speicher Allozieren für die Array darstellung des spiuelbrettes */
     param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
 
@@ -540,6 +543,5 @@ void spielbretter_berechne(spielbretter_t *bretter){
 		printf("Berechnet Spielbretter mit %d Spielfiguren \n", anzahlFiguren);
 		bretter->anzahlFiguren = anzahlFiguren;
         g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
-        printf("speicherzugriffsfehlertest ENDE");
     }
 }

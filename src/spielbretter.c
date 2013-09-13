@@ -52,7 +52,8 @@ static inline bool feldFrei(int* position, long long* spielbrett)
 }
 
 /**
- * 
+ * Hilfsmethode um  Spielbretter mit einer Figur als loebar zu initialisieren.
+ * Sigantur nach GHfunc glib 
  */
 static void setzeLoesbar(gpointer key, gpointer value, gpointer hash_table)
 {
@@ -62,7 +63,7 @@ static void setzeLoesbar(gpointer key, gpointer value, gpointer hash_table)
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
  */
-static void erzeugeHashtables(spielbretter_t *bretter){
+static inline void erzeugeHashtables(spielbretter_t *bretter){
     printf("Beginn erzeugeHashtables\n");
 	int figurenAnzahl;
 	for(figurenAnzahl=0; figurenAnzahl<=10; figurenAnzahl++){
@@ -82,7 +83,7 @@ void spielbretter_destruct(spielbretter_t* bretter)
 /**
  * Alloziert das Array zum Zwischenspeichern des Brettes.
  */
-static char** spielbretterArrayCreate(int hoehe, int breite)
+static inline char** spielbretterArrayCreate(int hoehe, int breite)
 {
 	int n;
 	char** tmp_array;
@@ -97,7 +98,7 @@ static char** spielbretterArrayCreate(int hoehe, int breite)
 /**
  * Gibt den Speicher des zweidimensionalen Arrays frei.
  */
-static void spielbretterArrayDestruct(char** array, int hoehe)
+static inline void spielbretterArrayDestruct(char** array, int hoehe)
 {
 	int n;
 	for(n = 0 ;n < hoehe;n ++)
@@ -451,7 +452,7 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
     /* Casten auf den richtigen Typen */
     spielbretter_t *bretter = (spielbretter_t*) bretter_ptr;
     
-    /* Param Stuct für den aufruf der Spielfiguren berechnung */
+    /* Param Stuct für den Aufruf der Spielfigurenberechnung */
     figuren_param_t param;
     /*Kopieren des Spielbretter Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);

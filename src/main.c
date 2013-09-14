@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
     
 	spielbretter_berechne(bretter);
   
-    printf("Es es sind %d von %d Spielbretter lösbar. \n", bretter->loesbareBretterGesamt, bretter->anzahlBretterGesamt);
+    printf("Es es sind %ld von %ld Spielbretter lösbar. \n", bretter->loesbareBretterGesamt, bretter->anzahlBretterGesamt);
     
 	spielbretter_destruct(bretter);
 	return EXIT_SUCCESS;	

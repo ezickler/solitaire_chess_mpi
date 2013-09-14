@@ -3,17 +3,17 @@
 
 #include <glib-2.0/glib.h>
 #include "askparam.h"
-#define DarstellungLeer	    0 //TODO: spielfiguren_Leer ?
-#define DarstellungBauer    1
-#define	DarstellungTurm	    2
-#define DarstellungLaeufer  3
-#define DarstellungSpringer 4
-#define DarstellungKoenig   5
-#define DarstellungDame     6
+#define DarstellungLeer	    0x0LL
+#define DarstellungBauer    0x1LL
+#define	DarstellungTurm	    0x2LL
+#define DarstellungLaeufer  0x3LL
+#define DarstellungSpringer 0x4LL
+#define DarstellungKoenig   0x5LL
+#define DarstellungDame     0x6LL
 
-#define SpielbrettBreite	option.spielbrettBreite //TODO: evtl streichen und für lesbarkeit options.b im code verwenden
+#define SpielbrettBreite	option.spielbrettBreite
 #define SpielbrettHoehe		option.spielbrettHoehe
-#define SpielfelderAnzahl  16 //TODO in define, rechnung aus anderen defines möglich, SpielbrettBreite*SpielbrettHoehe
+#define SpielfelderAnzahl   option.spielbrettBreite * option.spielbrettHoehe
 
 typedef struct figuren_param{
 	char **spielbrett_array; 

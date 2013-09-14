@@ -17,7 +17,6 @@ include_directories(${GTK2_INCLUDE_DIRS})
 # Add executable
 add_executable(${PROJECT} ${SOURCE})
 target_link_libraries(${PROJECT} glib-2.0)
-target_link_libraries(${PROJECT} m)
 
 # Install
 install(TARGETS ${PROJECT} DESTINATION bin)

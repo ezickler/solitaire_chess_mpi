@@ -57,7 +57,7 @@ static inline bool feldFrei(int* position, long long* spielbrett)
  */
 static void setzeLoesbar(gpointer key, gpointer value, gpointer hash_table)
 {
-     g_hash_table_replace((GHashTable*) hash_table, key,(gpointer) 1);
+    g_hash_table_replace((GHashTable*) hash_table, key,(gpointer) 1);
 }
 
 /**
@@ -156,8 +156,7 @@ spielbretter_t* spielbretter_create_figurenweise()
     gettimeofday(&comp_time_1, NULL); 
       
 	
-	//TODO: Spielbretter mit einer Figur in Hashtable als gelöst abspeichern!
-	printf("Beginn spielbretter_create\n");
+
 	/* Spielbrettvariablen, für die verschiedenen Ebenen der for-Schleifen, 
 	 * da jede Schleife eigene lokale Variablen braucht, um Überschreiben zu verhindern
 	 * Alternative: Zurückrechnen, am Ende der jeweiligen Schleife - aufwendiger */
@@ -442,7 +441,7 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
 {
     
     /* Casten des values aus der Hashtabelle auf den Richtigen Typen */
-	int loesbar = (int) loesbar_ptr;
+	long loesbar = (long) loesbar_ptr;
     
     /* Casten des Spielbretts aus der Hashtabelle auf den Richtigen Typen */
     long long spielbrett;
@@ -554,7 +553,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         double time_zwischenstand = (comp_time_2.tv_sec - comp_time_1.tv_sec) + (comp_time_2.tv_usec - comp_time_1.tv_usec) * 1e-6 ;
         printf("Aktuelle Laufzeit: %f \n",(comp_time_2.tv_sec - start_time.tv_sec) + (comp_time_2.tv_usec - start_time.tv_usec) * 1e-6 );
         printf("Berechnungszeit:    %f s \n", time_zwischenstand);
-        printf("Lösbare Bretter: %d von %d\n", (bretter->loesbareBretterGesamt-loesbareBretterTmp), g_hash_table_size(bretter->spielbretterHashtables[anzahlFiguren]));
+        printf("Lösbare Bretter: %ld von %d\n", (bretter->loesbareBretterGesamt-loesbareBretterTmp), g_hash_table_size(bretter->spielbretterHashtables[anzahlFiguren]));
         gettimeofday(&comp_time_1, NULL);
         
          printf("====================================================================== \n \n");

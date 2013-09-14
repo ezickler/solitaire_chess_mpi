@@ -76,21 +76,20 @@ static inline void erzeugeHashtables(spielbretter_t *bretter){
  */
 void spielbretter_destruct(spielbretter_t* bretter)
 {
-	printf("Beginn spielbretter_destruct\n");
 	free(bretter);
 }
 
 /**
  * Alloziert das Array zum Zwischenspeichern des Brettes.
  */
-static inline char** spielbretterArrayCreate(int hoehe, int breite)
+static inline char** spielbretterArrayCreate(int breite, int hoehe )
 {
 	int n;
 	char** tmp_array;
-	tmp_array = calloc(hoehe, sizeof(char*));
-	for(n = 0; n < hoehe; n++)
+	tmp_array = calloc(breite, sizeof(char*));
+	for(n = 0; n < breite; n++)
 	{
-		tmp_array[n] = calloc(breite, sizeof(char));
+		tmp_array[n] = calloc(hoehe, sizeof(char));
 	}
 	return tmp_array;
 }
@@ -98,10 +97,10 @@ static inline char** spielbretterArrayCreate(int hoehe, int breite)
 /**
  * Gibt den Speicher des zweidimensionalen Arrays frei.
  */
-static inline void spielbretterArrayDestruct(char** array, int hoehe)
+static inline void spielbretterArrayDestruct(char** array, int breite)
 {
 	int n;
-	for(n = 0 ;n < hoehe;n ++)
+	for(n = 0 ;n < breite;n ++)
 	{
 	 free(array[n]);
 	}
@@ -195,7 +194,6 @@ spielbretter_t* spielbretter_create_figurenweise()
 
 	/* Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
-    printf("Anzahlfelder: %d \n",anzFelder);
 	spielbrett_Leer = 0;
 	bretter = malloc(sizeof(spielbretter_t));
 	anzFiguren_Start = 0;
@@ -411,7 +409,7 @@ spielbretter_t* spielbretter_create_figurenweise()
     double time = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
 	printf("Berechnungszeit:    %f s \n", time);
     printf("Errechnete Spielbretter: %ld \n", zaehler_bretter);
-    printf("Bretter / Sekunde: %f \n", (zaehler_bretter /time) );
+    printf("Bretter / Sekunde: %f \n", (zaehler_bretter / time) );
     
     summe_anzahl = 0;
 	for(int tala=0; tala <= 10; tala++)
@@ -419,6 +417,8 @@ spielbretter_t* spielbretter_create_figurenweise()
         printf("Hashtablegröße für Anzahl: %2d = %d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
         summe_anzahl += g_hash_table_size(bretter->spielbretterHashtables[tala]);
 	}
+    
+    bretter->anzahlBretterGesamt = summe_anzahl;
     
     printf("Summe aller Bretter in den Hashtabellen: %ld\n",summe_anzahl);
     printf("Anteil der doppelt errechneten Bretter in Prozent : %f\n", (((zaehler_bretter-summe_anzahl)*100.0)/zaehler_bretter));
@@ -438,9 +438,8 @@ spielbretter_t* spielbretter_create_figurenweise()
  * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gpointer bretter_ptr ){
-	
-    printf("\n===============================================\n");
+static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gpointer bretter_ptr )
+{
     
     /* Casten des values aus der Hashtabelle auf den Richtigen Typen */
 	int loesbar = (int) loesbar_ptr;
@@ -466,51 +465,42 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
     int x, y;
     
     
-    /* Speicher Allozieren für die Array darstellung des spiuelbrettes */
-    param.spielbrett_array = spielbretterArrayCreate(SpielbrettHoehe, SpielbrettBreite);
+    /* Speicher allozieren für die Arraydarstellung des Spielbrettes */
+    param.spielbrett_array = spielbretterArrayCreate(SpielbrettBreite, SpielbrettHoehe);
+    
 
   
 	/* Berechnung der Arraydarstellung aus Oktaldarstellung
 	 * einfacher für die Überprüfung der Spielbrettgrenzen*/
-    printf("\nSpielbrett als Array \n");
-    for(y=0; y < SpielbrettBreite; y++)
+    for(x=0; x < SpielbrettBreite; x++)
     {
-        for(x=0; x < SpielbrettHoehe; x++)
-        {
+        for(y=0; y < SpielbrettHoehe; y++)
+        {   
 			param.spielbrett_array[x][y] = (spielbrett >> ((x+(y*SpielbrettBreite)) * 3)) % 8;
-            printf("%lld",(spielbrett >> ((x+(y*SpielbrettBreite)) * 3)) % 8);
         }
-        printf("\n");
     }
-    printf("\n");
-	
+    
 	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
 	 * ein lösbares neues Spielbrett entsteht */
      for(x=0; x < SpielbrettBreite && loesbar == 0; x++){
-		for(y=0; y < SpielbrettHoehe && loesbar == 0; y++){
+		for(y=0; y < SpielbrettHoehe && loesbar == 0; y++){   
 			switch(param.spielbrett_array[x][y]){
 				case DarstellungBauer:
-					printf("berechne Bauer an : x = %d  y = %d \n", x, y);
 					loesbar= berechneBauer(&param, x, y);
 					break;
 				case DarstellungTurm:
-					printf("berechne Turm an : x = %d  y = %d \n", x, y);
 					loesbar = berechneTurm(&param, x, y);
 					break;
 				case DarstellungLaeufer:
-					printf("berechne Läufer an : x = %d  y = %d \n", x, y);
 					loesbar = berechneLaeufer(&param, x, y);
 					break;
 				case DarstellungSpringer:
-					printf("berechne Springer an : x = %d  y = %d \n", x, y);
 					loesbar = berechneSpringer(&param, x, y);
 					break;
 				case DarstellungKoenig:
-					printf("berechne König an : x = %d  y = %d \n", x, y);
 					loesbar = berechneKoenig(&param, x, y);
 					break;
 				case DarstellungDame:
-					printf("berechne Dame an : x = %d  y = %d \n", x, y);
 					loesbar = berechneDame(&param, x, y);
 					break;
 			}
@@ -520,14 +510,12 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
     /* In der Hashtabelle speicher, wenn ein Spielbrett loesbar ist */
     if(loesbar==1)
     {
-        g_hash_table_replace(bretter->spielbretterHashtables[bretter->anzahlFiguren], (gpointer) spielbrett, (gpointer) loesbar);   
+        g_hash_table_replace(bretter->spielbretterHashtables[bretter->anzahlFiguren], (gpointer) spielbrett, (gpointer) loesbar);
+        bretter->loesbareBretterGesamt ++;
     }
-
-
-	printf("berechne Figuren fertig = Ende switch \n");
-	//Spielbrett Array wird wieder freigegeben
-	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettHoehe);
-    printf("\n===============================================\n");
+    
+	/*Spielbrett Array wird wieder freigegeben*/
+	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettBreite);
 }
 
 
@@ -535,13 +523,45 @@ static void spielbrettBerechne(gpointer spielbrett_ptr, gpointer loesbar_ptr, gp
  * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
  *
  */
-void spielbretter_berechne(spielbretter_t *bretter){
-	printf("Beginn spielbretter_berechne\n");
+void spielbretter_berechne(spielbretter_t *bretter)
+{
+    /* time measurement variables */
+    struct timeval start_time;       /* time when program started                      */
+    struct timeval comp_time;        /* time when calculation completed                */
+    struct timeval comp_time_1;      /* zeit vom letzten zwischenstand */
+    struct timeval comp_time_2;      /* vergleichszeit beim aktuellen zwischenstand */
+    
+    gettimeofday(&start_time, NULL); /* Starte Zeitmessung */
+    gettimeofday(&comp_time_1, NULL); 
+    
+    
+    printf("Beginn spielbretter_berechne\n");
+    
     int anzahlFiguren;
+    bretter->loesbareBretterGesamt = 0;
+    long loesbareBretterTmp =0;
     /* Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)*/
-    for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++){
-		printf("Berechnet Spielbretter mit %d Spielfiguren \n", anzahlFiguren);
+    for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++)
+    {
+        printf("\n====================================================================== \n");
+        printf("Berechne Spielbretter mit %2d Figuren \n", anzahlFiguren);
+        
 		bretter->anzahlFiguren = anzahlFiguren;
+        loesbareBretterTmp = bretter->loesbareBretterGesamt;
         g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
+        
+        gettimeofday(&comp_time_2, NULL);
+        double time_zwischenstand = (comp_time_2.tv_sec - comp_time_1.tv_sec) + (comp_time_2.tv_usec - comp_time_1.tv_usec) * 1e-6 ;
+        printf("Aktuelle Laufzeit: %f \n",(comp_time_2.tv_sec - start_time.tv_sec) + (comp_time_2.tv_usec - start_time.tv_usec) * 1e-6 );
+        printf("Berechnungszeit:    %f s \n", time_zwischenstand);
+        printf("Lösbare Bretter: %d von %d\n", (bretter->loesbareBretterGesamt-loesbareBretterTmp), g_hash_table_size(bretter->spielbretterHashtables[anzahlFiguren]));
+        gettimeofday(&comp_time_1, NULL);
+        
+         printf("====================================================================== \n \n");
     }
+    
+    gettimeofday(&comp_time, NULL); /* Stoppe Zeitmessung */
+    double time = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
+	printf("Berechnungszeit:    %f s \n", time);
+
 }

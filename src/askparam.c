@@ -1,7 +1,7 @@
 #include "askparam.h" 
 
 
-void AskParams( struct options* options, int argc, char** argv )
+void AskParams(options_t* option, int argc, char** argv )
 {
 	printf ( "\n");
 	printf ( "===============================================================\n" );
@@ -31,9 +31,9 @@ void AskParams( struct options* options, int argc, char** argv )
 		
 	if(argc == 5)
 	{
-		sscanf( argv[1],"%d", &(options->num ));
-		sscanf( argv[2],"%d", &(options->method));
-		sscanf( argv[3],"%d", &(options->spielbrettBreite));
-		sscanf( argv[4],"%d", &(options->spielbrettHoehe));
+		sscanf( argv[1],"%d", &(option->num ));
+		sscanf( argv[2],"%d", &(option->method));
+		sscanf( argv[3],"%d", &(option->spielbrettBreite));
+		sscanf( argv[4],"%d", &(option->spielbrettHoehe));
 	}
 }

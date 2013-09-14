@@ -11,8 +11,8 @@
 #define DarstellungKoenig   5
 #define DarstellungDame     6
 
-#define SpielbrettBreite	options.spielbrettBreite //TODO: evtl streichen und für lesbarkeit options.b im code verwenden
-#define SpielbrettHoehe		options.spielbrettHoehe
+#define SpielbrettBreite	option.spielbrettBreite //TODO: evtl streichen und für lesbarkeit options.b im code verwenden
+#define SpielbrettHoehe		option.spielbrettHoehe
 #define SpielfelderAnzahl  16 //TODO in define, rechnung aus anderen defines möglich, SpielbrettBreite*SpielbrettHoehe
 
 typedef struct figuren_param{

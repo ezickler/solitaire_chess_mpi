@@ -14,6 +14,7 @@
 
 
 
+
 /**
  *
  * @param argc
@@ -22,13 +23,16 @@
  */
 int main(int argc, char ** argv){
 	
-	//struct options options;
+    
+	AskParams(&option, argc, argv);
 	
-	AskParams(&options, argc, argv);
-	
-	
+    
 	spielbretter_t *bretter = spielbretter_create_figurenweise();
+    
 	spielbretter_berechne(bretter);
+  
+    printf("Es es sind %d von %d Spielbretter lösbar. \n", bretter->loesbareBretterGesamt, bretter->anzahlBretterGesamt);
+    
 	spielbretter_destruct(bretter);
 	return EXIT_SUCCESS;	
 }

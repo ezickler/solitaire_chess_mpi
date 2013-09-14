@@ -11,6 +11,12 @@ typedef struct spielbretter
 	
 	/* Anzahl der Figuren auf dem Spielbrett*/
 	int anzahlFiguren;
+    
+    /* Anzahl der Bretter */
+    long anzahlBretterGesamt;
+    
+    /* Anzahl loesbarer Bretter insgesammt */
+    long loesbareBretterGesamt;
 	
 }spielbretter_t;
 

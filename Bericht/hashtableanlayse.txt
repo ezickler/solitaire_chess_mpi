@@ -1,0 +1,124 @@
+./solitaire 12 0 2 3
+
+Berechnungszeit:    2.220033 s 
+Errechnete Spielbretter: 30118144 
+Bretter / Sekunde: 13566529.866898 
+Hashtablegröße für Anzahl: 0 = 1 
+Hashtablegröße für Anzahl: 1 = 36 
+Hashtablegröße für Anzahl: 2 = 510 
+Hashtablegröße für Anzahl: 3 = 3600 
+Hashtablegröße für Anzahl: 4 = 13140 
+Hashtablegröße für Anzahl: 5 = 23040 
+Hashtablegröße für Anzahl: 6 = 14760 
+Hashtablegröße für Anzahl: 7 = 0 
+Hashtablegröße für Anzahl: 8 = 0 
+Hashtablegröße für Anzahl: 9 = 0 
+Hashtablegröße für Anzahl: 10 = 0 
+
+
+./solitaire 12 0 2 2
+
+Berechnungszeit:    0.050712 s 
+Errechnete Spielbretter: 1265625 
+Bretter / Sekunde: 24957110.743019 
+Hashtablegröße für Anzahl: 0 = 1 
+Hashtablegröße für Anzahl: 1 = 24 
+Hashtablegröße für Anzahl: 2 = 204 
+Hashtablegröße für Anzahl: 3 = 720 
+Hashtablegröße für Anzahl: 4 = 876 
+Hashtablegröße für Anzahl: 5 = 0 
+Hashtablegröße für Anzahl: 6 = 0 
+Hashtablegröße für Anzahl: 7 = 0 
+Hashtablegröße für Anzahl: 8 = 0 
+Hashtablegröße für Anzahl: 9 = 0 
+Hashtablegröße für Anzahl: 10 = 0 
+
+
+./solitaire 12 0 2 5
+
+Berechnungszeit:    8649.970911 s 
+Errechnete Spielbretter: -1999024240     // ca. 2295678123
+Bretter / Sekunde: 265427.835495 
+Hashtablegröße für Anzahl: 0 = 1 
+Hashtablegröße für Anzahl: 1 = 60 
+Hashtablegröße für Anzahl: 2 = 1530 
+Hashtablegröße für Anzahl: 3 = 21600 
+Hashtablegröße für Anzahl: 4 = 183960 
+Hashtablegröße für Anzahl: 5 = 967680 
+Hashtablegröße für Anzahl: 6 = 3099600 
+Hashtablegröße für Anzahl: 7 = 5745600 
+Hashtablegröße für Anzahl: 8 = 5556600 
+Hashtablegröße für Anzahl: 9 = 2268000 
+Hashtablegröße für Anzahl: 10 = 226800 
+Summe aller Bretter in den Hashtabellen: 18071431
+
+
+
+./solitaire 12 0 4 4 (abgebrochen)
+ca. 1gb ram
+
+posDame: 0 	 posKoenig: 6 	 posSpringer1: 4 
+Aktuelle Laufzeit: 42621.554770 
+Berechnungszeit für den letzten Springer1:    1268.853943 s 
+Errechnete Spielbretter seit letztem Springer1: 50142078 
+Bretter / Sekunde: 39517.612154 
+Hashtablegröße für Anzahl: 0 = 0 
+Hashtablegröße für Anzahl: 1 = 1 
+Hashtablegröße für Anzahl: 2 = 53 
+Hashtablegröße für Anzahl: 3 = 1256 
+Hashtablegröße für Anzahl: 4 = 17208 
+Hashtablegröße für Anzahl: 5 = 151191 
+Hashtablegröße für Anzahl: 6 = 894863 
+Hashtablegröße für Anzahl: 7 = 3661609 
+Hashtablegröße für Anzahl: 8 = 10460057 
+Hashtablegröße für Anzahl: 9 = 20763671 
+Hashtablegröße für Anzahl: 10 = 24948071 
+
+
+./solitaire 12 0 3 4
+Berechnungszeit:    7369.227657 s 
+Errechnete Spielbretter: 185340366 
+Bretter / Sekunde: 25150.582208 
+Hashtablegröße für Anzahl:  0 = 1 
+Hashtablegröße für Anzahl:  1 = 64 
+Hashtablegröße für Anzahl:  2 = 1746 
+Hashtablegröße für Anzahl:  3 = 26809 
+Hashtablegröße für Anzahl:  4 = 256558 
+Hashtablegröße für Anzahl:  5 = 1603617 
+Hashtablegröße für Anzahl:  6 = 6697092 
+Hashtablegröße für Anzahl:  7 = 18874182 
+Hashtablegröße für Anzahl:  8 = 35735601 
+Hashtablegröße für Anzahl:  9 = 43154352 
+Hashtablegröße für Anzahl: 10 = 25255740 
+Summe aller Bretter in den Hashtabellen: 131605762
+Anteil der doppelt errechneten Bretter in Prozent : 28.992391
+
+
+./solitaire 12 0 4 4 (abgebrochen)
+ca. 16gb ram
+
+posDame: 1 	 posKoenig: 2 	 posSpringer1: 7 
+Aktuelle Laufzeit: 58005.087947 
+Berechnungszeit für den letzten Springer1:    366.210323 s 
+Errechnete Spielbretter seit letztem Springer1: 1813134 
+Bretter / Sekunde: 4951.072884 
+Hashtablegröße für Anzahl:  0 = 0 
+Hashtablegröße für Anzahl:  1 = 1 
+Hashtablegröße für Anzahl:  2 = 76 
+Hashtablegröße für Anzahl:  3 = 2582 
+Hashtablegröße für Anzahl:  4 = 50893 
+Hashtablegröße für Anzahl:  5 = 634380 
+Hashtablegröße für Anzahl:  6 = 5147670 
+Hashtablegröße für Anzahl:  7 = 26990700 
+Hashtablegröße für Anzahl:  8 = 87784290 
+Hashtablegröße für Anzahl:  9 = 160011720 
+Hashtablegröße für Anzahl: 10 = 126320040 
+Neue Spielbretter in den Hashtabellen: 1813134 
+Anteil der doppelt errechneten Bretter in Prozent : 0.000000 
+Zuletzt hinzugefügtes Spielbrett: 0000000040000560 
+
+
+
+
+
+

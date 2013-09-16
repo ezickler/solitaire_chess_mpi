@@ -1,0 +1,34 @@
+Bei einem Durchlauf ohne Speicherung der Spielbretter ergibt sich folgende Verteilung der Spielbretter.
+Errechnet in 38 sec auf einem CPU Kern.
+
+Errechnete Spielbretter: 6684411697 
+
+Errechnete Bretter posDame =  0:  371288056 
+Errechnete Bretter posDame =  1:  371288056 
+Errechnete Bretter posDame =  2:  371288056 
+Errechnete Bretter posDame =  3:  371288056 
+Errechnete Bretter posDame =  4:  371288056 
+Errechnete Bretter posDame =  5:  371288056 
+Errechnete Bretter posDame =  6:  371288056 
+Errechnete Bretter posDame =  7:  371288056 
+Errechnete Bretter posDame =  8:  371288056 
+Errechnete Bretter posDame =  9:  371288056 
+Errechnete Bretter posDame = 10:  371288056 
+Errechnete Bretter posDame = 11:  371288056 
+Errechnete Bretter posDame = 12:  371288056 
+Errechnete Bretter posDame = 13:  371288056 
+Errechnete Bretter posDame = 14:  371288056 
+Errechnete Bretter posDame = 15:  371288056 
+Errechnete Bretter posDame = 16:  743802801
+
+Hashtablegröße für Anzahl:  0 =          1 
+Hashtablegröße für Anzahl:  1 =         96 
+Hashtablegröße für Anzahl:  2 =       4080 
+Hashtablegröße für Anzahl:  3 =     100800 
+Hashtablegröße für Anzahl:  4 =    1594320 
+Hashtablegröße für Anzahl:  5 =   16773120 
+Hashtablegröße für Anzahl:  6 =  118198080 
+Hashtablegröße für Anzahl:  7 =  547747200 
+Hashtablegröße für Anzahl:  8 = 1589187600 
+Hashtablegröße für Anzahl:  9 = 2594592000 
+Hashtablegröße für Anzahl: 10 = 1816214400 

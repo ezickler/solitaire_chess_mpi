@@ -5,8 +5,15 @@ project(${PROJECT})
 # Include glib
 FIND_PACKAGE(GTK2 REQUIRED)
 
+FIND_PACKAGE(OpenMP) 
+
+if (OPENMP_FOUND)
+     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}") 
+endif()
+
 # Compiler definitions
-add_definitions(-O2 -g -pedantic -Wall -Wextra -std=c99)
+add_definitions(-O2 -g -pedantic -Wall -Wextra -fopenmp -std=c99)
 
 # Get source
 AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR} SOURCE)

@@ -8,8 +8,11 @@ typedef struct spielbretter
 	 * Die Felder 0 und 1 werden nicht benutzt.
 	 */  
 	GHashTable* spielbretterHashtables[11]; 
-	
     
+    /* MPI Prozessanzahl und Przessnummer */
+    int prozessNummer;
+    int anzahlProzesse;
+	
     /* Anzahl der Bretter */
     long anzahlBretter[11];
     long anzahlBretterGesamt;
@@ -17,6 +20,10 @@ typedef struct spielbretter
     /* Anzahl loesbarer Bretter insgesammt */
     long loesbareBretter[11];
     long loesbareBretterGesamt;
+    
+    /* Zeiten zum lösen der Spielbretter */
+    double berechnungsZeit[11];
+    double berechnungsZeitGesamt;
 	
 }spielbretter_t;
 
@@ -36,7 +43,7 @@ void spielbretter_berechne_alt(spielbretter_t *bretter);
  * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
  * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
  */
-spielbretter_t* spielbretter_berechne();
+void spielbretter_berechne(spielbretter_t *bretter);
 
 
 /**

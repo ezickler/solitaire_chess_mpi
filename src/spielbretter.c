@@ -53,14 +53,6 @@ static inline bool feldFrei(int* position, sp_okt_t* spielbrett)
 	return (((*spielbrett >> (*position * 3)) % 8) == DarstellungLeer);
 }
 
-/**
- * Hilfsmethode um  Spielbretter mit einer Figur als loebar zu initialisieren.
- * Sigantur nach GHfunc glib 
- */
-static void setzeLoesbar(gpointer key, gpointer value, gpointer hash_table)
-{
-    g_hash_table_replace((GHashTable*) hash_table, key,(gpointer) 1);
-}
 
 /**
  * Erzeugt die Hashtabellen zur Speicherung der Spielbretter.
@@ -74,13 +66,6 @@ static inline void erzeugeHashtables(spielbretter_t *bretter)
 	}
 }
 
-/**
- * Gibt den Speicher des Parameters frei.
- */
-void spielbretter_destruct(spielbretter_t* bretter)
-{
-	free(bretter);
-}
 
 /**
  * Alloziert das Array zum Zwischenspeichern des Brettes.
@@ -240,36 +225,25 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
  * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
  * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
  */
-spielbretter_t* spielbretter_berechne()
+void spielbretter_berechne(spielbretter_t *bretter)
 {
     
     /*Zähler für die anzahl der generierten Spielbretter*/
-    long zaehler_bretter_figuren;
-    long zaehler_bretter[11];
-    for (int x = 0; x<11; x++)
-    {
-        zaehler_bretter[x]=0;
-    }
     long zaehler_bretter_gesamt = 0;
-    long zaehler_bretter_zwischenstand = 0;
+    long zaehler_bretter_figuren; /* Zaehlt wie viel spielbretter für eine bestimmte figuren anzahl erstellt werden */
     
-    long zaehler_bretter_dame_zwischenstand = 0;
-    
-    /*Zähler für die anzahl der verschiedenen Bretter in den Hashtabellen*/
-    long summe_anzahl_vergleich = 0;
-    long summe_anzahl = 0;
-    
-    
+
     /* time measurement variables */
     struct timeval start_time;       /* time when program started                      */
     struct timeval comp_time;        /* time when calculation completed                */
-    struct timeval comp_time_1;      /* zeit vom letzten zwischenstand */
-    struct timeval comp_time_2;      /* vergleichszeit beim aktuellen zwischenstand */
+    struct timeval start_time_figur;      /* start zeit figuren durchlauf */
+    struct timeval comp_time_figur;      /* endzeit vom figurenduchlauf */
     
-    
-    gettimeofday(&start_time, NULL);
-    gettimeofday(&comp_time_1, NULL); 
-      
+    if(bretter->prozessNummer == 0)
+    {
+        gettimeofday(&start_time, NULL);
+        gettimeofday(&start_time_figur, NULL); 
+    }
 	
 
 	/* Spielbrettvariablen, für die verschiedenen Ebenen der for-Schleifen, 
@@ -293,16 +267,13 @@ spielbretter_t* spielbretter_berechne()
 		anzFiguren_Turm1, anzFiguren_Turm2,
 		anzFiguren_Bauer1, anzFiguren_Bauer2;
 		
-		
-	/* hält das Array von Pointern auf die verschiedenen Hashtables sowie die Anzahl der Figuren */
-	spielbretter_t *bretter;
+
 
 
 
 	/* Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
 	spielbrett_Leer = 0;
-	bretter = malloc(sizeof(spielbretter_t));
 	anzFiguren_Start = 0;
 	spielbrett_Bauer2 = 0;
 	
@@ -310,7 +281,7 @@ spielbretter_t* spielbretter_berechne()
     /* erzeuge Hashtabellen */
 	erzeugeHashtables(bretter);
     
-    
+    /* Spielbretter mit einer figur erzeugen */
 	spielbretterErzeugung1Figur(bretter);
         
     
@@ -326,9 +297,6 @@ spielbretter_t* spielbretter_berechne()
          
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
-            
-            zaehler_bretter_dame_zwischenstand = zaehler_bretter_gesamt;
-            
             anzFiguren_Dame = anzFiguren_Start;
             spielbrett_Dame = spielbrett_Leer;
             
@@ -500,10 +468,7 @@ spielbretter_t* spielbretter_berechne()
                                                                                 spielbrett_Bauer1 += (DarstellungBauer << posBauer1*3);
                                                                                 anzFiguren_Bauer1++;
                                                                             }
-                                                                        
-                                                                            // Spart die innere Schleife bei zu wenigen Figuren, 
-                                                                            // es können aber trotzdem Bretter mit einer Figur erstellt
-
+                                                                            
                                                                             /* Iteration für den Bauer2 */
                                                                             for(int posBauer2=posBauer1; posBauer2<=anzFelder; posBauer2++)
                                                                             {
@@ -537,11 +502,7 @@ spielbretter_t* spielbretter_berechne()
                                                                                         /* Zähler für die Statistik*/
                                                                                         zaehler_bretter_gesamt++;
                                                                                         zaehler_bretter_figuren++;
-                                                                                        
-                                                                                        
-                                                                                        
-                                                                                        //Debugcode um jedes spielbrett auszugenben. Achtung macht vielllllll lansamer!
-                                                                                        //printf("Zuletzt hinzugefügtes Spielbrett: %016llo \n", (unsigned long long) spielbrett_Bauer2);
+                                                        
                                                                                     }
                                                                                 }
                                                                             } /* Schleife Bauer2 */
@@ -557,74 +518,35 @@ spielbretter_t* spielbretter_berechne()
                                     }/* Schleife Läufer1 */
                                 }
                             } /* Schleife Springer2 */
-                            
-                            /* Debug und Geschwindigkeitsmesseung */
-                            //~ 
-                            //~ printf("\n====================================================================== \n");
-                            //~ 
-                            //~ printf("posDame: %d \t posKoenig: %d \t posSpringer1: %d \n", posDame, posKoenig, posSpringer1);
-                            //~ gettimeofday(&comp_time_2, NULL);
-                            //~ double time_zwischenstand = (comp_time_2.tv_sec - comp_time_1.tv_sec) + (comp_time_2.tv_usec - comp_time_1.tv_usec) * 1e-6 ;
-                            //~ printf("Aktuelle Laufzeit: %f \n",(comp_time_2.tv_sec - start_time.tv_sec) + (comp_time_2.tv_usec - start_time.tv_usec) * 1e-6 );
-                            //~ printf("Berechnungszeit für den letzten Springer1:    %f s \n", time_zwischenstand);
-                            //~ printf("Errechnete Spielbretter seit letztem Springer1: %ld \n", (zaehler_bretter_gesamt - zaehler_bretter_zwischenstand));
-                            //~ printf("Bretter / Sekunde: %f \n", ((zaehler_bretter_gesamt - zaehler_bretter_zwischenstand)/time_zwischenstand) );
-                            //~ 
-                            //~ summe_anzahl = 0;
-                            //~ for(int tala = 0; tala <= 10; tala++)
-                            //~ {
-                                //~ printf("Hashtablegröße für Anzahl: %2d = %10d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]));
-                                //~ summe_anzahl += g_hash_table_size(bretter->spielbretterHashtables[tala]);
-                            //~ }
-                            //~ 
-                            //~ printf("Summe aller Bretter in den Hashtabellen: %ld\n",summe_anzahl);
-                            //~ printf("Neue Spielbretter in den Hashtabellen: %ld \n", summe_anzahl - summe_anzahl_vergleich);
-                            //~ printf("Anteil der doppelt errechneten Bretter in Prozent : %f \n", ((((zaehler_bretter_gesamt - zaehler_bretter_zwischenstand)-(summe_anzahl - summe_anzahl_vergleich))*100.0)/(zaehler_bretter_gesamt - zaehler_bretter_zwischenstand)));
-                            //~ summe_anzahl_vergleich = summe_anzahl;
-                            //~ 
-                            //~ gettimeofday(&comp_time_1, NULL);
-                            //~ zaehler_bretter_zwischenstand = zaehler_bretter_gesamt;
-                            //~ 
-                            //~ printf("Zuletzt hinzugefügtes Spielbrett: %016llo \n", (unsigned long long) spielbrett_Bauer2);
-                            //~ 
-                            //~ printf("====================================================================== \n \n");
-                            //~ 
-                            /*  End Debug und Geschwindigkeitsmesseung */
                         }
                     } /* Schleife Springer1 */
                 }
             } /* Schleife König */
-            
-            //printf("Errechnete Bretter posDame = %2d: %10ld \n", posDame, zaehler_bretter_gesamt - zaehler_bretter_dame_zwischenstand);
         } /* Schleife Dame */
      
-    bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
-     
-    //TODO MPI kommunikation
-    //TODO löschen der nicht mehr benötigten hashtabellen 
-    printf("Fertig mit %d Figuren. \n", maxFiguren );    
+        bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
+    
+        //TODO MPI kommunikation
+        //TODO löschen der nicht mehr benötigten hashtabellen 
+        
+        /* Statistikwert speichern */
+        if(bretter->prozessNummer == 0)
+        {
+            gettimeofday(&comp_time_figur, NULL);
+            bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
+            gettimeofday(&start_time_figur, NULL);
+            printf("Fertig mit %d Figuren. \n", maxFiguren );
+        }        
+        
     }
     
-    bretter->anzahlBretterGesamt = zaehler_bretter_gesamt;
-
-    gettimeofday(&comp_time, NULL);
-    double time = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
-	printf("Berechnungszeit:    %f s \n", time);
-    printf("Errechnete Spielbretter: %ld \n", bretter->anzahlBretterGesamt);
-    printf("Bretter / Sekunde: %f \n", (bretter->anzahlBretterGesamt / time) );
-    
-    printf("Figurenanzahl: \t in Hashhtabelle \t loesbare Bretter: \t Bretter gesamt:\n");
-	for(int tala=0; tala <= 10; tala++)
-	{
-        printf(" %2d \t \t %10d \t \t  %10d  \t \t  %10d \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]),bretter->loesbareBretter[tala], bretter->anzahlBretter[tala]);
-	}
-
-    
-    printf("Summe aller Bretter in den Hashtabellen: %ld\n",bretter->loesbareBretterGesamt);
-    //printf("Anteil der loesbaren Bretter in Prozent: %f\n", (((bretter->anzahlBretterGesamt - bretter->loesbareBretterGesamt)*100.0)/bretter->anzahlBretterGesamt));
-    
-    
-	return bretter;
+    /* Statistikwert speichern */
+    if(bretter->prozessNummer == 0)
+    {
+        bretter->anzahlBretterGesamt = zaehler_bretter_gesamt;
+        gettimeofday(&comp_time, NULL);
+        bretter->berechnungsZeitGesamt = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
+    }
 }
 
 
@@ -685,7 +607,7 @@ void spielbretter_berechne_alt(spielbretter_t *bretter)
         
 		//bretter->anzahlFiguren = anzahlFiguren;
         loesbareBretterTmp = bretter->loesbareBretterGesamt;
-        g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne, bretter);
+        //g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne,(gpointer) bretter);
         
         
         

@@ -9,13 +9,13 @@ typedef struct spielbretter
 	 */  
 	GHashTable* spielbretterHashtables[11]; 
 	
-	/* Anzahl der Figuren auf dem Spielbrett*/
-	int anzahlFiguren;
     
     /* Anzahl der Bretter */
+    long anzahlBretter[11];
     long anzahlBretterGesamt;
     
     /* Anzahl loesbarer Bretter insgesammt */
+    long loesbareBretter[11];
     long loesbareBretterGesamt;
 	
 }spielbretter_t;
@@ -25,17 +25,9 @@ typedef struct spielbretter
  * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
  *
  */
-void spielbretter_berechne(spielbretter_t *bretter);
+void spielbretter_berechne_alt(spielbretter_t *bretter);
 
 
-/**
- * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
- * Ist noch in Arbeit.
- * Versuch die Spielbrett felderweise zu erzeugen, 
- * um Mehrfacherzeugung zu vermeiden.
- * 
- */
-spielbretter_t* spielbretter_create_felderweise();
 
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren
@@ -44,7 +36,7 @@ spielbretter_t* spielbretter_create_felderweise();
  * Felder gesetzt. Dabei kommt es zur Mehrfacherzeugung von gleichen
  * Brettern, wenn es mehr als 10 Felder auf dem Spielbrett gibt. 
  */
-spielbretter_t* spielbretter_create_figurenweise();
+spielbretter_t* spielbretter_berechne();
 
 
 /**

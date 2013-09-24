@@ -3,15 +3,6 @@
 
 void AskParams(options_t* option, int argc, char** argv )
 {
-	printf ( "\n");
-	printf ( "===============================================================\n" );
-	printf ( "Programm zur Berechnung aller lösbaren Spielbretter \n" );
-	printf ( "===============================================================\n" );
-	printf ( "    Kira Duwe\n");
-	printf ( "    Enno Zickler\n");
-	printf ( "===============================================================\n"  );
-	
-	
 	
 	if (argc != 5 ||
 		strcmp("help",(char *)argv[1])==0 || strcmp("-h",(char *)argv[1])==0 ||

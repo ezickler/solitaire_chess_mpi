@@ -300,7 +300,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
             /* MPI zuweisung der schleifen zu den Prozessen. */
             if(bretter->prozessNummer == ((bretter->anzahlProzesse/anzFelder) * posDame))
             {
-                printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
+                //printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
                 anzFiguren_Dame = anzFiguren_Start;
                 spielbrett_Dame = spielbrett_Leer;
                 
@@ -532,7 +532,9 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
     
         //TODO MPI kommunikation
-        //TODO löschen der nicht mehr benötigten hashtabellen 
+        //TODO löschen der nicht mehr benötigten hashtabellen
+        
+        MPI_Barrier(MPI_COMM_WORLD); 
         
         /* Statistikwert speichern */
         if(bretter->prozessNummer == 0)

@@ -16,8 +16,8 @@ endif()
 FIND_PACKAGE(MPI REQUIRED)
 
 if (MPI_FOUND)
-    set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAGS})
-    set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
+    set(CMAKE_CXX_COMPILE_FLAGS "${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAGS}")
+    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS}")
 endif()
 
 
@@ -28,7 +28,7 @@ add_definitions(-O2 -g -pedantic -Wall -Wextra -fopenmp -std=c99)
 AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_SOURCE_DIR} SOURCE)
 
 # Set additional include directories
-include_directories(${GTK2_INCLUDE_DIRS} MPI_INCLUDE_PATH)
+include_directories(${GTK2_INCLUDE_DIRS} ${MPI_INCLUDE_PATH})
 
 # Add executable
 add_executable(${PROJECT} ${SOURCE})

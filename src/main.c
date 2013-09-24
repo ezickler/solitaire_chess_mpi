@@ -81,7 +81,7 @@ int main(int argc, char ** argv)
     
     
     
-    //if(bretter.prozessNummer == 0)
+    if(bretter.prozessNummer == 0)
     {
         gibStatisticAus(&bretter);
     }

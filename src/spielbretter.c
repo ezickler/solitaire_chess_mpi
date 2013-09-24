@@ -297,231 +297,236 @@ void spielbretter_berechne(spielbretter_t *bretter)
          
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
-            anzFiguren_Dame = anzFiguren_Start;
-            spielbrett_Dame = spielbrett_Leer;
-            
-            if(posDame<anzFelder)
+            /* MPI zuweisung der schleifen zu den Prozessen. */
+            if(bretter->prozessNummer == ((bretter->anzahlProzesse/anzFelder) * posDame))
             {
-                /* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
-                spielbrett_Dame +=  (DarstellungDame << posDame*3);
-                anzFiguren_Dame ++; 
-            }
-            
-            /* Iteration für den König */
-            #pragma omp parallel for \
-                private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
-                schedule(dynamic)\
-                reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
+                printf(" Prozess %d berechnet posDame %d",bretter->prozessNummer, posDame );
+                anzFiguren_Dame = anzFiguren_Start;
+                spielbrett_Dame = spielbrett_Leer;
                 
-            for(int posKoenig=0; posKoenig<=anzFelder; posKoenig++)
-            {	
-                anzFiguren_Koenig = anzFiguren_Dame;
-                spielbrett_Koenig = spielbrett_Dame;
-                
-                if(!(anzFiguren_Koenig < maxFiguren))
+                if(posDame<anzFelder)
                 {
-                    posKoenig = anzFelder;
+                    /* posDame * 3, da die Figurenrepräsentation Oktal erfolgt und 3 Binärstellen eine Oktalstelle sind*/
+                    spielbrett_Dame +=  (DarstellungDame << posDame*3);
+                    anzFiguren_Dame ++; 
                 }
                 
-                
-                if(feldFrei(&posKoenig, &spielbrett_Dame))
-                {
-                    if(posKoenig<anzFelder)
+                /* Iteration für den König */
+                #pragma omp parallel for \
+                    private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
+                    schedule(dynamic)\
+                    reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
+                    
+                for(int posKoenig=0; posKoenig<=anzFelder; posKoenig++)
+                {	
+                    anzFiguren_Koenig = anzFiguren_Dame;
+                    spielbrett_Koenig = spielbrett_Dame;
+                    
+                    if(!(anzFiguren_Koenig < maxFiguren))
                     {
-                        spielbrett_Koenig += (DarstellungKoenig << posKoenig*3);
-                        anzFiguren_Koenig ++; 
+                        posKoenig = anzFelder;
                     }
                     
                     
-                    /* Iteration für den Springer */
-                    for(int posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++)
+                    if(feldFrei(&posKoenig, &spielbrett_Dame))
                     {
-                        anzFiguren_Springer1 = anzFiguren_Koenig;
-                        spielbrett_Springer1 = spielbrett_Koenig;
-                        
-                        if(!(anzFiguren_Springer1 < maxFiguren))
+                        if(posKoenig<anzFelder)
                         {
-                            posSpringer1 = anzFelder;
+                            spielbrett_Koenig += (DarstellungKoenig << posKoenig*3);
+                            anzFiguren_Koenig ++; 
                         }
                         
                         
-                        if(feldFrei(&posSpringer1, &spielbrett_Koenig))
+                        /* Iteration für den Springer */
+                        for(int posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++)
                         {
-                            if(posSpringer1<anzFelder)
+                            anzFiguren_Springer1 = anzFiguren_Koenig;
+                            spielbrett_Springer1 = spielbrett_Koenig;
+                            
+                            if(!(anzFiguren_Springer1 < maxFiguren))
                             {
-                                spielbrett_Springer1 += (DarstellungSpringer << posSpringer1*3); 
-                                anzFiguren_Springer1 ++;
+                                posSpringer1 = anzFelder;
                             }
                             
-                            /* Iteration für den Springer2 
-                             * geänderte Startposition, um Duplikate zu vermeiden
-                             * analog für andere doppelte Figuren */
-                            for(int posSpringer2=posSpringer1; posSpringer2<=anzFelder; posSpringer2++)
+                            
+                            if(feldFrei(&posSpringer1, &spielbrett_Koenig))
                             {
-                                anzFiguren_Springer2 = anzFiguren_Springer1;
-                                spielbrett_Springer2 = spielbrett_Springer1;
-                                
-                                if(!(anzFiguren_Springer2 < maxFiguren))
+                                if(posSpringer1<anzFelder)
                                 {
-                                    posSpringer2 = anzFelder;
+                                    spielbrett_Springer1 += (DarstellungSpringer << posSpringer1*3); 
+                                    anzFiguren_Springer1 ++;
                                 }
                                 
-                                if(feldFrei(&posSpringer2, &spielbrett_Springer1))
+                                /* Iteration für den Springer2 
+                                 * geänderte Startposition, um Duplikate zu vermeiden
+                                 * analog für andere doppelte Figuren */
+                                for(int posSpringer2=posSpringer1; posSpringer2<=anzFelder; posSpringer2++)
                                 {
-                                    if(posSpringer2<anzFelder)
+                                    anzFiguren_Springer2 = anzFiguren_Springer1;
+                                    spielbrett_Springer2 = spielbrett_Springer1;
+                                    
+                                    if(!(anzFiguren_Springer2 < maxFiguren))
                                     {
-                                        spielbrett_Springer2 += (DarstellungSpringer << posSpringer2*3);
-                                        anzFiguren_Springer2 ++;
+                                        posSpringer2 = anzFelder;
                                     }
                                     
-                                    /* Iteration für den Läufer1 */
-                                    for(int posLaeufer1=0; posLaeufer1<=anzFelder; posLaeufer1++)
+                                    if(feldFrei(&posSpringer2, &spielbrett_Springer1))
                                     {
-                                        anzFiguren_Laeufer1 = anzFiguren_Springer2;
-                                        spielbrett_Laeufer1 = spielbrett_Springer2;
-                                        
-                                        if(!(anzFiguren_Laeufer1 < maxFiguren))
+                                        if(posSpringer2<anzFelder)
                                         {
-                                            posLaeufer1 = anzFelder;
+                                            spielbrett_Springer2 += (DarstellungSpringer << posSpringer2*3);
+                                            anzFiguren_Springer2 ++;
                                         }
                                         
-                                        
-                                        if(feldFrei(&posLaeufer1, &spielbrett_Springer2))
+                                        /* Iteration für den Läufer1 */
+                                        for(int posLaeufer1=0; posLaeufer1<=anzFelder; posLaeufer1++)
                                         {
-                                            if(posLaeufer1<anzFelder)
+                                            anzFiguren_Laeufer1 = anzFiguren_Springer2;
+                                            spielbrett_Laeufer1 = spielbrett_Springer2;
+                                            
+                                            if(!(anzFiguren_Laeufer1 < maxFiguren))
                                             {
-                                                spielbrett_Laeufer1 += (DarstellungLaeufer << posLaeufer1*3);
-                                                anzFiguren_Laeufer1++;
+                                                posLaeufer1 = anzFelder;
                                             }
-
-                                            /* Iteration für den Läufer2 */
-                                            for(int posLaeufer2=posLaeufer1; posLaeufer2<=anzFelder; posLaeufer2++)
+                                            
+                                            
+                                            if(feldFrei(&posLaeufer1, &spielbrett_Springer2))
                                             {
-                                                anzFiguren_Laeufer2 = anzFiguren_Laeufer1;
-                                                spielbrett_Laeufer2 = spielbrett_Laeufer1;
-                                                
-                                                if(!(anzFiguren_Laeufer2 < maxFiguren))
+                                                if(posLaeufer1<anzFelder)
                                                 {
-                                                    posLaeufer2 = anzFelder;
+                                                    spielbrett_Laeufer1 += (DarstellungLaeufer << posLaeufer1*3);
+                                                    anzFiguren_Laeufer1++;
                                                 }
-                                                
-                                                if(feldFrei(&posLaeufer2, &spielbrett_Laeufer1))
-                                                {
-                                                    if(posLaeufer2<anzFelder)
-                                                    {    
-                                                        spielbrett_Laeufer2 += (DarstellungLaeufer << posLaeufer2*3);
-                                                        anzFiguren_Laeufer2++;
-                                                    }
 
-                                                    /* Iteration für den Turm1 */
-                                                    for(int posTurm1=0; posTurm1<=anzFelder; posTurm1++)
+                                                /* Iteration für den Läufer2 */
+                                                for(int posLaeufer2=posLaeufer1; posLaeufer2<=anzFelder; posLaeufer2++)
+                                                {
+                                                    anzFiguren_Laeufer2 = anzFiguren_Laeufer1;
+                                                    spielbrett_Laeufer2 = spielbrett_Laeufer1;
+                                                    
+                                                    if(!(anzFiguren_Laeufer2 < maxFiguren))
                                                     {
-                                                        anzFiguren_Turm1 = anzFiguren_Laeufer2;
-                                                        spielbrett_Turm1 = spielbrett_Laeufer2;
-                                                        
-                                                        if(!(anzFiguren_Turm1 < maxFiguren))
-                                                        {
-                                                            posTurm1 = anzFelder;
+                                                        posLaeufer2 = anzFelder;
+                                                    }
+                                                    
+                                                    if(feldFrei(&posLaeufer2, &spielbrett_Laeufer1))
+                                                    {
+                                                        if(posLaeufer2<anzFelder)
+                                                        {    
+                                                            spielbrett_Laeufer2 += (DarstellungLaeufer << posLaeufer2*3);
+                                                            anzFiguren_Laeufer2++;
                                                         }
-                                                        
-                                                        if(feldFrei(&posTurm1, &spielbrett_Laeufer2))
+
+                                                        /* Iteration für den Turm1 */
+                                                        for(int posTurm1=0; posTurm1<=anzFelder; posTurm1++)
                                                         {
-                                                            if(posTurm1<anzFelder)
+                                                            anzFiguren_Turm1 = anzFiguren_Laeufer2;
+                                                            spielbrett_Turm1 = spielbrett_Laeufer2;
+                                                            
+                                                            if(!(anzFiguren_Turm1 < maxFiguren))
                                                             {
-                                                                spielbrett_Turm1 += (DarstellungTurm << posTurm1*3);
-                                                                anzFiguren_Turm1++;
+                                                                posTurm1 = anzFelder;
                                                             }
                                                             
-                                                            /* Iteration für den Turm2 */
-                                                            for(int posTurm2=posTurm1; posTurm2<=anzFelder; posTurm2++)
+                                                            if(feldFrei(&posTurm1, &spielbrett_Laeufer2))
                                                             {
-                                                                anzFiguren_Turm2 = anzFiguren_Turm1;
-                                                                spielbrett_Turm2 = spielbrett_Turm1;
+                                                                if(posTurm1<anzFelder)
+                                                                {
+                                                                    spielbrett_Turm1 += (DarstellungTurm << posTurm1*3);
+                                                                    anzFiguren_Turm1++;
+                                                                }
                                                                 
-                                                                if(!(anzFiguren_Turm2 < maxFiguren))
+                                                                /* Iteration für den Turm2 */
+                                                                for(int posTurm2=posTurm1; posTurm2<=anzFelder; posTurm2++)
                                                                 {
-                                                                    posTurm2 = anzFelder;
-                                                                }
-                                                
-                                                                if(feldFrei(&posTurm2, &spielbrett_Turm1))
-                                                                {
-                                                                    if(posTurm2<anzFelder){
-                                                                        spielbrett_Turm2 += (DarstellungTurm << posTurm2*3);
-                                                                        anzFiguren_Turm2++;
-                                                                    }
+                                                                    anzFiguren_Turm2 = anzFiguren_Turm1;
+                                                                    spielbrett_Turm2 = spielbrett_Turm1;
                                                                     
-                                                                    /* Iteration für den Bauer1 */
-                                                                    for(int posBauer1=0; posBauer1<=anzFelder; posBauer1++)
+                                                                    if(!(anzFiguren_Turm2 < maxFiguren))
                                                                     {
-                                                                        anzFiguren_Bauer1 = anzFiguren_Turm2;
-                                                                        spielbrett_Bauer1 = spielbrett_Turm2;
+                                                                        posTurm2 = anzFelder;
+                                                                    }
+                                                    
+                                                                    if(feldFrei(&posTurm2, &spielbrett_Turm1))
+                                                                    {
+                                                                        if(posTurm2<anzFelder){
+                                                                            spielbrett_Turm2 += (DarstellungTurm << posTurm2*3);
+                                                                            anzFiguren_Turm2++;
+                                                                        }
                                                                         
-                                                                        if(!(anzFiguren_Bauer1 < maxFiguren))
+                                                                        /* Iteration für den Bauer1 */
+                                                                        for(int posBauer1=0; posBauer1<=anzFelder; posBauer1++)
                                                                         {
-                                                                            posBauer1 = anzFelder;
-                                                                        }
-                                                
-                                                                        if(feldFrei(&posBauer1, &spielbrett_Turm2))
-                                                                        {
-                                                                            if(posBauer1<anzFelder)
-                                                                            {
-                                                                                spielbrett_Bauer1 += (DarstellungBauer << posBauer1*3);
-                                                                                anzFiguren_Bauer1++;
-                                                                            }
+                                                                            anzFiguren_Bauer1 = anzFiguren_Turm2;
+                                                                            spielbrett_Bauer1 = spielbrett_Turm2;
                                                                             
-                                                                            /* Iteration für den Bauer2 */
-                                                                            for(int posBauer2=posBauer1; posBauer2<=anzFelder; posBauer2++)
+                                                                            if(!(anzFiguren_Bauer1 < maxFiguren))
                                                                             {
-                                                                                anzFiguren_Bauer2 = anzFiguren_Bauer1;
-                                                                                spielbrett_Bauer2 = spielbrett_Bauer1;
+                                                                                posBauer1 = anzFelder;
+                                                                            }
+                                                    
+                                                                            if(feldFrei(&posBauer1, &spielbrett_Turm2))
+                                                                            {
+                                                                                if(posBauer1<anzFelder)
+                                                                                {
+                                                                                    spielbrett_Bauer1 += (DarstellungBauer << posBauer1*3);
+                                                                                    anzFiguren_Bauer1++;
+                                                                                }
                                                                                 
-                                                                                if(!(anzFiguren_Bauer2 < maxFiguren))
+                                                                                /* Iteration für den Bauer2 */
+                                                                                for(int posBauer2=posBauer1; posBauer2<=anzFelder; posBauer2++)
                                                                                 {
-                                                                                    posBauer2 = anzFelder;
-                                                                                }
-                                                
-                                                                                if(feldFrei(&posBauer2, &spielbrett_Bauer1))
-                                                                                {
-                                                                                    if(posBauer2<anzFelder)
-                                                                                    {
-                                                                                        spielbrett_Bauer2 += (DarstellungBauer << posBauer2*3);
-                                                                                        anzFiguren_Bauer2++;
-                                                                                    }
+                                                                                    anzFiguren_Bauer2 = anzFiguren_Bauer1;
+                                                                                    spielbrett_Bauer2 = spielbrett_Bauer1;
                                                                                     
-                                                                                    
-                                                                                    if(anzFiguren_Bauer2 == maxFiguren)
+                                                                                    if(!(anzFiguren_Bauer2 < maxFiguren))
                                                                                     {
-                                                                                        // Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
-                                                                                        // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
-                                                                                        // aber trotzdem Bretter mit nur einer Figur
-                                                                                        // g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) spielbrett_Bauer2,(gpointer) 0 );
-                                                                                        spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
-                                                                                        
-                                                                                        
-                                                                                        
-                                                                                        /* Zähler für die Statistik*/
-                                                                                        zaehler_bretter_gesamt++;
-                                                                                        zaehler_bretter_figuren++;
-                                                        
+                                                                                        posBauer2 = anzFelder;
                                                                                     }
-                                                                                }
-                                                                            } /* Schleife Bauer2 */
-                                                                        }
-                                                                    } /* Schleife Bauer1 */
-                                                                }
-                                                            } /* Schleife Turm2 */
-                                                        }
-                                                    } /* Schleife Turm1 */
-                                                }
-                                            } /* Schleife Läufer2 */
-                                        }
-                                    }/* Schleife Läufer1 */
-                                }
-                            } /* Schleife Springer2 */
-                        }
-                    } /* Schleife Springer1 */
-                }
-            } /* Schleife König */
+                                                    
+                                                                                    if(feldFrei(&posBauer2, &spielbrett_Bauer1))
+                                                                                    {
+                                                                                        if(posBauer2<anzFelder)
+                                                                                        {
+                                                                                            spielbrett_Bauer2 += (DarstellungBauer << posBauer2*3);
+                                                                                            anzFiguren_Bauer2++;
+                                                                                        }
+                                                                                        
+                                                                                        
+                                                                                        if(anzFiguren_Bauer2 == maxFiguren)
+                                                                                        {
+                                                                                            // Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
+                                                                                            // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
+                                                                                            // aber trotzdem Bretter mit nur einer Figur
+                                                                                            // g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) spielbrett_Bauer2,(gpointer) 0 );
+                                                                                            spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                            /* Zähler für die Statistik*/
+                                                                                            zaehler_bretter_gesamt++;
+                                                                                            zaehler_bretter_figuren++;
+                                                            
+                                                                                        }
+                                                                                    }
+                                                                                } /* Schleife Bauer2 */
+                                                                            }
+                                                                        } /* Schleife Bauer1 */
+                                                                    }
+                                                                } /* Schleife Turm2 */
+                                                            }
+                                                        } /* Schleife Turm1 */
+                                                    }
+                                                } /* Schleife Läufer2 */
+                                            }
+                                        }/* Schleife Läufer1 */
+                                    }
+                                } /* Schleife Springer2 */
+                            }
+                        } /* Schleife Springer1 */
+                    }
+                } /* Schleife König */
+            }
         } /* Schleife Dame */
      
         bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;

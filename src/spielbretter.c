@@ -5,6 +5,7 @@
 #include <sys/time.h>
 
 #include <omp.h>
+#include <mpi.h>
 
 
 /**
@@ -222,6 +223,7 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
         #pragma omp critical (spielbrett_berechne_g_hash_add)
         {
             g_hash_table_add(bretter->spielbretterHashtables[anzahlFiguren], (gpointer) spielbrett );
+            bretter->loesbareBretter[anzahlFiguren]++;
             bretter->loesbareBretterGesamt ++;
         }
     }
@@ -242,6 +244,7 @@ spielbretter_t* spielbretter_berechne()
 {
     
     /*Zähler für die anzahl der generierten Spielbretter*/
+    long zaehler_bretter_figuren;
     long zaehler_bretter[11];
     for (int x = 0; x<11; x++)
     {
@@ -313,7 +316,7 @@ spielbretter_t* spielbretter_berechne()
     
 	for(int maxFiguren=2; maxFiguren <= 10; maxFiguren++)
     {
-        
+        zaehler_bretter_figuren = 0;
     
         /* Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
          * für alle anderen Figuren analog!*/
@@ -337,7 +340,11 @@ spielbretter_t* spielbretter_berechne()
             }
             
             /* Iteration für den König */
-            #pragma omp parallel for private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2)
+            #pragma omp parallel for \
+                private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
+                schedule(dynamic)\
+                reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
+                
             for(int posKoenig=0; posKoenig<=anzFelder; posKoenig++)
             {	
                 anzFiguren_Koenig = anzFiguren_Dame;
@@ -359,7 +366,6 @@ spielbretter_t* spielbretter_berechne()
                     
                     
                     /* Iteration für den Springer */
-                    //#pragma omp parallel for private(anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2)
                     for(int posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++)
                     {
                         anzFiguren_Springer1 = anzFiguren_Koenig;
@@ -379,9 +385,6 @@ spielbretter_t* spielbretter_berechne()
                                 anzFiguren_Springer1 ++;
                             }
                             
-                            
-                            //printf("posDame: %d \t posKoenig: %d \t posSpringer1: %d \t anzFiguren_Springer1: %d \n",posDame, posKoenig, posSpringer1, anzFiguren_Springer1);
-                        
                             /* Iteration für den Springer2 
                              * geänderte Startposition, um Duplikate zu vermeiden
                              * analog für andere doppelte Figuren */
@@ -533,9 +536,10 @@ spielbretter_t* spielbretter_berechne()
                                                                                         
                                                                                         /* Zähler für die Statistik*/
                                                                                         zaehler_bretter_gesamt++;
+                                                                                        zaehler_bretter_figuren++;
                                                                                         
-                                                                                        //(bretter->anzahlBretter[maxFiguren])++;
-                                                                                        //zaehler_bretter[anzFiguren_Bauer2]++;
+                                                                                        
+                                                                                        
                                                                                         //Debugcode um jedes spielbrett auszugenben. Achtung macht vielllllll lansamer!
                                                                                         //printf("Zuletzt hinzugefügtes Spielbrett: %016llo \n", (unsigned long long) spielbrett_Bauer2);
                                                                                     }
@@ -594,11 +598,13 @@ spielbretter_t* spielbretter_berechne()
             //printf("Errechnete Bretter posDame = %2d: %10ld \n", posDame, zaehler_bretter_gesamt - zaehler_bretter_dame_zwischenstand);
         } /* Schleife Dame */
      
+    bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
      
     //TODO MPI kommunikation
     //TODO löschen der nicht mehr benötigten hashtabellen 
     printf("Fertig mit %d Figuren. \n", maxFiguren );    
     }
+    
     bretter->anzahlBretterGesamt = zaehler_bretter_gesamt;
 
     gettimeofday(&comp_time, NULL);

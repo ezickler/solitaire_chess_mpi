@@ -300,7 +300,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
             /* MPI zuweisung der schleifen zu den Prozessen. */
             if(bretter->prozessNummer == ((bretter->anzahlProzesse/anzFelder) * posDame))
             {
-                printf(" Prozess %d berechnet posDame %d",bretter->prozessNummer, posDame );
+                printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
                 anzFiguren_Dame = anzFiguren_Start;
                 spielbrett_Dame = spielbrett_Leer;
                 

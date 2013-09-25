@@ -59,7 +59,6 @@ static inline bool feldFrei(int* position, sp_okt_t* spielbrett)
  */
 static inline void erzeugeHashtables(spielbretter_t *bretter)
 {
-    printf("Beginn erzeugeHashtables\n");
 	int figurenAnzahl;
 	for(figurenAnzahl=0; figurenAnzahl<=10; figurenAnzahl++){
 		bretter->spielbretterHashtables[figurenAnzahl] = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -534,7 +533,14 @@ void spielbretter_berechne(spielbretter_t *bretter)
         //TODO MPI kommunikation
         //TODO löschen der nicht mehr benötigten hashtabellen
         
+        
         MPI_Barrier(MPI_COMM_WORLD); 
+        
+        //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
+        
+        /* nicht mehr benötigte Hashtabellen freigeben */
+        g_hash_table_destroy( bretter->spielbretterHashtables[maxFiguren-1]);
+        
         
         /* Statistikwert speichern */
         if(bretter->prozessNummer == 0)
@@ -542,7 +548,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
             gettimeofday(&comp_time_figur, NULL);
             bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
             gettimeofday(&start_time_figur, NULL);
-            printf("Fertig mit %d Figuren. \n", maxFiguren );
+            printf("Fertig mit %d Figuren in %f sec. \n", maxFiguren, bretter->berechnungsZeit[maxFiguren]);
         }        
         
     }

@@ -22,7 +22,7 @@ static void gibStatisticAus(spielbretter_t *bretter)
     printf("==========================================================================\n");
 	for(int tala=0; tala <= 10; tala++)
 	{
-        printf(" %2d \t\t %10d \t %10ld \t %10ld \t  %f \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]),bretter->loesbareBretter[tala], bretter->anzahlBretter[tala], bretter->berechnungsZeit[tala]);
+        printf(" %2d \t\t %10d \t %10ld \t %10ld \t  %-04.3f \n",tala,g_hash_table_size(bretter->spielbretterHashtables[tala]),bretter->loesbareBretter[tala], bretter->anzahlBretter[tala], bretter->berechnungsZeit[tala]);
 	}
     printf("==========================================================================\n");
     printf("Summe: \t\t %10ld \t %10ld \t %10ld \t  %f \n\n",bretter->loesbareBretterGesamt,bretter->loesbareBretterGesamt,bretter->anzahlBretterGesamt, bretter->berechnungsZeitGesamt );
@@ -62,6 +62,7 @@ int main(int argc, char ** argv)
 	}
     MPI_Comm_size(MPI_COMM_WORLD, &(bretter.anzahlProzesse));
 	MPI_Comm_rank(MPI_COMM_WORLD, &(bretter.prozessNummer));
+    AskParams(&option, argc, argv);
 	
     if(bretter.prozessNummer == 0)
     {
@@ -72,11 +73,10 @@ int main(int argc, char ** argv)
         printf ( "    Kira Duwe\n");
         printf ( "    Enno Zickler\n");
         printf ( "===============================================================\n"  );
+        printf ( "Starte Berechnung für %d x %d Spielbretter. \n", option.spielbrettBreite, option.spielbrettHoehe);
     }
 
-
-    AskParams(&option, argc, argv);
-    
+        
     spielbretter_berechne(&bretter);
     
     

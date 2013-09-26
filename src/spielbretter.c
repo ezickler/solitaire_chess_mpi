@@ -238,7 +238,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
     struct timeval start_time_figur;      /* start zeit figuren durchlauf */
     struct timeval comp_time_figur;      /* endzeit vom figurenduchlauf */
     
-    if(bretter->prozessNummer == 0)
+    //if(bretter->prozessNummer == 0)
     {
         gettimeofday(&start_time, NULL);
         gettimeofday(&start_time_figur, NULL); 
@@ -532,8 +532,14 @@ void spielbretter_berechne(spielbretter_t *bretter)
     
         //TODO MPI kommunikation
         //TODO löschen der nicht mehr benötigten hashtabellen
-        
-        
+        /* Statistikwert speichern */
+        //if(bretter->prozessNummer == 0)
+        {
+            gettimeofday(&comp_time_figur, NULL);
+            bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
+            gettimeofday(&start_time_figur, NULL);
+            printf("Pozess %d fertig mit %d Figuren in %f sec. \n",bretter->prozessNummer, maxFiguren, bretter->berechnungsZeit[maxFiguren]);
+        }
         MPI_Barrier(MPI_COMM_WORLD); 
         
         //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
@@ -542,14 +548,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         g_hash_table_destroy( bretter->spielbretterHashtables[maxFiguren-1]);
         
         
-        /* Statistikwert speichern */
-        if(bretter->prozessNummer == 0)
-        {
-            gettimeofday(&comp_time_figur, NULL);
-            bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
-            gettimeofday(&start_time_figur, NULL);
-            printf("Fertig mit %d Figuren in %f sec. \n", maxFiguren, bretter->berechnungsZeit[maxFiguren]);
-        }        
+       
         
     }
     

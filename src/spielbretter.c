@@ -171,8 +171,8 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
      
      /* Verlust des Abbruchkriterium durch Parallelisierung */
      
-     for(x=0; x < SpielbrettBreite && loesbar == 0; x++){
-		for(y=0; y < SpielbrettHoehe && loesbar == 0; y++){   
+     for(x=0; (x < SpielbrettBreite) && (loesbar == 0); x++){
+		for(y=0; (y < SpielbrettHoehe) && (loesbar == 0); y++){   
 			switch(param.spielbrett_array[x][y]){
 				case DarstellungBauer:
 					loesbar= berechneBauer(&param, x, y);
@@ -213,13 +213,13 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
             bretter->loesbareBretterGesamt ++;
         }
     }
-    else
-    {
-        if(anzahlFiguren == 2)
-        {
-            printf("%0*lo \n",SpielfelderAnzahl, spielbrett);
-        }
-    }
+    //~ else
+    //~ {
+        //~ if(anzahlFiguren == 4)
+        //~ {
+            //~ printf("%0*lo \n",SpielfelderAnzahl, spielbrett);
+        //~ }
+    //~ }
     
 	/*Spielbrett Array wird wieder freigegeben*/
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettBreite);

@@ -63,7 +63,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 	/*
 	 * Bauer schlägt nach links oben
 	 */
-	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0))
+	if((x-1)>=0 && (y-1)>=0 && (param->spielbrett_array[x-1][y-1] != 0))
     {
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
@@ -81,7 +81,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 	/*
 	 * Bauer schlägt nach links unten
 	 */	
-	if((x-1)>0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0))
+	if((x-1)>=0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0))
     {
 		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 		
@@ -97,7 +97,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 	/*
 	 * Bauer schlägt nach rechts oben
 	 */
-	if((x+1)<SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0))
+	if((x+1)<SpielbrettBreite && (y-1)>=0 && (param->spielbrett_array[x+1][y-1] != 0))
     {
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
@@ -162,7 +162,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Turm schlägt nach links*/
-	for(n = 1; (x-n) > 0 ; n++)
+	for(n = 1; (x-n) >= 0 ; n++)
 	{	
         if (param->spielbrett_array[x-n][y] != 0)
 		{
@@ -192,7 +192,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Turm schlägt nach oben*/
-	for(n = 1; (y-n) > 0; n++)
+	for(n = 1; (y-n) >= 0; n++)
 	{
 		if(param->spielbrett_array[x][y-n] != 0)
 		{
@@ -226,7 +226,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	
 	
 	/*Läufer schlägt nach links oben*/
-	for(n = 1; ((x-n) > 0) && ((y-n) > 0); n++)
+	for(n = 1; ((x-n)>=0) && ((y-n)>=0); n++)
 	{	
         if(param->spielbrett_array[x-n][y-n] != 0)
         {
@@ -241,7 +241,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Läufer schlägt nach links unten*/
-	for(n = 1; ((x-n) > 0) && ((y+n) < SpielbrettHoehe) ; n++)
+	for(n = 1; ((x-n)>=0) && ((y+n) < SpielbrettHoehe) ; n++)
 	{	
         if(param->spielbrett_array[x-n][y+n] != 0)
         {
@@ -256,7 +256,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Läufer schlägt nach rechts oben*/
-	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n) > 0); n++)
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n)>=0); n++)
 	{	
         if(param->spielbrett_array[x+n][y-n] != 0)
         {
@@ -306,7 +306,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
     	/*
 	 * Springer schlägt nach erst oben dann rechts
 	 */
-	if((x+1)<SpielbrettBreite && (y-2)>0 && (param->spielbrett_array[x+1][y-2] != 0))
+	if((x+1)<SpielbrettBreite && (y-2)>=0 && (param->spielbrett_array[x+1][y-2] != 0))
     {
 		
 		neue_pos = (x+1)+((y-2)*SpielbrettBreite);
@@ -324,7 +324,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	/*
 	 * Springer schlägt nach erst oben  dann links
 	 */
-	if((x-1)>0 && (y-2)>0 && (param->spielbrett_array[x-1][y-2] != 0))
+	if((x-1)>=0 && (y-2)>=0 && (param->spielbrett_array[x-1][y-2] != 0))
     {
 		
 		neue_pos = (x-1)+((y-2)*SpielbrettBreite);
@@ -342,7 +342,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	/*
 	 * Springer schlägt nach erst links dann oben
 	 */	
-	if((x-2)>0 && (y-1)>0 && (param->spielbrett_array[x-2][y-1] != 0))
+	if((x-2)>=0 && (y-1)>=0 && (param->spielbrett_array[x-2][y-1] != 0))
     {
 		
 		neue_pos = (x-2)+((y-1)*SpielbrettBreite);
@@ -360,7 +360,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	/*
 	 * Springer schlägt nach links unten
 	 */	
-	if((x-2)>0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-2][y+1] != 0))
+	if((x-2)>=0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-2][y+1] != 0))
     {
 		
 		neue_pos = (x-2)+((y+1)*SpielbrettBreite);
@@ -378,7 +378,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	/*
 	 * Springer schlägt nach unten links
 	 */
-	if((x-1)>0 && (y+2)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+2] != 0))
+	if((x-1)>=0 && (y+2)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+2] != 0))
     {
 	
 		neue_pos = (x-1)+((y+2)*SpielbrettBreite);
@@ -431,7 +431,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	/*
 	 * Springer schlägt nach rechts oben
 	 */
-	if((x+2)<SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+2][y-1] != 0))
+	if((x+2)<SpielbrettBreite && (y-1)>=0 && (param->spielbrett_array[x+2][y-1] != 0))
     {
 		
 		neue_pos = (x+2)+((y-1)*SpielbrettBreite);
@@ -465,7 +465,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 /*
 	 * König schlägt nach links oben
 	 */
-	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0))
+	if((x-1)>=0 && (y-1)>=0 && (param->spielbrett_array[x-1][y-1] != 0))
     {
 		
 		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
@@ -483,7 +483,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	/*
 	 * König schlägt nach links unten
 	 */	
-	if((x-1)>0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0))
+	if((x-1)>=0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0))
     {
 		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
 		
@@ -499,7 +499,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	/*
 	 * König schlägt nach rechts oben
 	 */
-	if((x+1)<SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0))
+	if((x+1)<SpielbrettBreite && (y-1)>=0 && (param->spielbrett_array[x+1][y-1] != 0))
     {
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
@@ -531,7 +531,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	/*
 	 * König schlägt nach oben
 	 */
-	if((y-1)>0 && (param->spielbrett_array[x][y-1] != 0))
+	if((y-1)>=0 && (param->spielbrett_array[x][y-1] != 0))
     {
 		
 		neue_pos = (x)+((y-1)*SpielbrettBreite);
@@ -549,7 +549,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	/*
 	 * König schlägt nach links
 	 */	
-	if((x-1)>0 && (param->spielbrett_array[x-1][y] != 0))
+	if((x-1)>=0 && (param->spielbrett_array[x-1][y] != 0))
     {
 		
 		neue_pos = (x-1)+((y)*SpielbrettBreite);
@@ -635,7 +635,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Dame schlägt nach links*/
-	for(n = 1; (x-n) > 0 ; n++)
+	for(n = 1; (x-n)>=0 ; n++)
 	{	
         if (param->spielbrett_array[x-n][y] != 0)
 		{
@@ -665,7 +665,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Dame schlägt nach oben*/
-	for(n = 1; (y-n) > 0; n++)
+	for(n = 1; (y-n)>=0; n++)
 	{
 		if(param->spielbrett_array[x][y-n] != 0)
 		{
@@ -680,7 +680,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 	}
     
     /*Dame schlägt nach links oben*/
-	for(n = 1; ((x-n) > 0) && ((y-n) > 0); n++)
+	for(n = 1; ((x-n)>=0) && ((y-n)>=0); n++)
 	{	
         if(param->spielbrett_array[x-n][y-n] != 0)
         {
@@ -695,7 +695,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Dame schlägt nach links unten*/
-	for(n = 1; ((x-n) > 0) && ((y+n) < SpielbrettHoehe) ; n++)
+	for(n = 1; ((x-n)>=0) && ((y+n) < SpielbrettHoehe) ; n++)
 	{	
         if(param->spielbrett_array[x-n][y+n] != 0)
         {
@@ -710,7 +710,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 	}
 	
 	/*Dame schlägt nach rechts oben*/
-	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n) > 0); n++)
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n)>=0); n++)
 	{	
         if(param->spielbrett_array[x+n][y-n] != 0)
         {

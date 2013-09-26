@@ -293,6 +293,10 @@ void spielbretter_berechne(spielbretter_t *bretter)
          
          
          //TODO MPI aufteilung
+        if(bretter->prozessNummer == 0)
+        {
+            printf("========== %d Figuren===============\n",maxFiguren );
+        }
          
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
@@ -534,10 +538,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         //TODO löschen der nicht mehr benötigten hashtabellen
         /* Statistikwert speichern */
         
-        if(bretter->prozessNummer == 0)
-        {
-            printf("========== %d Figuren===============",maxFiguren );
-        }
+
         //if(bretter->prozessNummer == 0)
         {
             gettimeofday(&comp_time_figur, NULL);
@@ -557,7 +558,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         
         if(bretter->prozessNummer == 0)
         {
-            printf("====================================");
+            printf("====================================\n");
         }
        
         

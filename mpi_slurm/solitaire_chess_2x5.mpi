@@ -6,7 +6,7 @@
 # Run 10 tasks on 2 nodes.
 #SBATCH -N 10 -n 10
 # Output goes to job.out, error messages to job.err.
-#SBATCH --error=job.err --output=job.out
+#SBATCH --error=error/job-%j_2x5.err --output=out/job-%j_2x5.out
 	
 srun hostname
-mpiexec ../build/./solitaire 10 0 3 4
+mpiexec ../build/./solitaire 10 0 2 5

@@ -576,6 +576,48 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->vorgaengerSpielbretter = temp;
         
         
+        sp_okt_t *spielbretterBuf[bretter->anzahlProzesse];
+        unsigned int spielbretterBufSize[bretter->anzahlProzesse];
+        
+        spielbretterBuf[bretter->prozessNummer] = malloc(g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter])* sizeof(sp_okt_t));
+        
+        GHashTableIter iter;
+        gpointer key, value;
+        
+        int i = 0;
+        g_hash_table_iter_init (&iter, bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
+        while (g_hash_table_iter_next (&iter, &key, &value))
+        {
+            spielbretterBuf[bretter->prozessNummer][i] = (sp_okt_t) value;
+            i++;
+        }
+        
+        
+        for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
+        {
+            
+            if(bretter->prozessNummer == prozess)
+            {
+                spielbretterBufSize[prozess] = g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
+            }
+            
+            
+            /* Große der Hashtabelle an alle senden */
+            MPI_Bcast (&spielbretterBufSize[bretter->anzahlProzesse], 1, MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
+            /* Inhalt der Hashtabelle ayus dem Buffer an alle senden */
+            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[bretter->anzahlProzesse], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
+        }
+        
+        for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
+        {
+            if(bretter->prozessNummer != prozess)
+            {
+                for(unsigned int s = 0; s < spielbretterBufSize[prozess]; s++)
+                {
+                    g_hash_table_add(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter],(gpointer) spielbretterBuf[prozess][s]);
+                }            
+            }
+        }
         
         
         //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);

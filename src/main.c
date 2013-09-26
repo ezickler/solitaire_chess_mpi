@@ -22,10 +22,10 @@ static void gibStatisticAus(spielbretter_t *bretter)
     printf("==========================================================================\n");
 	for(int tala=0; tala <= 10; tala++)
 	{
-        printf(" %2d \t\t %10d \t %10ld \t %10.3f \t  %10.3f \n",tala, bretter->loesbareBretter[tala], bretter->anzahlBretter[tala],bretter->loesbareBretter[tala]*100.0/bretter->anzahlBretter[tala] , bretter->berechnungsZeit[tala]);
+        printf(" %2d \t \t %10d \t %10ld \t %10.3f \t %8.3f \n",tala, bretter->loesbareBretter[tala], bretter->anzahlBretter[tala],bretter->loesbareBretter[tala]*100.0/bretter->anzahlBretter[tala] , bretter->berechnungsZeit[tala]);
 	}
     printf("==========================================================================\n");
-    printf("Summe: \t\t %10ld \t %10ld \t %10.3f \t  %10.3f \n\n",bretter->loesbareBretterGesamt,bretter->anzahlBretterGesamt,bretter->loesbareBretterGesamt*100.0/bretter->anzahlBretterGesamt, bretter->berechnungsZeitGesamt );
+    printf("Summe: \t\t %10ld \t %10ld \t %10.3f \t %8.3f \n\n",bretter->loesbareBretterGesamt,bretter->anzahlBretterGesamt,bretter->loesbareBretterGesamt*100.0/bretter->anzahlBretterGesamt, bretter->berechnungsZeitGesamt );
 
     
     printf("Anteil der loesbaren Bretter in Prozent: %f\n", (((bretter->anzahlBretterGesamt - bretter->loesbareBretterGesamt)*100.0)/bretter->anzahlBretterGesamt));

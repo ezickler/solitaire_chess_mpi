@@ -543,7 +543,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
             gettimeofday(&comp_time_figur, NULL);
             bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
             gettimeofday(&start_time_figur, NULL);
-            printf("Pozess %d fertig in %f sec. \n",bretter->prozessNummer bretter->berechnungsZeit[maxFiguren]);
+            printf("Pozess %d fertig in %f sec. \n",bretter->prozessNummer, bretter->berechnungsZeit[maxFiguren]);
         }
         
 

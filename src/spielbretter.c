@@ -108,7 +108,7 @@ static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
         for(int figur = 1; figur <7; figur++)
         {
             spielbrett = (figur << pos*3);
-            g_hash_table_insert(bretter->spielbretterHashtables[1], (gpointer) spielbrett ,(gpointer) 1 );
+            g_hash_table_insert(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter], (gpointer) spielbrett ,(gpointer) 1 );
             /* Zähler für Statistik */
             (bretter->anzahlBretter[1])++;
             (bretter->loesbareBretter[1])++;
@@ -140,8 +140,9 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
     figuren_param_t param;
     /* Kopieren des Spielbretter Arrays */
     memcpy(param.spielbretterHashtables, bretter->spielbretterHashtables, sizeof(GHashTable*)*11);
-    /* Kopiere anzahlfiguren von bretter nach param */
-    param.anzahlFiguren = anzahlFiguren;
+    /* Kopiere Variable */
+    param.aktuelleSpielbretter = bretter->aktuelleSpielbretter;
+    param.vorgaengerSpielbretter = bretter->vorgaengerSpielbretter;
     /* Pointer auf spielbrett in prama speichern */
     param.spielbrett = &spielbrett;
     
@@ -198,6 +199,7 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
     //TODO brett umdrehen
     
     
+    
     /* In der Hashtabelle speicher, wenn ein Spielbrett loesbar ist */
     if(loesbar==1)
     {
@@ -206,9 +208,16 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
         // Kritischerbereich für omp
         #pragma omp critical (spielbrett_berechne_g_hash_add)
         {
-            g_hash_table_add(bretter->spielbretterHashtables[anzahlFiguren], (gpointer) spielbrett );
+            g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
             bretter->loesbareBretter[anzahlFiguren]++;
             bretter->loesbareBretterGesamt ++;
+        }
+    }
+    else
+    {
+        if(anzahlFiguren == 2)
+        {
+            printf("%0*lo \n",SpielfelderAnzahl, spielbrett);
         }
     }
     
@@ -272,10 +281,16 @@ void spielbretter_berechne(spielbretter_t *bretter)
 
 	/* Anzahl der Felder, über die iteriert werden muss */
 	int anzFelder = SpielbrettBreite * SpielbrettHoehe;
+    
+    
 	spielbrett_Leer = 0;
 	anzFiguren_Start = 0;
 	spielbrett_Bauer2 = 0;
 	
+    
+    /* initialisiere Hashtabellen zuordnung in Bretter */ 
+    bretter->vorgaengerSpielbretter = 0;
+    bretter->aktuelleSpielbretter = 1;
     
     /* erzeuge Hashtabellen */
 	erzeugeHashtables(bretter);
@@ -315,7 +330,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 }
                 
                 /* Iteration für den König */
-                #pragma omp parallel for \
+                //#pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
                     reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
@@ -551,17 +566,22 @@ void spielbretter_berechne(spielbretter_t *bretter)
         
         MPI_Barrier(MPI_COMM_WORLD); 
         
-        //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
-        
         /* nicht mehr benötigte Hashtabellen freigeben */
-        g_hash_table_destroy( bretter->spielbretterHashtables[maxFiguren-1]);
+        g_hash_table_remove_all( bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
+        /* Hashtabelle für aktuelle Bretter zu Vorgänger Brettern machen und umgekehrt */ 
+        int temp = bretter->aktuelleSpielbretter;
+        bretter->aktuelleSpielbretter = bretter->vorgaengerSpielbretter;
+        bretter->vorgaengerSpielbretter = temp;
+        
+        
+        
+        
+        //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
         
         if(bretter->prozessNummer == 0)
         {
             printf("====================================\n");
         }
-       
-        
     }
     
     /* Statistikwert speichern */

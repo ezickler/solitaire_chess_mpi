@@ -31,12 +31,16 @@ static inline void schlageFigur(sp_okt_t* spielbrett, sp_okt_t* neues_spielbrett
 	*neues_spielbrett = *spielbrett & ( einser_Bitmaske - (7 << pos*3) - (7 << neue_pos*3));
 	/* nach Schlagen Spielfigur neu  setzen */
 	*neues_spielbrett += (DarstellungFigur << neue_pos*3);
+    //~ if(DarstellungFigur == DarstellungKoenig)
+    //~ {
+        //~ //printf("%0*lo => %0*lo \n",SpielfelderAnzahl, *spielbrett, SpielfelderAnzahl, *neues_spielbrett);
+    //~ }
 }
 
 
 static inline int neuesSpielbrettLoesbar(figuren_param_t *param,sp_okt_t neues_spielbrett)
 {
-    return g_hash_table_contains(param->spielbretterHashtables[(param->anzahlFiguren)-1],(gpointer) neues_spielbrett);
+    return g_hash_table_contains(param->spielbretterHashtables[param->vorgaengerSpielbretter],(gpointer) neues_spielbrett);
 }
  
 
@@ -307,7 +311,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x+1)+((y-2)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -325,7 +329,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x-1)+((y-2)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
         if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -343,7 +347,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x-2)+((y-1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -361,7 +365,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x-2)+((y+1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -379,7 +383,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	
 		neue_pos = (x-1)+((y+2)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -396,7 +400,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 	
 		neue_pos = (x+1)+((y+2)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -414,7 +418,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x+2)+((y+1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -432,7 +436,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x+2)+((y-1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
 		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -458,13 +462,69 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	int neue_pos;
 	sp_okt_t neues_spielbrett;
 
-
-    /*
-	 * Der König kann die 4 Züge des Bauerns auch ausführen
-     */
-	if(berechneBauer(param, x, y) == 1)
+/*
+	 * König schlägt nach links oben
+	 */
+	if((x-1)>0 && (y-1)>0 && (param->spielbrett_array[x-1][y-1] != 0))
     {
-		return 1;
+		
+		neue_pos = (x-1)+((y-1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+        {
+			return 1;
+		}
+	}
+	
+
+	/*
+	 * König schlägt nach links unten
+	 */	
+	if((x-1)>0 && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x-1][y+1] != 0))
+    {
+		neue_pos = (x-1)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+        {
+			return 1;
+		}
+	}
+	
+	/*
+	 * König schlägt nach rechts oben
+	 */
+	if((x+1)<SpielbrettBreite && (y-1)>0 && (param->spielbrett_array[x+1][y-1] != 0))
+    {
+		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
+		
+		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+        {
+			return 1;
+		}
+	}
+	
+	/*
+	 * König schlägt nach rechts unten
+	 */
+	if((x+1)<SpielbrettBreite && (y+1)<SpielbrettHoehe && (param->spielbrett_array[x+1][y+1] != 0))
+    {
+		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
+		
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
+		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+        {
+
+			return 1;
+		}
 	}
 
 	
@@ -476,7 +536,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x)+((y-1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -494,7 +554,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x-1)+((y)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -512,7 +572,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 	
 		neue_pos = (x)+((y+1)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
 		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -530,7 +590,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		neue_pos = (x+1)+((y)*SpielbrettBreite);
 		
-		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
+		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
 		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
@@ -552,20 +612,131 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
  */
 int berechneDame(figuren_param_t *param, int x, int y)
 {
-	/*
-     * Die Dame kann die gleichen Züge wie ein Turm ausführen
-     */ 
-	if(berechneTurm(param, x, y) == 1)
-    {
-		return 1;
+    int pos = x+(y*SpielbrettBreite);
+	int neue_pos;
+	sp_okt_t neues_spielbrett;
+    int n;
+    
+    
+	/*Dame schlägt nach rechts */
+	for(n = 1; (x+n) < SpielbrettBreite ; n++)
+	{
+		if(param->spielbrett_array[x+n][y] != 0)
+		{	
+            
+			neue_pos = (x+n)+((y)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
 	}
 	
-    /*
-	 * Die Dame kann die gleichen Züge wie ein Läufer ausführen
-     */ 
-	if(berechneLaeufer(param, x, y) == 1)
-    {
-		return 1;
+	/*Dame schlägt nach links*/
+	for(n = 1; (x-n) > 0 ; n++)
+	{	
+        if (param->spielbrett_array[x-n][y] != 0)
+		{
+			neue_pos = (x-n)+((y)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+	
+	/*Dame schlägt nach unten */
+	for(n = 1; (y+n) < SpielbrettHoehe ; n++)
+	{
+		if(param->spielbrett_array[x][y+n] != 0)
+		{
+			neue_pos = (x)+((y+n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+	
+	/*Dame schlägt nach oben*/
+	for(n = 1; (y-n) > 0; n++)
+	{
+		if(param->spielbrett_array[x][y-n] != 0)
+		{
+			neue_pos = (x)+((y-n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+    
+    /*Dame schlägt nach links oben*/
+	for(n = 1; ((x-n) > 0) && ((y-n) > 0); n++)
+	{	
+        if(param->spielbrett_array[x-n][y-n] != 0)
+        {
+			neue_pos = (x-n)+((y-n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+	
+	/*Dame schlägt nach links unten*/
+	for(n = 1; ((x-n) > 0) && ((y+n) < SpielbrettHoehe) ; n++)
+	{	
+        if(param->spielbrett_array[x-n][y+n] != 0)
+        {
+			neue_pos = (x-n)+((y+n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+	
+	/*Dame schlägt nach rechts oben*/
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y-n) > 0); n++)
+	{	
+        if(param->spielbrett_array[x+n][y-n] != 0)
+        {
+			neue_pos = (x+n)+((y-n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
+	}
+	
+	/*Dame schlägt nach rechts unten*/
+	for(n = 1; ((x+n) < SpielbrettBreite) && ((y+n) < SpielbrettHoehe) ; n++)
+	{	
+        if(param->spielbrett_array[x+n][y+n] != 0)
+        {
+			neue_pos = (x+n)+((y+n)*SpielbrettBreite);
+			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
+			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+            if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
+            {
+                return 1;
+            }
+		}
 	}
 	
 	return 0;

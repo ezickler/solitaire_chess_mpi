@@ -9,6 +9,10 @@ typedef struct spielbretter
 	 */  
 	GHashTable* spielbretterHashtables[11]; 
     
+    /* variablen in den gespeichert ist in welcher Hashtabelle welche Bretter sind*/
+    int aktuelleSpielbretter;
+    int vorgaengerSpielbretter;
+    
     /* MPI Prozessanzahl und Przessnummer */
     int prozessNummer;
     int anzahlProzesse;

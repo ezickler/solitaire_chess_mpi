@@ -37,8 +37,11 @@ typedef uint64_t sp_okt_t;
 typedef struct figuren_param{
 	char **spielbrett_array; 
 	sp_okt_t* spielbrett; 
-	int anzahlFiguren;
+    
 	GHashTable* spielbretterHashtables[11]; 
+    /* variablen in den gespeichert ist in welcher Hashtabelle welche Bretter sind*/
+    int aktuelleSpielbretter;
+    int vorgaengerSpielbretter;
 	
 }figuren_param_t;
 

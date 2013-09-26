@@ -533,13 +533,21 @@ void spielbretter_berechne(spielbretter_t *bretter)
         //TODO MPI kommunikation
         //TODO löschen der nicht mehr benötigten hashtabellen
         /* Statistikwert speichern */
+        
+        if(bretter->prozessNummer == 0)
+        {
+            printf("========== %d Figuren===============",maxFiguren );
+        }
         //if(bretter->prozessNummer == 0)
         {
             gettimeofday(&comp_time_figur, NULL);
             bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
             gettimeofday(&start_time_figur, NULL);
-            printf("Pozess %d fertig mit %d Figuren in %f sec. \n",bretter->prozessNummer, maxFiguren, bretter->berechnungsZeit[maxFiguren]);
+            printf("Pozess %d fertig in %f sec. \n",bretter->prozessNummer bretter->berechnungsZeit[maxFiguren]);
         }
+        
+
+        
         MPI_Barrier(MPI_COMM_WORLD); 
         
         //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
@@ -547,7 +555,10 @@ void spielbretter_berechne(spielbretter_t *bretter)
         /* nicht mehr benötigte Hashtabellen freigeben */
         g_hash_table_destroy( bretter->spielbretterHashtables[maxFiguren-1]);
         
-        
+        if(bretter->prozessNummer == 0)
+        {
+            printf("====================================");
+        }
        
         
     }

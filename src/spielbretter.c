@@ -609,7 +609,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 spielbretterBuf[prozess] = malloc(spielbretterBufSize[prozess]* sizeof(sp_okt_t));
             }
             /* Inhalt der Hashtabelle ayus dem Buffer an alle senden */
-            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[bretter->prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
+            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
         }
         
         for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)

@@ -64,6 +64,11 @@ int main(int argc, char ** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &(bretter.anzahlProzesse));
 	MPI_Comm_rank(MPI_COMM_WORLD, &(bretter.prozessNummer));
     AskParams(&option, argc, argv);
+    
+    if(option.numThreads>0)
+    {
+        omp_set_num_threads(option.numThreads);
+    }
 	
     if(bretter.prozessNummer == 0)
     {
@@ -74,7 +79,7 @@ int main(int argc, char ** argv)
         printf ( "    Kira Duwe\n");
         printf ( "    Enno Zickler\n");
         printf ( "===============================================================\n"  );
-        printf ( "Starte Berechnung für %d x %d Spielbretter. \n", option.spielbrettBreite, option.spielbrettHoehe);
+        printf ( "Starte Berechnung für %d x %d Spielbretter mit %d Threads in %d Prozessen. \n", option.spielbrettBreite, option.spielbrettHoehe,omp_get_max_threads(), bretter.anzahlProzesse);
     }
 
         

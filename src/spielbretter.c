@@ -325,6 +325,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 }
                 
                 /* Iteration für den König */
+                omp_set_nested(1);
                 #pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
@@ -351,6 +352,10 @@ void spielbretter_berechne(spielbretter_t *bretter)
                         
                         
                         /* Iteration für den Springer */
+                        #pragma omp parallel for \
+                            private(anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
+                            schedule(dynamic)\
+                            reduction (+: zaehlerLoesbareBretter, zaehler_bretter_figuren)
                         for(int posSpringer1=0; posSpringer1<=anzFelder; posSpringer1++)
                         {
                             anzFiguren_Springer1 = anzFiguren_Koenig;
@@ -556,7 +561,6 @@ void spielbretter_berechne(spielbretter_t *bretter)
             gettimeofday(&comp_time_figur, NULL);
             bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
             gettimeofday(&start_time_figur, NULL);
-            printf("Pozess %d fertig in %f sec. \n",bretter->prozessNummer, bretter->berechnungsZeit[maxFiguren]);
         }
         
 
@@ -620,19 +624,22 @@ void spielbretter_berechne(spielbretter_t *bretter)
             free(spielbretterBuf[prozess]);
         }
         
-        
-        
-                
-        if(bretter->prozessNummer == 0)
-        {
-            printf("====================================\n");
-        }
     }
     
     /* Bretter Zähler von Prozessen einsammeln */
     MPI_Reduce (&zaehlerLoesbareBretterGesamt, &bretter->loesbareBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce (&zaehler_bretter_gesamt, &bretter->anzahlBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
     
+    if(bretter->prozessNummer == 0)
+    {
+        MPI_Reduce (MPI_IN_PLACE, bretter->loesbareBretter, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        MPI_Reduce (MPI_IN_PLACE, bretter->anzahlBretter, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    }
+    else
+    {
+        MPI_Reduce (bretter->loesbareBretter, 0, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        MPI_Reduce (bretter->anzahlBretter, 0, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    }
     
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMax, 11, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMin, 11, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);

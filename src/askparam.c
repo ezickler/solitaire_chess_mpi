@@ -22,7 +22,7 @@ void AskParams(options_t* option, int argc, char** argv )
 		
 	if(argc == 5)
 	{
-		sscanf( argv[1],"%d", &(option->num ));
+		sscanf( argv[1],"%d", &(option->numThreads ));
 		sscanf( argv[2],"%d", &(option->method));
 		sscanf( argv[3],"%d", &(option->spielbrettBreite));
 		sscanf( argv[4],"%d", &(option->spielbrettHoehe));

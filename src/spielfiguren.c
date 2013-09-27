@@ -24,7 +24,7 @@ sp_okt_t einser_Bitmaske = 0xffffffffffffffffLL;
  /**
   * Hilfsmethode zum Setzen einer Figur von pos auf neue_pos 
   */
-static inline void schlageFigur(sp_okt_t* spielbrett, sp_okt_t* neues_spielbrett, int DarstellungFigur, int pos, int neue_pos)
+ static inline void schlageFigur(sp_okt_t* spielbrett, sp_okt_t* neues_spielbrett, int DarstellungFigur, int pos, int neue_pos)
 {
 	/* Spielfiguren, geschlagene und schlagende, von Spielbrett löschen */
 	/* Von der Bitmaske wird "(7 << pos*3)" abgezogen, um an dieser Stelle 0 zu erzeugen */
@@ -40,7 +40,7 @@ static inline void schlageFigur(sp_okt_t* spielbrett, sp_okt_t* neues_spielbrett
 
 static inline int neuesSpielbrettLoesbar(figuren_param_t *param,sp_okt_t neues_spielbrett)
 {
-    return g_hash_table_contains(param->spielbretterHashtables[param->vorgaengerSpielbretter],(gpointer) neues_spielbrett);
+    return !(g_hash_table_contains(param->spielbretterHashtables[param->vorgaengerSpielbretter],(gpointer) neues_spielbrett));
 }
  
 

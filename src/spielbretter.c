@@ -108,7 +108,7 @@ static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
         for(int figur = 1; figur <7; figur++)
         {
             spielbrett = (figur << pos*3);
-            g_hash_table_insert(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter], (gpointer) spielbrett ,(gpointer) 1 );
+            //g_hash_table_insert(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter], (gpointer) spielbrett ,(gpointer) 1 );
             /* Zähler für Statistik */
             (bretter->anzahlBretter[1])++;
             (bretter->loesbareBretter[1])++;
@@ -208,18 +208,20 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
         // Kritischerbereich für omp
         #pragma omp critical (spielbrett_berechne_g_hash_add)
         {
-            g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
+            //g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
             bretter->loesbareBretter[anzahlFiguren]++;
             bretter->loesbareBretterGesamt ++;
         }
     }
-    //~ else
-    //~ {
-        //~ if(anzahlFiguren == 4)
-        //~ {
-            //~ printf("%0*lo \n",SpielfelderAnzahl, spielbrett);
-        //~ }
-    //~ }
+    else
+    {
+        #pragma omp critical (spielbrett_berechne_g_hash_add)
+        {
+            g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
+            //bretter->loesbareBretter[anzahlFiguren]++;
+            //bretter->loesbareBretterGesamt ++;  
+        } 
+    }
     
 	/*Spielbrett Array wird wieder freigegeben*/
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettBreite);
@@ -316,7 +318,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
             /* MPI zuweisung der schleifen zu den Prozessen. */
-            if(bretter->prozessNummer == ((bretter->anzahlProzesse/anzFelder) * posDame))
+            if(bretter->prozessNummer == (int) ((bretter->anzahlProzesse/(anzFelder+1.0)) * posDame))
             {
                 //printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
                 anzFiguren_Dame = anzFiguren_Start;
@@ -330,7 +332,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 }
                 
                 /* Iteration für den König */
-                //#pragma omp parallel for \
+                #pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
                     reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
@@ -574,10 +576,58 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->vorgaengerSpielbretter = temp;
         
         
+        sp_okt_t *spielbretterBuf[bretter->anzahlProzesse];
+        unsigned int spielbretterBufSize[bretter->anzahlProzesse];
+        
+        spielbretterBuf[bretter->prozessNummer] = malloc(g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter])* sizeof(sp_okt_t));
+        
+        GHashTableIter iter;
+        gpointer key, value;
+        
+        int i = 0;
+        g_hash_table_iter_init (&iter, bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
+        while (g_hash_table_iter_next (&iter, &key, &value))
+        {
+            spielbretterBuf[bretter->prozessNummer][i] = (sp_okt_t) value;
+            i++;
+        }
         
         
-        //MPI_Allgather (void *sendbuf, int sendcount, MPI_Datatype sendtype, void *recvbuf, int recvcount, MPI_Datatype recvtype, MPI_COMM_WORLD);
+        for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
+        {
+            
+            if(bretter->prozessNummer == prozess)
+            {
+                spielbretterBufSize[prozess] = g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
+            }
+            
+            /* Große der Hashtabelle an alle senden */
+            MPI_Bcast (&spielbretterBufSize[prozess],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
+            /* Buffer für Daten empfang allozieren */
+            if(bretter->prozessNummer != prozess)
+            {
+                spielbretterBuf[prozess] = malloc(spielbretterBufSize[prozess]* sizeof(sp_okt_t));
+            }
+
+            /* Inhalt der Hashtabelle aus dem Buffer an alle senden */
+            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
+        }
         
+        for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
+        {
+            if(bretter->prozessNummer != prozess)
+            {
+                for(unsigned int s = 0; s < spielbretterBufSize[prozess]; s++)
+                {
+                    g_hash_table_add(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter],(gpointer) spielbretterBuf[prozess][s]);
+                }            
+            }
+            free(spielbretterBuf[prozess]);
+        }
+        
+        
+        
+                
         if(bretter->prozessNummer == 0)
         {
             printf("====================================\n");

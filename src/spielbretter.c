@@ -318,7 +318,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
             /* MPI zuweisung der schleifen zu den Prozessen. */
-            if(bretter->prozessNummer == ((bretter->anzahlProzesse/anzFelder) * posDame))
+            if(bretter->prozessNummer == (int) ((bretter->anzahlProzesse/(anzFelder+1.0)) * posDame))
             {
                 //printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
                 anzFiguren_Dame = anzFiguren_Start;
@@ -591,7 +591,6 @@ void spielbretter_berechne(spielbretter_t *bretter)
             spielbretterBuf[bretter->prozessNummer][i] = (sp_okt_t) value;
             i++;
         }
-        printf("Pozess %d Hashtabelle im Buffer. \n",bretter->prozessNummer);
         
         
         for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
@@ -603,24 +602,16 @@ void spielbretter_berechne(spielbretter_t *bretter)
             }
             
             /* Große der Hashtabelle an alle senden */
-            MPI_Bcast (&spielbretterBufSize[bretter->anzahlProzesse],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
-            //printf("Pozess %d bcast size=%d prozess %d. \n",bretter->prozessNummer, spielbretterBufSize[prozess], prozess);
+            MPI_Bcast (&spielbretterBufSize[prozess],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
+            /* Buffer für Daten empfang allozieren */
             if(bretter->prozessNummer != prozess)
             {
                 spielbretterBuf[prozess] = malloc(spielbretterBufSize[prozess]* sizeof(sp_okt_t));
             }
-            printf("Pozess %d malloc prozess %d. \n",bretter->prozessNummer, prozess);
-            /* Inhalt der Hashtabelle ayus dem Buffer an alle senden */
-            //MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
-            //printf("Pozess %d bcast Buffer prozess %d. \n",bretter->prozessNummer, prozess);
-            
-            if(bretter->prozessNummer == 0)
-            {
-                printf("-------------------\n");
-            }
-            MPI_Barrier(MPI_COMM_WORLD);
+
+            /* Inhalt der Hashtabelle aus dem Buffer an alle senden */
+            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
         }
-        printf("Pozess %d Buffer versendet. \n",bretter->prozessNummer);
         
         for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
         {
@@ -635,7 +626,6 @@ void spielbretter_berechne(spielbretter_t *bretter)
         }
         
         
-        printf("Pozess %d Buffer in Hashtabelle geschriben. \n",bretter->prozessNummer);
         
                 
         if(bretter->prozessNummer == 0)

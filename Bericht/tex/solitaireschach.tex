@@ -103,17 +103,43 @@ TODO: Hier kommt eine kurze Beschreibung der nachfolgenden Arbeit hin.
 \chapter{Einleitung}
 \label{Einleitung}
 
+\section{Spielregeln}
+Solitaireschach ist eine Kombination aus der Spiellogik von Solitaire und 
+den Zugregeln des Schachs. Es wird allein auf einem 4x4 großen Brett mit einer gegebenen Startaufstellung gespielt. Diese ergibt sich zufällig aus der Figurenmenge des Schachs, wobei nur zwei Bauern vorhanden sind. Es gibt also eine Dame,
+einen König, zwei Springer, zwei Läufer, zwei Türme und zwei Bauern. 
+Zu Beginn kann eine beliebige Kombination dieser Figuren auf dem Brett stehen, wobei mindestens zwei und maximal zehn Figuren benutzt werden.
+Ungültig wären Spielbretter bei denen zum Beispiel zwei Damen aufgestellt sind.
+
+
+Ziel ist es, dass am Ende des Spiels nur noch eine einzige Figur auf dem Spielbrett steht. Pro Zug muss genau eine Figur gezogen und damit eine andere geschlagen werden.
+Die Figuren ziehen nach folgenden Regeln:
+\begin{itemize}
+\item Bauer: 
+Der Bauer kann auf eines seiner benachbarten Diagonalfelder ziehen. Im Gegensatz zum Schach ist hier jede Zugrichtung möglich.
+\item Turm: Der kann beliebig viele Felder (mindestens eines) auf der x- oder auf der y-Koordinate seines Feldes ziehen.
+\item Läufer: Der Läufer kann beliebig viele Felder (mindestens eines) auf den Diagonalen seines Feldes ziehen.
+\item Springer: Der Springer ist die einzige Figur, die über andere Figuren auf ihrem Weg hinwegspringen kann. Erst die Figur am Ende des Zuges wird geschlagen. Es gibt zwei mögliche Züge. Entweder der Springer wird zwei Felder auf der x-Koordinate und eines auf der y-Koordinate gezogen oder ein Feld in x-Richtung und zwei in y-Richtung. 
+\item König: Der König kann genau ein Feld weit ziehen, wobei alle benachbarten Felder möglich sind. Er stellt also eine Mischung aus Bauer und eingeschränktem Turm dar.
+\item Dame: Die Dame ist in der Lage beliebig viele Felder auf den Diagnoalen oder auf einer der beiden Achsen zu ziehen. Damit ist sie eine Kombination aus Läufer und Turm.
+\end{itemize}
+
+
 \section{Aufgabenstellung}
 
-\section{Spielregeln}
+Das Spiel bietet nun eine enorme Vielfalt an gültigen Startpositionen und resultierenden Folgebrettern.
+Uns faszinierte daher die Frage, wie viele mögliche Startbelegungen es gäbe und welche davon lösbar wären.
+Dieses Problem wollten wir gern für eine variable Spielbrettgröße untersuchen und nicht nur für den Fall des 4x4-Brettes.
+Sollten diese Aufgabenstellungen nicht umfangreich genug sein, so hätten wir uns noch mit der Ausgabe der möglichen Lösungen beschäftigt und einer Aufzeichnung der Lösungswege.
+Das Programm sollte also alle gültigen Startpositionen erzeugen - und zwar nur die gültigen - sowie eine Berechnung durchführen, welche dieser entstandenen Bretter lösbar sind.
+
 
 \section{Begrifflichkeiten}
 Hier eine Definition der im folgenden gebrauchten Begriffe:
 \begin{itemize}
 	\item Spielbrett: die aktuelle Belegung der einzelnen Felder
 	\item Spielfeld: genau ein Einzelsegment des Spielbrettes
-	\item Spielbrettbreite: x-Koordinate des Spielbrettes
-	\item Spielbretthöhe: y-Koordinate des Spielbrettes
+	\item Spielbrettbreite: x-Koordinate des Spielbrettes (links-rechts)
+	\item Spielbretthöhe: y-Koordinate des Spielbrettes (oben-unten)
 	\item Felderanzahl= Spielbrettbreite x Spielbretthöhe
 \end{itemize}
 
@@ -124,20 +150,95 @@ Hier eine Definition der im folgenden gebrauchten Begriffe:
 
 \section{Entwurf}
 \section{Probleme}
+Während des Entwurfs und der Implementierung traten in einigen Bereichen Schwierigkeiten auf.
 \subsection{Spielbretterzeugung}
-\subsection{Speicherung der Spielbretter}
-\subsection{Berechnung der Spielbretter}
-\subsection{Lastungleichheit}
+Zunächst einmal bestand der Anspruch nicht nur einen korrekten sondern auch einen effizienten Algorithmus für die Erzeugung der Spielbretter auf einer variablen Spielbrettgröße zu finden.
+Es sollten also garantiert alle Spielbretter erzeugt werden, ohne dass doppelte entstehen.
 
-\textit{%
-In diesem Kapitel ...
-}
-\bigskip
+\subsection{Modellierung und Speicherung der Spielbretter}
+Eine obere Grenze für die Anzahl der möglichen Startbelegungen bietet eine Abschätzung mit der Faktoriellen:\\
+16 * 15 * 14 * 13 * 12 * 11 * 10 * 9 * 8 * 7 = 29 059 430 400
+
+Dort sind zwar noch die doppelten Felder enthalten, die dadurch entstehen, dass zwischen den Figuren vom gleichen Typ nicht unterschieden wird, dennoch bietet es eine gute Einschätzung der Größenordnung.
+Damit ergab sich die Frage, wie man die Spielbretter möglichst speichereffizient modellieren kann und wie eine sinnvolle Speicherverwaltung einer derart großen Menge aussehen könnte, die später auch noch für den parallelen Zugriff geeignet wäre.
+
+\subsection{Berechnung der Spielbretter}
+Um von einer gültigen Startbelegung zu der Aussage "Das Brett ist lösbar." zu kommen,braucht man mindestens einen im Maximalfall aber 9 Berechnungsschritte und zwar für jedes Spielbrett. Da die Zahl der möglichen Spielbretter ohnehin schon sehr groß ist, musste also eine Berechnung gefunden werden, die sehr effizient arbeitet.
+
+
+\subsection{Lastungleichheit}
+Aufgrund der Abhängigkeit der Berechnungszeit von der Anzahl der möglichen Züge ergibt sich eine deutliche Lastungleichheit.
+
+
 
 \section{Implementierung}
 \subsection{Darstellung der Spielbretter}
+Wir schwankten lange zwischen zwei verschiedenen Ansätzen.
+Eine Möglichkeit ist die Speicherung als zweidimensionales Array, das eine deutlich intuitivere Handhabung mit sich bringt. Allerdings ist es deutlich größer, was den benötigten Speicher angeht.
+Das kleinste zur Verfügung stehende wäre ein 16 elementiges Char-Array. 
+Es braucht also für den Fall 4x4:  16*8bit = 128 bit.
+
+Um eine möglichst kompakte und damit speicher- und zugriffseffiziente Darstellung der Spielbretter zu erhalten, entschieden wir uns für eine Oktaldarstellung. Diese benötigt 64 bit und bietet die Möglichkeit, Spielbretter bis zu einer Größe von 3 x 7 zu codieren. 
+Das 4x4 Brett braucht also nur 64 bit und damit die Hälfte im Vergleich zum Array.
+
+Codierung:\\
+Die letzte Stelle der Zahl ist das Feld des Brettes mit der Nummer 0.
+Jede Stelle der Oktalzahl bzw. drei Stellen der Binärzahl ($ 2^3 = 8 $) repräsentiert also genau ein Feld des Spielbrettes. Für die Spielfiguren führten wir folgende Codierung ein:
+\begin{itemize}
+\item 0 = leeres Feld
+\item 1 = Bauer
+\item 2 = Turm
+\item 3 = Läufer
+\item 4 = Springer
+\item 5 = König
+\item 6 = Dame
+\end{itemize}
+
+Die Felder des Spielbrettes nummerierten wir von 0 - Felderanzahl-1 durch.
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}\hline
+		 0 &  1 &  2 &  3 \\ \hline
+		 4 &  5 &  6 &  7 \\ \hline
+		 8 &  9 & 10 & 11 \\ \hline
+		12 & 13 & 14 & 15  \\ \hline
+		\end{tabular}
+	\end{center}
+	\caption{Nummerierung der Spielfelder}
+	\label{table:Tabelle1}
+\end{table}
+
+Hier ein Beispiel wie für die Darstellung eines Spielbrettes als Oktalzahl.
+Das Spielbrett:  3032 4124 0650 0010 entspricht dem in der Tabelle dargestellten.
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|}\hline
+		 0 &  1 &  0 &  0 \\ \hline
+		 0 &  5 &  6 &  0 \\ \hline
+		 4 &  2 &  1 & 4 \\ \hline
+		 2 &  3 &  0 &  3 \\ \hline
+		\end{tabular}
+	\end{center}
+	\caption{Spielbrett 3032 4124 0650 0010}
+	\label{table:Tabelle1}
+\end{table} 
+
+Diese Art der Repräsentation orientiert sich an dem gängigen Standard für die Speicherung von Schachbrettern. Dort wird eine Binärzahl mit der Größe von  64 bit benutzt, um darstzustellen, welche Felder belegt sind.
+Zwei weitere werden benötigt, um die Figurentypen zu speichern.
+Da wir aber ein deutlich kleineres Spielbrett betrachten, entschieden wir uns dafür nur eine Zahl zu benutzen.
+
 \subsection{Erzeugung der Spielbretter}
+
+
+Pseudocode: for-schleifen
+
+\subsection{Berechnung der Spielbretter}
+
+Pseudocode: Bitmaske und shiften für schlage Figur
+
 \subsection{Speicherung der Spielbretter}
+
+Hashtabelle als set
 \subsection{Parallelisierung}
 \subsection{Kommunikation}
 

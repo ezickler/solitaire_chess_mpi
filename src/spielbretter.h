@@ -27,6 +27,9 @@ typedef struct spielbretter
     
     /* Zeiten zum lösen der Spielbretter */
     double berechnungsZeit[11];
+    double berechnungsZeitMin[11];
+    double berechnungsZeitMax[11];
+    double berechnungsZeitAvg[11];
     double berechnungsZeitGesamt;
 	
 }spielbretter_t;

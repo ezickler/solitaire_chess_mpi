@@ -129,7 +129,7 @@ static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
  * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int anzahlFiguren )
+static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int anzahlFiguren )
 {
     
     /* Zwischenspeicherung ob das Spielbrett bereits gelöst ist */
@@ -200,31 +200,21 @@ static void spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int
     
     
     
-    /* In der Hashtabelle speicher, wenn ein Spielbrett loesbar ist */
-    if(loesbar==1)
+    /* In der Hashtabelle speicher, wenn ein Spielbrett nicht loesbar ist */
+    if(loesbar==0)
     {
         //TODO umgedrehtes brett in der hastabelle nachgucken
         
         // Kritischerbereich für omp
         #pragma omp critical (spielbrett_berechne_g_hash_add)
         {
-            //g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
-            bretter->loesbareBretter[anzahlFiguren]++;
-            bretter->loesbareBretterGesamt ++;
+            g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
         }
     }
-    else
-    {
-        #pragma omp critical (spielbrett_berechne_g_hash_add)
-        {
-            g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
-            //bretter->loesbareBretter[anzahlFiguren]++;
-            //bretter->loesbareBretterGesamt ++;  
-        } 
-    }
-    
 	/*Spielbrett Array wird wieder freigegeben*/
 	spielbretterArrayDestruct(param.spielbrett_array, SpielbrettBreite);
+    
+    return loesbar;
 }
 
 
@@ -241,6 +231,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
     /*Zähler für die anzahl der generierten Spielbretter*/
     long zaehler_bretter_gesamt = 0;
     long zaehler_bretter_figuren; /* Zaehlt wie viel spielbretter für eine bestimmte figuren anzahl erstellt werden */
+    long zaehlerLoesbareBretter = 0;
+    long zaehlerLoesbareBretterGesamt = 0;
     
 
     /* time measurement variables */
@@ -304,6 +296,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
 	for(int maxFiguren=2; maxFiguren <= 10; maxFiguren++)
     {
         zaehler_bretter_figuren = 0;
+        zaehlerLoesbareBretter = 0;
     
         /* Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
          * für alle anderen Figuren analog!*/
@@ -335,7 +328,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 #pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
-                    reduction (+: zaehler_bretter_gesamt, zaehler_bretter_figuren)
+                    reduction (+: zaehlerLoesbareBretter, zaehler_bretter_figuren)
                     
                 for(int posKoenig=0; posKoenig<=anzFelder; posKoenig++)
                 {	
@@ -519,12 +512,11 @@ void spielbretter_berechne(spielbretter_t *bretter)
                                                                                             // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
                                                                                             // aber trotzdem Bretter mit nur einer Figur
                                                                                             // g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) spielbrett_Bauer2,(gpointer) 0 );
-                                                                                            spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
-                                                                                            
-                                                                                            
+                                                                                            zaehlerLoesbareBretter += spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
+                                                                                        
                                                                                             
                                                                                             /* Zähler für die Statistik*/
-                                                                                            zaehler_bretter_gesamt++;
+                                                                                            
                                                                                             zaehler_bretter_figuren++;
                                                             
                                                                                         }
@@ -550,6 +542,9 @@ void spielbretter_berechne(spielbretter_t *bretter)
         } /* Schleife Dame */
      
         bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
+        zaehler_bretter_gesamt += zaehler_bretter_figuren;
+        bretter->loesbareBretter[maxFiguren] = zaehlerLoesbareBretter;
+        zaehlerLoesbareBretterGesamt += zaehlerLoesbareBretter;
     
         //TODO MPI kommunikation
         //TODO löschen der nicht mehr benötigten hashtabellen
@@ -634,10 +629,25 @@ void spielbretter_berechne(spielbretter_t *bretter)
         }
     }
     
+    /* Bretter Zähler von Prozessen einsammeln */
+    MPI_Reduce (&zaehlerLoesbareBretterGesamt, &bretter->loesbareBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce (&zaehler_bretter_gesamt, &bretter->anzahlBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    
+    
+    MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMax, 11, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMin, 11, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitAvg, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    
+    /* summe der Zeiten zu duchschnit machen */
+    for(int x = 0; x<=10; x++)
+    {
+        bretter->berechnungsZeitAvg[x] = bretter->berechnungsZeitAvg[x]/bretter->anzahlProzesse;
+    }
+    
+    
     /* Statistikwert speichern */
     if(bretter->prozessNummer == 0)
-    {
-        bretter->anzahlBretterGesamt = zaehler_bretter_gesamt;
+    {   
         gettimeofday(&comp_time, NULL);
         bretter->berechnungsZeitGesamt = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
     }

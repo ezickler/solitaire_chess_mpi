@@ -629,7 +629,10 @@ void spielbretter_berechne(spielbretter_t *bretter)
                     g_hash_table_add(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter],(gpointer) spielbretterBuf[prozess][s]);
                 }            
             }
+            free(spielbretterBuf[prozess]);
         }
+        
+        
         printf("Pozess %d Buffer in Hashtabelle geschriben. \n",bretter->prozessNummer);
         
                 

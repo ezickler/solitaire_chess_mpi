@@ -1,0 +1,13 @@
+[west8:21389] *** Process received signal ***
+[west8:21389] Signal: Segmentation fault (11)
+[west8:21389] Signal code: Address not mapped (1)
+[west8:21389] Failing at address: (nil)
+[west8:21389] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0xfcb0) [0x7f48cd715cb0]
+[west8:21389] [ 1] ../build/./solitaire(spielbretter_berechne+0x497) [0x402777]
+[west8:21389] [ 2] ../build/./solitaire(main+0xad) [0x4014cd]
+[west8:21389] [ 3] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xed) [0x7f48cd36876d]
+[west8:21389] [ 4] ../build/./solitaire() [0x401719]
+[west8:21389] *** End of error message ***
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 7 with PID 21389 on node west8 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

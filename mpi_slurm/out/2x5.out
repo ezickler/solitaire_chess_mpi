@@ -1,0 +1,56 @@
+west1
+west2
+west3
+west4
+west6
+west9
+west10
+west5
+west8
+west7
+
+===============================================================
+Programm zur Berechnung aller lösbaren Spielbretter 
+===============================================================
+    Kira Duwe
+    Enno Zickler
+===============================================================
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Beginn erzeugeHashtables
+Fertig mit 2 Figuren. 
+Fertig mit 3 Figuren. 
+Fertig mit 4 Figuren. 
+Fertig mit 5 Figuren. 
+Fertig mit 6 Figuren. 
+Fertig mit 7 Figuren. 
+Fertig mit 8 Figuren. 
+Fertig mit 9 Figuren. 
+Fertig mit 10 Figuren. 
+Berechnungszeit:    2.709823 s 
+Bretter / Sekunde: 506972.226599 
+
+Figuren: 	 Hashgröße: 	 Loesbare: 	 Gesamt: 	 Zeit:
+==========================================================================
+  0 		          0 	          0 	          0 	  0.000000 
+  1 		         60 	         60 	         60 	  0.000000 
+  2 		         30 	         30 	         45 	  0.008745 
+  3 		        128 	        128 	        864 	  0.005294 
+  4 		        778 	        778 	       9072 	  0.009349 
+  5 		       5923 	       5923 	      55944 	  0.025388 
+  6 		      35182 	      35182 	     204120 	  0.116379 
+  7 		     105774 	     105774 	     423360 	  0.678411 
+  8 		     135676 	     135676 	     453600 	  1.323394 
+  9 		      65814 	      65814 	     204120 	  0.496532 
+ 10 		       7308 	       7308 	      22680 	  0.046266 
+==========================================================================
+Summe: 		     356613 	     356613 	    1373805 	  2.709823 
+
+Anteil der loesbaren Bretter in Prozent: 74.041949

@@ -1,0 +1,4 @@
+slurmd[west1]: *** JOB 38297 CANCELLED AT 2013-09-27T11:04:53 ***
+mpiexec: killing job...
+
+[west1:08020] [[50372,0],0]-[[50372,0],1] mca_oob_tcp_msg_recv: readv failed: Connection reset by peer (104)

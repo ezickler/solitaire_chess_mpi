@@ -1,0 +1,146 @@
+west1
+west2
+west3
+west4
+west5
+west6
+west7
+west9
+west8
+west10
+
+===============================================================
+Programm zur Berechnung aller lösbaren Spielbretter 
+===============================================================
+    Kira Duwe
+    Enno Zickler
+===============================================================
+Starte Berechnung für 4 x 4 Spielbretter. 
+========== 2 Figuren===============
+Pozess 3 fertig in 0.005281 sec. 
+Pozess 9 fertig in 0.005782 sec. 
+Pozess 0 fertig in 0.006582 sec. 
+Pozess 6 fertig in 0.006906 sec. 
+Pozess 2 fertig in 0.008183 sec. 
+Pozess 1 fertig in 0.008462 sec. 
+Pozess 5 fertig in 0.009336 sec. 
+Pozess 7 fertig in 0.009233 sec. 
+Pozess 4 fertig in 0.010722 sec. 
+Pozess 8 fertig in 0.011762 sec. 
+====================================
+========== 3 Figuren===============
+Pozess 8 fertig in 1.987516 sec. 
+Pozess 0 fertig in 1.994067 sec. 
+Pozess 1 fertig in 1.992856 sec. 
+Pozess 9 fertig in 2.037824 sec. 
+Pozess 6 fertig in 4.845618 sec. 
+Pozess 3 fertig in 4.849287 sec. 
+Pozess 4 fertig in 4.846118 sec. 
+Pozess 5 fertig in 4.847898 sec. 
+Pozess 7 fertig in 4.847958 sec. 
+Pozess 2 fertig in 4.850362 sec. 
+Pozess 6 fertig in 0.452891 sec. 
+Pozess 8 fertig in 3.348051 sec. 
+====================================
+========== 4 Figuren===============
+Pozess 1 fertig in 3.948264 sec. 
+Pozess 0 fertig in 3.950254 sec. 
+Pozess 9 fertig in 4.120758 sec. 
+Pozess 4 fertig in 1.460855 sec. 
+Pozess 5 fertig in 1.460791 sec. 
+Pozess 3 fertig in 1.586902 sec. 
+Pozess 2 fertig in 1.626195 sec. 
+Pozess 7 fertig in 2.628293 sec. 
+====================================
+========== 5 Figuren===============
+Pozess 3 fertig in 8.556983 sec. 
+Pozess 6 fertig in 9.762805 sec. 
+Pozess 8 fertig in 9.798397 sec. 
+Pozess 2 fertig in 9.072909 sec. 
+Pozess 5 fertig in 9.413479 sec. 
+Pozess 0 fertig in 9.839719 sec. 
+Pozess 4 fertig in 9.529171 sec. 
+Pozess 7 fertig in 8.363182 sec. 
+Pozess 1 fertig in 9.942918 sec. 
+Pozess 9 fertig in 17.039957 sec. 
+====================================
+========== 6 Figuren===============
+Pozess 3 fertig in 16.378843 sec. 
+Pozess 6 fertig in 16.593628 sec. 
+Pozess 2 fertig in 21.761006 sec. 
+Pozess 8 fertig in 23.756862 sec. 
+Pozess 0 fertig in 23.200265 sec. 
+Pozess 7 fertig in 23.227588 sec. 
+Pozess 1 fertig in 23.307638 sec. 
+Pozess 5 fertig in 23.695015 sec. 
+Pozess 4 fertig in 23.877444 sec. 
+Pozess 9 fertig in 50.029680 sec. 
+====================================
+========== 7 Figuren===============
+Pozess 3 fertig in 74.041682 sec. 
+Pozess 6 fertig in 75.120300 sec. 
+Pozess 2 fertig in 91.489250 sec. 
+Pozess 1 fertig in 90.535449 sec. 
+Pozess 5 fertig in 90.722236 sec. 
+Pozess 8 fertig in 91.729534 sec. 
+Pozess 4 fertig in 91.141203 sec. 
+Pozess 7 fertig in 92.280464 sec. 
+Pozess 0 fertig in 92.397493 sec. 
+Pozess 9 fertig in 115.953749 sec. 
+====================================
+========== 8 Figuren===============
+Pozess 3 fertig in 141.515488 sec. 
+Pozess 6 fertig in 142.771227 sec. 
+Pozess 2 fertig in 167.909538 sec. 
+Pozess 4 fertig in 169.392468 sec. 
+Pozess 1 fertig in 171.635197 sec. 
+Pozess 5 fertig in 171.295302 sec. 
+Pozess 8 fertig in 170.835715 sec. 
+Pozess 0 fertig in 170.381026 sec. 
+Pozess 7 fertig in 172.910502 sec. 
+====================================
+========== 9 Figuren===============
+Pozess 9 fertig in 178.590485 sec. 
+Pozess 3 fertig in 204.752539 sec. 
+Pozess 6 fertig in 203.356400 sec. 
+Pozess 9 fertig in 152.324428 sec. 
+Pozess 8 fertig in 233.223275 sec. 
+Pozess 1 fertig in 233.875410 sec. 
+Pozess 7 fertig in 231.697231 sec. 
+Pozess 2 fertig in 240.484325 sec. 
+Pozess 4 fertig in 238.791943 sec. 
+Pozess 0 fertig in 237.500175 sec. 
+Pozess 5 fertig in 239.351599 sec. 
+====================================
+========== 10 Figuren===============
+Pozess 9 fertig in 21.349072 sec. 
+Pozess 3 fertig in 154.607964 sec. 
+Pozess 6 fertig in 153.531837 sec. 
+Pozess 8 fertig in 135.724424 sec. 
+Pozess 1 fertig in 135.591032 sec. 
+Pozess 7 fertig in 135.281948 sec. 
+Pozess 2 fertig in 134.505850 sec. 
+Pozess 0 fertig in 134.854247 sec. 
+Pozess 4 fertig in 135.773032 sec. 
+Pozess 5 fertig in 134.428262 sec. 
+====================================
+Berechnungszeit:    675.225497 s 
+Bretter / Sekunde: 1099745.364029 
+
+Figuren: 	 Loesbare: 	 Gesamt: 	 Lösbar in %: 	 Zeit:
+==========================================================================
+  0 	 	          0 	          0 	       -nan 	    0.000 
+  1 	 	         96 	         96 	    100.000 	    0.000 
+  2 	 	         95 	        150 	     63.333 	    0.007 
+  3 	 	       3954 	       5040 	     78.452 	    1.994 
+  4 	 	      92344 	      98280 	     93.960 	    3.950 
+  5 	 	    1201944 	    1212120 	     99.160 	    9.840 
+  6 	 	    9722034 	    9729720 	     99.921 	   23.200 
+  7 	 	   50448150 	   50450400 	     99.996 	   92.397 
+  8 	 	  162162000 	  162162000 	    100.000 	  170.381 
+  9 	 	  291891600 	  291891600 	    100.000 	  237.500 
+ 10 	 	  227026800 	  227026800 	    100.000 	  134.854 
+==========================================================================
+Summe: 		  742548921 	  742576110 	     99.996 	  675.225 
+
+Anteil der loesbaren Bretter in Prozent: 0.003661

@@ -1,0 +1,618 @@
+west1
+west2
+west3
+west4
+west6
+west5
+west9
+west8
+west7
+west10
+
+===============================================================
+Programm zur Berechnung aller lösbaren Spielbretter 
+===============================================================
+    Kira Duwe
+    Enno Zickler
+===============================================================
+Starte Berechnung für 3 x 3 Spielbretter. 
+========== 2 Figuren===============
+Pozess 1 fertig in 0.001219 sec. 
+Pozess 4 fertig in 0.001332 sec. 
+Pozess 6 fertig in 0.001319 sec. 
+Pozess 0 fertig in 0.002189 sec. 
+Pozess 8 fertig in 0.003011 sec. 
+Pozess 9 fertig in 0.003033 sec. 
+Pozess 5 fertig in 0.004881 sec. 
+Pozess 7 fertig in 0.005012 sec. 
+Pozess 2 fertig in 0.006171 sec. 
+Pozess 3 fertig in 0.006855 sec. 
+Pozess 3 Hashtabelle im Buffer. 
+Pozess 5 Hashtabelle im Buffer. 
+Pozess 4 Hashtabelle im Buffer. 
+Pozess 0 Hashtabelle im Buffer. 
+Pozess 7 Hashtabelle im Buffer. 
+Pozess 1 Hashtabelle im Buffer. 
+Pozess 9 Hashtabelle im Buffer. 
+Pozess 2 Hashtabelle im Buffer. 
+Pozess 8 Hashtabelle im Buffer. 
+Pozess 6 Hashtabelle im Buffer. 
+Pozess 0 malloc prozess 0. 
+-------------------
+Pozess 8 malloc prozess 0. 
+Pozess 4 malloc prozess 0. 
+Pozess 2 malloc prozess 0. 
+Pozess 1 malloc prozess 0. 
+Pozess 5 malloc prozess 0. 
+Pozess 9 malloc prozess 0. 
+Pozess 6 malloc prozess 0. 
+Pozess 3 malloc prozess 0. 
+Pozess 7 malloc prozess 0. 
+Pozess 0 malloc prozess 1. 
+-------------------
+Pozess 1 malloc prozess 1. 
+Pozess 2 malloc prozess 1. 
+Pozess 9 malloc prozess 1. 
+Pozess 3 malloc prozess 1. 
+Pozess 6 malloc prozess 1. 
+Pozess 5 malloc prozess 1. 
+Pozess 4 malloc prozess 1. 
+Pozess 7 malloc prozess 1. 
+Pozess 8 malloc prozess 1. 
+Pozess 0 malloc prozess 2. 
+-------------------
+Pozess 2 malloc prozess 2. 
+Pozess 4 malloc prozess 2. 
+Pozess 6 malloc prozess 2. 
+Pozess 3 malloc prozess 2. 
+Pozess 8 malloc prozess 2. 
+Pozess 7 malloc prozess 2. 
+Pozess 5 malloc prozess 2. 
+Pozess 1 malloc prozess 2. 
+Pozess 9 malloc prozess 2. 
+Pozess 0 malloc prozess 3. 
+-------------------
+Pozess 3 malloc prozess 3. 
+Pozess 1 malloc prozess 3. 
+Pozess 5 malloc prozess 3. 
+Pozess 4 malloc prozess 3. 
+Pozess 7 malloc prozess 3. 
+Pozess 6 malloc prozess 3. 
+Pozess 8 malloc prozess 3. 
+Pozess 2 malloc prozess 3. 
+Pozess 9 malloc prozess 3. 
+Pozess 0 malloc prozess 4. 
+-------------------
+Pozess 4 malloc prozess 4. 
+Pozess 6 malloc prozess 4. 
+Pozess 5 malloc prozess 4. 
+Pozess 8 malloc prozess 4. 
+Pozess 2 malloc prozess 4. 
+Pozess 3 malloc prozess 4. 
+Pozess 9 malloc prozess 4. 
+Pozess 7 malloc prozess 4. 
+Pozess 1 malloc prozess 4. 
+Pozess 5 malloc prozess 5. 
+Pozess 0 malloc prozess 5. 
+-------------------
+Pozess 7 malloc prozess 5. 
+Pozess 9 malloc prozess 5. 
+Pozess 3 malloc prozess 5. 
+Pozess 8 malloc prozess 5. 
+Pozess 6 malloc prozess 5. 
+Pozess 4 malloc prozess 5. 
+Pozess 1 malloc prozess 5. 
+Pozess 2 malloc prozess 5. 
+Pozess 0 malloc prozess 6. 
+-------------------
+Pozess 6 malloc prozess 6. 
+Pozess 4 malloc prozess 6. 
+Pozess 8 malloc prozess 6. 
+Pozess 7 malloc prozess 6. 
+Pozess 2 malloc prozess 6. 
+Pozess 5 malloc prozess 6. 
+Pozess 1 malloc prozess 6. 
+Pozess 3 malloc prozess 6. 
+Pozess 9 malloc prozess 6. 
+Pozess 0 malloc prozess 7. 
+-------------------
+Pozess 7 malloc prozess 7. 
+Pozess 1 malloc prozess 7. 
+Pozess 8 malloc prozess 7. 
+Pozess 5 malloc prozess 7. 
+Pozess 6 malloc prozess 7. 
+Pozess 2 malloc prozess 7. 
+Pozess 3 malloc prozess 7. 
+Pozess 9 malloc prozess 7. 
+Pozess 4 malloc prozess 7. 
+Pozess 0 malloc prozess 8. 
+-------------------
+Pozess 8 malloc prozess 8. 
+Pozess 2 malloc prozess 8. 
+Pozess 6 malloc prozess 8. 
+Pozess 4 malloc prozess 8. 
+Pozess 9 malloc prozess 8. 
+Pozess 7 malloc prozess 8. 
+Pozess 1 malloc prozess 8. 
+Pozess 3 malloc prozess 8. 
+Pozess 5 malloc prozess 8. 
+Pozess 0 malloc prozess 9. 
+-------------------
+Pozess 3 malloc prozess 9. 
+Pozess 9 malloc prozess 9. 
+Pozess 1 malloc prozess 9. 
+Pozess 2 malloc prozess 9. 
+Pozess 4 malloc prozess 9. 
+Pozess 8 malloc prozess 9. 
+Pozess 7 malloc prozess 9. 
+Pozess 6 malloc prozess 9. 
+Pozess 5 malloc prozess 9. 
+Pozess 0 Buffer versendet. 
+Pozess 4 Buffer versendet. 
+Pozess 2 Buffer versendet. 
+Pozess 3 Buffer versendet. 
+Pozess 7 Buffer versendet. 
+Pozess 6 Buffer versendet. 
+Pozess 5 Buffer versendet. 
+Pozess 8 Buffer versendet. 
+Pozess 1 Buffer versendet. 
+Pozess 9 Buffer versendet. 
+Pozess 8 Buffer in Hashtabelle geschriben. 
+Pozess 8 fertig in 0.014568 sec. 
+Pozess 9 Buffer in Hashtabelle geschriben. 
+Pozess 9 fertig in 0.253628 sec. 
+Pozess 4 Buffer in Hashtabelle geschriben. 
+Pozess 4 fertig in 0.258804 sec. 
+Pozess 2 Buffer in Hashtabelle geschriben. 
+Pozess 2 fertig in 0.513519 sec. 
+Pozess 5 Buffer in Hashtabelle geschriben. 
+Pozess 5 fertig in 0.548520 sec. 
+Pozess 0 Buffer in Hashtabelle geschriben. 
+====================================
+========== 3 Figuren===============
+Pozess 0 fertig in 0.611986 sec. 
+Pozess 6 Buffer in Hashtabelle geschriben. 
+Pozess 6 fertig in 0.652510 sec. 
+Pozess 7 Buffer in Hashtabelle geschriben. 
+Pozess 7 fertig in 0.737683 sec. 
+Pozess 3 Buffer in Hashtabelle geschriben. 
+Pozess 3 fertig in 0.940426 sec. 
+Pozess 1 Buffer in Hashtabelle geschriben. 
+Pozess 1 fertig in 0.989930 sec. 
+Pozess 0 Hashtabelle im Buffer. 
+Pozess 0 malloc prozess 0. 
+-------------------
+Pozess 3 Hashtabelle im Buffer. 
+Pozess 1 Hashtabelle im Buffer. 
+Pozess 1 malloc prozess 0. 
+Pozess 9 Hashtabelle im Buffer. 
+Pozess 7 Hashtabelle im Buffer. 
+Pozess 4 Hashtabelle im Buffer. 
+Pozess 2 Hashtabelle im Buffer. 
+Pozess 3 malloc prozess 0. 
+Pozess 4 malloc prozess 0. 
+Pozess 8 Hashtabelle im Buffer. 
+Pozess 8 malloc prozess 0. 
+Pozess 6 Hashtabelle im Buffer. 
+Pozess 5 Hashtabelle im Buffer. 
+Pozess 5 malloc prozess 0. 
+Pozess 2 malloc prozess 0. 
+Pozess 6 malloc prozess 0. 
+Pozess 9 malloc prozess 0. 
+Pozess 7 malloc prozess 0. 
+Pozess 1 malloc prozess 1. 
+Pozess 3 malloc prozess 1. 
+Pozess 0 malloc prozess 1. 
+-------------------
+Pozess 5 malloc prozess 1. 
+Pozess 9 malloc prozess 1. 
+Pozess 2 malloc prozess 1. 
+Pozess 7 malloc prozess 1. 
+Pozess 6 malloc prozess 1. 
+Pozess 4 malloc prozess 1. 
+Pozess 8 malloc prozess 1. 
+Pozess 0 malloc prozess 2. 
+-------------------
+Pozess 2 malloc prozess 2. 
+Pozess 6 malloc prozess 2. 
+Pozess 4 malloc prozess 2. 
+Pozess 1 malloc prozess 2. 
+Pozess 3 malloc prozess 2. 
+Pozess 5 malloc prozess 2. 
+Pozess 8 malloc prozess 2. 
+Pozess 7 malloc prozess 2. 
+Pozess 9 malloc prozess 2. 
+Pozess 3 malloc prozess 3. 
+Pozess 1 malloc prozess 3. 
+Pozess 5 malloc prozess 3. 
+Pozess 7 malloc prozess 3. 
+Pozess 4 malloc prozess 3. 
+Pozess 9 malloc prozess 3. 
+Pozess 2 malloc prozess 3. 
+Pozess 0 malloc prozess 3. 
+-------------------
+Pozess 6 malloc prozess 3. 
+Pozess 8 malloc prozess 3. 
+Pozess 4 malloc prozess 4. 
+Pozess 0 malloc prozess 4. 
+-------------------
+Pozess 6 malloc prozess 4. 
+Pozess 5 malloc prozess 4. 
+Pozess 2 malloc prozess 4. 
+Pozess 3 malloc prozess 4. 
+Pozess 8 malloc prozess 4. 
+Pozess 7 malloc prozess 4. 
+Pozess 1 malloc prozess 4. 
+Pozess 9 malloc prozess 4. 
+Pozess 0 malloc prozess 5. 
+-------------------
+Pozess 6 malloc prozess 5. 
+Pozess 5 malloc prozess 5. 
+Pozess 3 malloc prozess 5. 
+Pozess 7 malloc prozess 5. 
+Pozess 8 malloc prozess 5. 
+Pozess 4 malloc prozess 5. 
+Pozess 9 malloc prozess 5. 
+Pozess 2 malloc prozess 5. 
+Pozess 1 malloc prozess 5. 
+Pozess 0 malloc prozess 6. 
+-------------------
+Pozess 6 malloc prozess 6. 
+Pozess 4 malloc prozess 6. 
+Pozess 8 malloc prozess 6. 
+Pozess 7 malloc prozess 6. 
+Pozess 2 malloc prozess 6. 
+Pozess 5 malloc prozess 6. 
+Pozess 9 malloc prozess 6. 
+Pozess 3 malloc prozess 6. 
+Pozess 1 malloc prozess 6. 
+Pozess 0 malloc prozess 7. 
+-------------------
+Pozess 3 malloc prozess 7. 
+Pozess 7 malloc prozess 7. 
+Pozess 5 malloc prozess 7. 
+Pozess 1 malloc prozess 7. 
+Pozess 9 malloc prozess 7. 
+Pozess 8 malloc prozess 7. 
+Pozess 6 malloc prozess 7. 
+Pozess 2 malloc prozess 7. 
+Pozess 4 malloc prozess 7. 
+Pozess 0 malloc prozess 8. 
+-------------------
+Pozess 8 malloc prozess 8. 
+Pozess 4 malloc prozess 8. 
+Pozess 6 malloc prozess 8. 
+Pozess 2 malloc prozess 8. 
+Pozess 3 malloc prozess 8. 
+Pozess 9 malloc prozess 8. 
+Pozess 7 malloc prozess 8. 
+Pozess 1 malloc prozess 8. 
+Pozess 5 malloc prozess 8. 
+Pozess 0 malloc prozess 9. 
+-------------------
+Pozess 7 malloc prozess 9. 
+Pozess 3 malloc prozess 9. 
+Pozess 2 malloc prozess 9. 
+Pozess 4 malloc prozess 9. 
+Pozess 9 malloc prozess 9. 
+Pozess 1 malloc prozess 9. 
+Pozess 5 malloc prozess 9. 
+Pozess 8 malloc prozess 9. 
+Pozess 6 malloc prozess 9. 
+Pozess 4 Buffer versendet. 
+Pozess 5 Buffer versendet. 
+Pozess 8 Buffer versendet. 
+Pozess 7 Buffer versendet. 
+Pozess 0 Buffer versendet. 
+Pozess 6 Buffer versendet. 
+Pozess 3 Buffer versendet. 
+Pozess 9 Buffer versendet. 
+Pozess 2 Buffer versendet. 
+Pozess 1 Buffer versendet. 
+Pozess 0 Buffer in Hashtabelle geschriben. 
+====================================
+========== 4 Figuren===============
+Pozess 0 fertig in 0.386743 sec. 
+Pozess 6 Buffer in Hashtabelle geschriben. 
+Pozess 6 fertig in 0.489432 sec. 
+Pozess 1 Buffer in Hashtabelle geschriben. 
+Pozess 3 Buffer in Hashtabelle geschriben. 
+Pozess 1 fertig in 0.154897 sec. 
+Pozess 3 fertig in 0.198845 sec. 
+Pozess 9 Buffer in Hashtabelle geschriben. 
+Pozess 5 Buffer in Hashtabelle geschriben. 
+Pozess 7 Buffer in Hashtabelle geschriben. 
+Pozess 7 fertig in 0.428806 sec. 
+Pozess 5 fertig in 0.619062 sec. 
+Pozess 9 fertig in 0.921049 sec. 
+Pozess 8 Buffer in Hashtabelle geschriben. 
+Pozess 8 fertig in 1.941749 sec. 
+Pozess 2 Buffer in Hashtabelle geschriben. 
+Pozess 2 fertig in 2.040786 sec. 
+Pozess 4 Buffer in Hashtabelle geschriben. 
+Pozess 4 fertig in 13.097074 sec. 
+Pozess 0 Hashtabelle im Buffer. 
+Pozess 0 malloc prozess 0. 
+-------------------
+Pozess 3 Hashtabelle im Buffer. 
+Pozess 6 Hashtabelle im Buffer. 
+Pozess 2 Hashtabelle im Buffer. 
+Pozess 4 Hashtabelle im Buffer. 
+Pozess 4 malloc prozess 0. 
+Pozess 7 Hashtabelle im Buffer. 
+Pozess 5 Hashtabelle im Buffer. 
+Pozess 1 Hashtabelle im Buffer. 
+Pozess 2 malloc prozess 0. 
+Pozess 8 Hashtabelle im Buffer. 
+Pozess 8 malloc prozess 0. 
+Pozess 1 malloc prozess 0. 
+Pozess 3 malloc prozess 0. 
+Pozess 5 malloc prozess 0. 
+Pozess 6 malloc prozess 0. 
+Pozess 7 malloc prozess 0. 
+Pozess 9 Hashtabelle im Buffer. 
+Pozess 9 malloc prozess 0. 
+Pozess 0 malloc prozess 1. 
+-------------------
+Pozess 4 malloc prozess 1. 
+Pozess 5 malloc prozess 1. 
+Pozess 1 malloc prozess 1. 
+Pozess 2 malloc prozess 1. 
+Pozess 3 malloc prozess 1. 
+Pozess 7 malloc prozess 1. 
+Pozess 9 malloc prozess 1. 
+Pozess 6 malloc prozess 1. 
+Pozess 8 malloc prozess 1. 
+Pozess 0 malloc prozess 2. 
+-------------------
+Pozess 4 malloc prozess 2. 
+Pozess 2 malloc prozess 2. 
+Pozess 6 malloc prozess 2. 
+Pozess 8 malloc prozess 2. 
+Pozess 3 malloc prozess 2. 
+Pozess 5 malloc prozess 2. 
+Pozess 7 malloc prozess 2. 
+Pozess 1 malloc prozess 2. 
+Pozess 9 malloc prozess 2. 
+Pozess 3 malloc prozess 3. 
+Pozess 0 malloc prozess 3. 
+-------------------
+Pozess 8 malloc prozess 3. 
+Pozess 7 malloc prozess 3. 
+Pozess 6 malloc prozess 3. 
+Pozess 5 malloc prozess 3. 
+Pozess 1 malloc prozess 3. 
+Pozess 2 malloc prozess 3. 
+Pozess 4 malloc prozess 3. 
+Pozess 9 malloc prozess 3. 
+Pozess 0 malloc prozess 4. 
+-------------------
+Pozess 4 malloc prozess 4. 
+Pozess 8 malloc prozess 4. 
+Pozess 6 malloc prozess 4. 
+Pozess 5 malloc prozess 4. 
+Pozess 2 malloc prozess 4. 
+Pozess 3 malloc prozess 4. 
+Pozess 9 malloc prozess 4. 
+Pozess 1 malloc prozess 4. 
+Pozess 7 malloc prozess 4. 
+Pozess 0 malloc prozess 5. 
+-------------------
+Pozess 3 malloc prozess 5. 
+Pozess 7 malloc prozess 5. 
+Pozess 6 malloc prozess 5. 
+Pozess 5 malloc prozess 5. 
+Pozess 1 malloc prozess 5. 
+Pozess 8 malloc prozess 5. 
+Pozess 2 malloc prozess 5. 
+Pozess 4 malloc prozess 5. 
+Pozess 9 malloc prozess 5. 
+Pozess 0 malloc prozess 6. 
+-------------------
+Pozess 6 malloc prozess 6. 
+Pozess 8 malloc prozess 6. 
+Pozess 7 malloc prozess 6. 
+Pozess 4 malloc prozess 6. 
+Pozess 9 malloc prozess 6. 
+Pozess 5 malloc prozess 6. 
+Pozess 1 malloc prozess 6. 
+Pozess 2 malloc prozess 6. 
+Pozess 3 malloc prozess 6. 
+Pozess 7 malloc prozess 7. 
+Pozess 0 malloc prozess 7. 
+-------------------
+Pozess 1 malloc prozess 7. 
+Pozess 3 malloc prozess 7. 
+Pozess 8 malloc prozess 7. 
+Pozess 5 malloc prozess 7. 
+Pozess 9 malloc prozess 7. 
+Pozess 2 malloc prozess 7. 
+Pozess 6 malloc prozess 7. 
+Pozess 4 malloc prozess 7. 
+Pozess 0 malloc prozess 8. 
+-------------------
+Pozess 8 malloc prozess 8. 
+Pozess 2 malloc prozess 8. 
+Pozess 6 malloc prozess 8. 
+Pozess 3 malloc prozess 8. 
+Pozess 9 malloc prozess 8. 
+Pozess 7 malloc prozess 8. 
+Pozess 1 malloc prozess 8. 
+Pozess 4 malloc prozess 8. 
+Pozess 5 malloc prozess 8. 
+Pozess 0 malloc prozess 9. 
+-------------------
+Pozess 3 malloc prozess 9. 
+Pozess 9 malloc prozess 9. 
+Pozess 7 malloc prozess 9. 
+Pozess 2 malloc prozess 9. 
+Pozess 8 malloc prozess 9. 
+Pozess 5 malloc prozess 9. 
+Pozess 1 malloc prozess 9. 
+Pozess 6 malloc prozess 9. 
+Pozess 4 malloc prozess 9. 
+Pozess 0 Buffer versendet. 
+Pozess 2 Buffer versendet. 
+Pozess 6 Buffer versendet. 
+Pozess 4 Buffer versendet. 
+Pozess 8 Buffer versendet. 
+Pozess 5 Buffer versendet. 
+Pozess 3 Buffer versendet. 
+Pozess 7 Buffer versendet. 
+Pozess 9 Buffer versendet. 
+Pozess 1 Buffer versendet. 
+Pozess 1 Buffer in Hashtabelle geschriben. 
+Pozess 8 Buffer in Hashtabelle geschriben. 
+Pozess 8 fertig in 11.564194 sec. 
+Pozess 1 fertig in 12.379188 sec. 
+Pozess 9 Buffer in Hashtabelle geschriben. 
+Pozess 6 Buffer in Hashtabelle geschriben. 
+Pozess 6 fertig in 12.890066 sec. 
+Pozess 9 fertig in 12.894105 sec. 
+Pozess 2 Buffer in Hashtabelle geschriben. 
+Pozess 2 fertig in 11.733698 sec. 
+Pozess 5 Buffer in Hashtabelle geschriben. 
+Pozess 5 fertig in 13.321669 sec. 
+Pozess 0 Buffer in Hashtabelle geschriben. 
+====================================
+========== 5 Figuren===============
+Pozess 0 fertig in 13.592862 sec. 
+Pozess 7 Buffer in Hashtabelle geschriben. 
+Pozess 7 fertig in 13.718875 sec. 
+Pozess 3 Buffer in Hashtabelle geschriben. 
+Pozess 3 fertig in 14.126001 sec. 
+Pozess 4 Buffer in Hashtabelle geschriben. 
+Pozess 4 fertig in 12.384246 sec. 
+Pozess 0 Hashtabelle im Buffer. 
+Pozess 0 malloc prozess 0. 
+-------------------
+Pozess 2 Hashtabelle im Buffer. 
+Pozess 6 Hashtabelle im Buffer. 
+Pozess 4 Hashtabelle im Buffer. 
+Pozess 3 Hashtabelle im Buffer. 
+Pozess 4 malloc prozess 0. 
+Pozess 8 Hashtabelle im Buffer. 
+Pozess 8 malloc prozess 0. 
+Pozess 7 Hashtabelle im Buffer. 
+Pozess 1 Hashtabelle im Buffer. 
+Pozess 1 malloc prozess 0. 
+Pozess 3 malloc prozess 0. 
+Pozess 6 malloc prozess 0. 
+Pozess 5 Hashtabelle im Buffer. 
+Pozess 2 malloc prozess 0. 
+Pozess 5 malloc prozess 0. 
+Pozess 7 malloc prozess 0. 
+Pozess 9 Hashtabelle im Buffer. 
+Pozess 9 malloc prozess 0. 
+Pozess 0 malloc prozess 1. 
+-------------------
+Pozess 1 malloc prozess 1. 
+Pozess 9 malloc prozess 1. 
+Pozess 6 malloc prozess 1. 
+Pozess 5 malloc prozess 1. 
+Pozess 2 malloc prozess 1. 
+Pozess 3 malloc prozess 1. 
+Pozess 4 malloc prozess 1. 
+Pozess 7 malloc prozess 1. 
+Pozess 8 malloc prozess 1. 
+Pozess 0 malloc prozess 2. 
+-------------------
+Pozess 4 malloc prozess 2. 
+Pozess 6 malloc prozess 2. 
+Pozess 2 malloc prozess 2. 
+Pozess 3 malloc prozess 2. 
+Pozess 5 malloc prozess 2. 
+Pozess 1 malloc prozess 2. 
+Pozess 8 malloc prozess 2. 
+Pozess 7 malloc prozess 2. 
+Pozess 9 malloc prozess 2. 
+Pozess 3 malloc prozess 3. 
+Pozess 0 malloc prozess 3. 
+-------------------
+Pozess 4 malloc prozess 3. 
+Pozess 5 malloc prozess 3. 
+Pozess 1 malloc prozess 3. 
+Pozess 6 malloc prozess 3. 
+Pozess 7 malloc prozess 3. 
+Pozess 2 malloc prozess 3. 
+Pozess 8 malloc prozess 3. 
+Pozess 9 malloc prozess 3. 
+Pozess 0 malloc prozess 4. 
+-------------------
+Pozess 6 malloc prozess 4. 
+Pozess 4 malloc prozess 4. 
+Pozess 5 malloc prozess 4. 
+Pozess 2 malloc prozess 4. 
+Pozess 3 malloc prozess 4. 
+Pozess 7 malloc prozess 4. 
+Pozess 8 malloc prozess 4. 
+Pozess 1 malloc prozess 4. 
+Pozess 9 malloc prozess 4. 
+Pozess 0 malloc prozess 5. 
+-------------------
+Pozess 5 malloc prozess 5. 
+Pozess 6 malloc prozess 5. 
+Pozess 3 malloc prozess 5. 
+Pozess 7 malloc prozess 5. 
+Pozess 9 malloc prozess 5. 
+Pozess 8 malloc prozess 5. 
+Pozess 2 malloc prozess 5. 
+Pozess 1 malloc prozess 5. 
+Pozess 4 malloc prozess 5. 
+Pozess 0 malloc prozess 6. 
+-------------------
+Pozess 6 malloc prozess 6. 
+Pozess 8 malloc prozess 6. 
+Pozess 3 malloc prozess 6. 
+Pozess 7 malloc prozess 6. 
+Pozess 5 malloc prozess 6. 
+Pozess 2 malloc prozess 6. 
+Pozess 4 malloc prozess 6. 
+Pozess 1 malloc prozess 6. 
+Pozess 9 malloc prozess 6. 
+Pozess 0 malloc prozess 7. 
+-------------------
+Pozess 5 malloc prozess 7. 
+Pozess 6 malloc prozess 7. 
+Pozess 9 malloc prozess 7. 
+Pozess 7 malloc prozess 7. 
+Pozess 3 malloc prozess 7. 
+Pozess 8 malloc prozess 7. 
+Pozess 2 malloc prozess 7. 
+Pozess 1 malloc prozess 7. 
+Pozess 4 malloc prozess 7. 
+Pozess 0 malloc prozess 8. 
+-------------------
+Pozess 2 malloc prozess 8. 
+Pozess 8 malloc prozess 8. 
+Pozess 6 malloc prozess 8. 
+Pozess 3 malloc prozess 8. 
+Pozess 4 malloc prozess 8. 
+Pozess 9 malloc prozess 8. 
+Pozess 7 malloc prozess 8. 
+Pozess 5 malloc prozess 8. 
+Pozess 1 malloc prozess 8. 
+Pozess 0 malloc prozess 9. 
+-------------------
+Pozess 9 malloc prozess 9. 
+Pozess 3 malloc prozess 9. 
+Pozess 1 malloc prozess 9. 
+Pozess 8 malloc prozess 9. 
+Pozess 7 malloc prozess 9. 
+Pozess 5 malloc prozess 9. 
+Pozess 4 malloc prozess 9. 
+Pozess 6 malloc prozess 9. 
+Pozess 2 malloc prozess 9. 
+Pozess 0 Buffer versendet. 
+Pozess 6 Buffer versendet. 
+Pozess 3 Buffer versendet. 
+Pozess 8 Buffer versendet. 
+Pozess 7 Buffer versendet. 
+Pozess 5 Buffer versendet. 
+Pozess 4 Buffer versendet. 
+Pozess 9 Buffer versendet. 
+Pozess 1 Buffer versendet. 
+Pozess 2 Buffer versendet. 
+Pozess 9 Buffer in Hashtabelle geschriben. 
+Pozess 9 fertig in 11.917079 sec. 
+Pozess 8 Buffer in Hashtabelle geschriben. 

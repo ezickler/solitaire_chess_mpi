@@ -1,0 +1,134 @@
+west1
+west2
+west3
+west4
+west6
+west5
+west7
+west9
+west8
+west10
+
+===============================================================
+Programm zur Berechnung aller lösbaren Spielbretter 
+===============================================================
+    Kira Duwe
+    Enno Zickler
+===============================================================
+Starte Berechnung für 3 x 3 Spielbretter. 
+========== 2 Figuren===============
+Pozess 2 fertig in 0.003004 sec. 
+Pozess 0 fertig in 0.005054 sec. 
+Pozess 3 fertig in 0.005931 sec. 
+Pozess 4 fertig in 0.006333 sec. 
+Pozess 7 fertig in 0.002419 sec. 
+Pozess 5 fertig in 0.007231 sec. 
+Pozess 1 fertig in 0.008718 sec. 
+Pozess 8 fertig in 0.008862 sec. 
+Pozess 9 fertig in 0.008792 sec. 
+Pozess 6 fertig in 0.010047 sec. 
+Pozess 9 Hashtabelle im Buffer. 
+Pozess 5 Hashtabelle im Buffer. 
+Pozess 3 Hashtabelle im Buffer. 
+Pozess 7 Hashtabelle im Buffer. 
+Pozess 0 Hashtabelle im Buffer. 
+Pozess 2 Hashtabelle im Buffer. 
+Pozess 8 Hashtabelle im Buffer. 
+Pozess 1 Hashtabelle im Buffer. 
+Pozess 4 Hashtabelle im Buffer. 
+Pozess 6 Hashtabelle im Buffer. 
+Pozess 4 bcast size prozess 0. 
+Pozess 4 bcast Buffer prozess 0. 
+Pozess 1 bcast size prozess 0. 
+Pozess 1 bcast Buffer prozess 0. 
+Pozess 9 bcast size prozess 0. 
+Pozess 9 bcast Buffer prozess 0. 
+Pozess 5 bcast size prozess 0. 
+Pozess 5 bcast Buffer prozess 0. 
+Pozess 8 bcast size prozess 0. 
+Pozess 8 bcast Buffer prozess 0. 
+Pozess 3 bcast size prozess 0. 
+Pozess 3 bcast Buffer prozess 0. 
+Pozess 7 bcast size prozess 0. 
+Pozess 7 bcast Buffer prozess 0. 
+Pozess 0 bcast size prozess 0. 
+Pozess 0 bcast Buffer prozess 0. 
+Pozess 2 bcast size prozess 0. 
+Pozess 2 bcast Buffer prozess 0. 
+Pozess 6 bcast size prozess 0. 
+Pozess 6 bcast Buffer prozess 0. 
+-------------------
+Pozess 0 bcast size prozess 1. 
+Pozess 0 bcast Buffer prozess 1. 
+Pozess 2 bcast size prozess 1. 
+Pozess 2 bcast Buffer prozess 1. 
+Pozess 5 bcast size prozess 1. 
+Pozess 5 bcast Buffer prozess 1. 
+Pozess 1 bcast size prozess 1. 
+Pozess 9 bcast size prozess 1. 
+Pozess 9 bcast Buffer prozess 1. 
+Pozess 6 bcast size prozess 1. 
+Pozess 6 bcast Buffer prozess 1. 
+Pozess 3 bcast size prozess 1. 
+Pozess 3 bcast Buffer prozess 1. 
+Pozess 1 bcast Buffer prozess 1. 
+Pozess 4 bcast size prozess 1. 
+Pozess 4 bcast Buffer prozess 1. 
+Pozess 7 bcast size prozess 1. 
+Pozess 7 bcast Buffer prozess 1. 
+Pozess 8 bcast size prozess 1. 
+Pozess 8 bcast Buffer prozess 1. 
+-------------------
+Pozess 0 bcast size prozess 2. 
+Pozess 0 bcast Buffer prozess 2. 
+Pozess 2 bcast size prozess 2. 
+Pozess 2 bcast Buffer prozess 2. 
+Pozess 4 bcast size prozess 2. 
+Pozess 4 bcast Buffer prozess 2. 
+Pozess 6 bcast size prozess 2. 
+Pozess 6 bcast Buffer prozess 2. 
+Pozess 1 bcast size prozess 2. 
+Pozess 1 bcast Buffer prozess 2. 
+Pozess 7 bcast size prozess 2. 
+Pozess 7 bcast Buffer prozess 2. 
+Pozess 3 bcast size prozess 2. 
+Pozess 3 bcast Buffer prozess 2. 
+Pozess 5 bcast size prozess 2. 
+Pozess 5 bcast Buffer prozess 2. 
+Pozess 8 bcast size prozess 2. 
+Pozess 8 bcast Buffer prozess 2. 
+Pozess 9 bcast size prozess 2. 
+Pozess 9 bcast Buffer prozess 2. 
+-------------------
+Pozess 0 bcast size prozess 3. 
+Pozess 0 bcast Buffer prozess 3. 
+Pozess 3 bcast size prozess 3. 
+Pozess 3 bcast Buffer prozess 3. 
+Pozess 1 bcast size prozess 3. 
+Pozess 1 bcast Buffer prozess 3. 
+Pozess 4 bcast size prozess 3. 
+Pozess 4 bcast Buffer prozess 3. 
+Pozess 5 bcast size prozess 3. 
+Pozess 5 bcast Buffer prozess 3. 
+Pozess 6 bcast size prozess 3. 
+Pozess 6 bcast Buffer prozess 3. 
+Pozess 2 bcast size prozess 3. 
+Pozess 2 bcast Buffer prozess 3. 
+Pozess 7 bcast size prozess 3. 
+Pozess 7 bcast Buffer prozess 3. 
+Pozess 8 bcast size prozess 3. 
+Pozess 8 bcast Buffer prozess 3. 
+Pozess 9 bcast size prozess 3. 
+Pozess 9 bcast Buffer prozess 3. 
+-------------------
+Pozess 0 bcast size prozess 4. 
+Pozess 4 bcast size prozess 4. 
+Pozess 4 bcast Buffer prozess 4. 
+Pozess 2 bcast size prozess 4. 
+Pozess 5 bcast size prozess 4. 
+Pozess 6 bcast size prozess 4. 
+Pozess 3 bcast size prozess 4. 
+Pozess 8 bcast size prozess 4. 
+Pozess 1 bcast size prozess 4. 
+Pozess 9 bcast size prozess 4. 
+Pozess 7 bcast size prozess 4. 

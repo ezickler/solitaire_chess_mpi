@@ -1,0 +1,29 @@
+west1
+west2
+west4
+west5
+west6
+west7
+west8
+west9
+west10
+west3
+
+===============================================================
+Programm zur Berechnung aller lösbaren Spielbretter 
+===============================================================
+    Kira Duwe
+    Enno Zickler
+===============================================================
+Starte Berechnung für 3 x 3 Spielbretter. 
+========== 2 Figuren===============
+Pozess 3 fertig in 0.001343 sec. 
+Pozess 8 fertig in 0.001759 sec. 
+Pozess 9 fertig in 0.002050 sec. 
+Pozess 1 fertig in 0.003650 sec. 
+Pozess 5 fertig in 0.004059 sec. 
+Pozess 7 fertig in 0.003998 sec. 
+Pozess 0 fertig in 0.004570 sec. 
+Pozess 6 fertig in 0.004081 sec. 
+Pozess 2 fertig in 0.006224 sec. 
+Pozess 4 fertig in 0.007587 sec. 

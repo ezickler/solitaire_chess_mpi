@@ -1,0 +1,26 @@
+[west2:02790] *** Process received signal ***
+[west2:02790] Signal: Segmentation fault (11)
+[west2:02790] Signal code: Address not mapped (1)
+[west2:02790] Failing at address: 0xb20
+[west2:02790] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0xfcb0) [0x7f250bda3cb0]
+[west2:02790] [ 1] /lib/x86_64-linux-gnu/libc.so.6(+0x148a0e) [0x7f250bb1da0e]
+[west2:02790] [ 2] /usr/lib/openmpi/lib/openmpi/mca_btl_tcp.so(mca_btl_tcp_frag_recv+0xce) [0x7f250611748e]
+[west2:02790] [ 3] /usr/lib/openmpi/lib/openmpi/mca_btl_tcp.so(+0x72a5) [0x7f25061162a5]
+[west2:02790] [ 4] /usr/lib/libmpi.so.1(opal_event_base_loop+0x281) [0x7f250c5a1971]
+[west2:02790] [ 5] /usr/lib/libmpi.so.1(opal_progress+0xb1) [0x7f250c5c3f01]
+[west2:02790] [ 6] /usr/lib/libmpi.so.1(ompi_request_default_wait+0x16d) [0x7f250c50f43d]
+[west2:02790] [ 7] /usr/lib/openmpi/lib/openmpi/mca_coll_tuned.so(ompi_coll_tuned_bcast_intra_generic+0x2cf) [0x7f25052ddfcf]
+[west2:02790] [ 8] /usr/lib/openmpi/lib/openmpi/mca_coll_tuned.so(ompi_coll_tuned_bcast_intra_pipeline+0xd0) [0x7f25052de4d0]
+[west2:02790] [ 9] /usr/lib/openmpi/lib/openmpi/mca_coll_tuned.so(ompi_coll_tuned_bcast_intra_dec_fixed+0x134) [0x7f25052d5a24]
+[west2:02790] [10] /usr/lib/openmpi/lib/openmpi/mca_coll_sync.so(mca_coll_sync_bcast+0x79) [0x7f25054ed7d9]
+[west2:02790] [11] /usr/lib/libmpi.so.1(MPI_Bcast+0x155) [0x7f250c51d335]
+[west2:02790] [12] ../build/./solitaire(spielbretter_berechne+0x3a6) [0x4026d6]
+[west2:02790] [13] ../build/./solitaire(main+0xad) [0x40151d]
+[west2:02790] [14] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xed) [0x7f250b9f676d]
+[west2:02790] [15] ../build/./solitaire() [0x401769]
+[west2:02790] *** End of error message ***
+[west1][[52333,1],0][btl_tcp_frag.c:215:mca_btl_tcp_frag_recv] mca_btl_tcp_frag_recv: readv failed: Connection reset by peer (104)
+[west1][[52333,1],0][btl_tcp_frag.c:215:mca_btl_tcp_frag_recv] mca_btl_tcp_frag_recv: readv failed: Connection reset by peer (104)
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 1 with PID 2790 on node west2 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

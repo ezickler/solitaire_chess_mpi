@@ -1,0 +1,49 @@
+[west2:02856] *** Process received signal ***
+[west2:02856] Signal: Segmentation fault (11)
+[west2:02856] Signal code: Address not mapped (1)
+[west2:02856] Failing at address: (nil)
+[west8:19873] *** Process received signal ***
+[west8:19873] Signal: Segmentation fault (11)
+[west8:19873] Signal code: Address not mapped (1)
+[west8:19873] Failing at address: (nil)
+[west4:20350] *** Process received signal ***
+[west4:20350] Signal: Segmentation fault (11)
+[west4:20350] Signal code: Address not mapped (1)
+[west4:20350] Failing at address: (nil)
+[west6:19978] *** Process received signal ***
+[west6:19978] Signal: Segmentation fault (11)
+[west6:19978] Signal code: Address not mapped (1)
+[west6:19978] Failing at address: (nil)
+[west1:06261] *** Process received signal ***
+[west1:06261] Signal: Segmentation fault (11)
+[west1:06261] Signal code: Address not mapped (1)
+[west1:06261] Failing at address: (nil)
+[west10:31713] *** Process received signal ***
+[west2:02856] [ 0] /lib/x86_64-linux-gnu/libpthread.so.0(+0xfcb0) [0x7f7244ffccb0]
+[west2:02856] [ 1] ../build/./solitaire(spielbretter_berechne+0x43f) [0x40276f]
+[west2:02856] [ 2] ../build/./solitaire(main+0xad) [0x40151d]
+[west2:02856] [ 3] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xed) [0x7f7244c4f76d]
+[west2:02856] [ 4] ../build/./solitaire() [0x401769]
+[west2:02856] *** End of error message ***
+[west10:31713] Signal: Segmentation fault (11)
+[west10:31713] Signal code: Address not mapped (1)
+[west10:31713] Failing at address: (nil)
+[west3:22740] *** Process received signal ***
+[west3:22740] Signal: Segmentation fault (11)
+[west3:22740] Signal code: Address not mapped (1)
+[west3:22740] Failing at address: (nil)
+[west9:19490] *** Process received signal ***
+[west9:19490] Signal: Segmentation fault (11)
+[west9:19490] Signal code: Address not mapped (1)
+[west9:19490] Failing at address: (nil)
+[west5:20121] *** Process received signal ***
+[west5:20121] Signal: Segmentation fault (11)
+[west5:20121] Signal code: Address not mapped (1)
+[west5:20121] Failing at address: 0x7fffbbefc000
+[west7:19753] *** Process received signal ***
+[west7:19753] Signal: Segmentation fault (11)
+[west7:19753] Signal code: Address not mapped (1)
+[west7:19753] Failing at address: (nil)
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 1 with PID 2856 on node west2 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

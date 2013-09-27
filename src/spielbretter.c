@@ -604,15 +604,15 @@ void spielbretter_berechne(spielbretter_t *bretter)
             
             /* Große der Hashtabelle an alle senden */
             MPI_Bcast (&spielbretterBufSize[bretter->anzahlProzesse],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
-            printf("Pozess %d bcast size=%d prozess %d. \n",bretter->prozessNummer, spielbretterBufSize[prozess], prozess);
+            //printf("Pozess %d bcast size=%d prozess %d. \n",bretter->prozessNummer, spielbretterBufSize[prozess], prozess);
             if(bretter->prozessNummer != prozess)
             {
                 spielbretterBuf[prozess] = malloc(spielbretterBufSize[prozess]* sizeof(sp_okt_t));
             }
-             printf("Pozess %d malloc prozess %d. \n",bretter->prozessNummer, prozess);
+            printf("Pozess %d malloc prozess %d. \n",bretter->prozessNummer, prozess);
             /* Inhalt der Hashtabelle ayus dem Buffer an alle senden */
-            MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
-            printf("Pozess %d bcast Buffer prozess %d. \n",bretter->prozessNummer, prozess);
+            //MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
+            //printf("Pozess %d bcast Buffer prozess %d. \n",bretter->prozessNummer, prozess);
             
             if(bretter->prozessNummer == 0)
             {

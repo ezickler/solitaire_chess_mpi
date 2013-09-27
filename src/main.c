@@ -22,7 +22,7 @@ static void gibStatisticAus(spielbretter_t *bretter)
     printf("==========================================================================\n");
 	for(int tala=0; tala <= 10; tala++)
 	{
-        printf(" %2d     %10d  %10ld  %8.2f  %8.2f %8.2f %8.2f\n",tala, bretter->loesbareBretter[tala], bretter->anzahlBretter[tala],bretter->loesbareBretter[tala]*100.0/bretter->anzahlBretter[tala], bretter->berechnungsZeitMax[tala], bretter->berechnungsZeitMin[tala], bretter->berechnungsZeitAvg[tala]);
+        printf(" %2d     %10ld  %10ld  %8.2f  %8.2f %8.2f %8.2f\n",tala, bretter->loesbareBretter[tala], bretter->anzahlBretter[tala],bretter->loesbareBretter[tala]*100.0/bretter->anzahlBretter[tala], bretter->berechnungsZeitMax[tala], bretter->berechnungsZeitMin[tala], bretter->berechnungsZeitAvg[tala]);
 	}
     printf("==========================================================================\n");
     printf("Summe:  %10ld  %10ld  %8.2f  %8.2f \n\n",bretter->loesbareBretterGesamt,bretter->anzahlBretterGesamt,bretter->loesbareBretterGesamt*100.0/bretter->anzahlBretterGesamt, bretter->berechnungsZeitGesamt );

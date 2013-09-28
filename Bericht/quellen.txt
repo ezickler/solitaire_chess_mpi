@@ -1,0 +1,5 @@
+http://openmp.org/wp/openmp-specifications/
+https://en.wikipedia.org/wiki/Bitboard
+https://en.wikipedia.org/wiki/Dynamic_programming
+http://www.open-mpi.de/doc
+https://computing.llnl.gov/linux/slurm/documentation.html

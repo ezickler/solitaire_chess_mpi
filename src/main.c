@@ -13,7 +13,7 @@
 #include <omp.h>
 #include <mpi.h>
 
-static void gibStatisticAus(spielbretter_t *bretter)
+static void gibStatistikAus(spielbretter_t *bretter)
 {
     printf("Berechnungszeit:    %f s \n", bretter->berechnungsZeitGesamt);
     printf("Bretter / Sekunde: %f \n", (bretter->anzahlBretterGesamt / bretter->berechnungsZeitGesamt) );
@@ -89,7 +89,7 @@ int main(int argc, char ** argv)
     
     if(bretter.prozessNummer == 0)
     {
-        gibStatisticAus(&bretter);
+        gibStatistikAus(&bretter);
     }
 
     MPI_Finalize();

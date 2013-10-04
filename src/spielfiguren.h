@@ -26,13 +26,13 @@
 
 
 /*
- * Typ für die oktal darstellung der Spielbretter
+ * Typ für die Oktaldarstellung der Spielbretter
  */
 typedef uint64_t sp_okt_t;
 
 
 /*
- * Struct um die Signaturen der Figuren übersichlich zu halten. 
+ * Struct, um die Signaturen der Figuren übersichlich zu halten. 
  */ 
 typedef struct figuren_param{
 	char **spielbrett_array; 

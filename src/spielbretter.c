@@ -230,7 +230,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
     
     /*Zähler für die anzahl der generierten Spielbretter*/
     long zaehler_bretter_gesamt = 0;
-    long zaehler_bretter_figuren; /* Zaehlt wie viel spielbretter für eine bestimmte figuren anzahl erstellt werden */
+    long zaehler_bretter_figuren; /* Zählt wie viel Spielbretter für eine bestimmte Figurenanzahl erstellt werden */
     long zaehlerLoesbareBretter = 0;
     long zaehlerLoesbareBretterGesamt = 0;
     
@@ -600,7 +600,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 spielbretterBufSize[prozess] = g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
             }
             
-            /* Große der Hashtabelle an alle senden */
+            /* Größe der Hashtabelle an alle senden */
             MPI_Bcast (&spielbretterBufSize[prozess],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
             /* Buffer für Daten empfang allozieren */
             if(bretter->prozessNummer != prozess)
@@ -645,7 +645,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMin, 11, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitAvg, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     
-    /* summe der Zeiten zu duchschnit machen */
+    /* Summe der Zeiten zu Durchschnitt machen */
     for(int x = 0; x<=10; x++)
     {
         bretter->berechnungsZeitAvg[x] = bretter->berechnungsZeitAvg[x]/bretter->anzahlProzesse;

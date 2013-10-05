@@ -24,7 +24,7 @@ if (MPI_FOUND)
 endif()
 
 
-set(VAMPIR_ENABLE Ture)
+set(VAMPIR_ENABLE True)
 
 IF(VAMPIR_ENABLE)
     message("[CONFIG] build program with vampir support")

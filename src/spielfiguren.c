@@ -70,7 +70,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -87,7 +87,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -102,7 +102,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -117,7 +117,7 @@ int berechneBauer(figuren_param_t *param, int x, int y)
 		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungBauer, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 
@@ -153,7 +153,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
             
 			neue_pos = (x+n)+((y)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -168,7 +168,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x-n)+((y)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -183,7 +183,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -198,7 +198,7 @@ int berechneTurm(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x)+((y-n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungTurm, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -232,7 +232,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x-n)+((y-n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -247,7 +247,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x-n)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -262,7 +262,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x+n)+((y-n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -277,7 +277,7 @@ int berechneLaeufer(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x+n)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungLaeufer, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -313,7 +313,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -331,7 +331,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
         if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
             return 1;
@@ -349,7 +349,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -385,7 +385,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -402,7 +402,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -420,7 +420,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -438,7 +438,7 @@ int berechneSpringer(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungSpringer, pos, neue_pos);
 		
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -472,7 +472,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -489,7 +489,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -504,7 +504,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		neue_pos = (x+1)+((y-1)*SpielbrettBreite);
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -519,7 +519,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		neue_pos = (x+1)+((y+1)*SpielbrettBreite);
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 
@@ -538,7 +538,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -556,7 +556,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -574,7 +574,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Ueberpruefen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -592,7 +592,7 @@ int berechneKoenig(figuren_param_t *param, int x, int y)
 		
 		schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungKoenig, pos, neue_pos);
 		
-		/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+		/* Überprüfen, ob das neue Spielbrett lösbar ist*/
 		if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
         {
 			return 1;
@@ -626,7 +626,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
             
 			neue_pos = (x+n)+((y)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -641,7 +641,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x-n)+((y)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -656,7 +656,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -671,7 +671,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
 		{
 			neue_pos = (x)+((y-n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -701,7 +701,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x-n)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;
@@ -731,7 +731,7 @@ int berechneDame(figuren_param_t *param, int x, int y)
         {
 			neue_pos = (x+n)+((y+n)*SpielbrettBreite);
 			schlageFigur(param->spielbrett, &neues_spielbrett, DarstellungDame, pos, neue_pos);
-			/* Überprüfen, ob das neue Spielbrett loesbar ist*/
+			/* Überprüfen, ob das neue Spielbrett lösbar ist*/
             if( neuesSpielbrettLoesbar(param, neues_spielbrett) )
             {
                 return 1;

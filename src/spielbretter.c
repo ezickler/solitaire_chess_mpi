@@ -169,7 +169,6 @@ static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int 
 	/* Berechnet, ob die Figuren an der jeweiligen Position schlagen können und daraus
 	 * ein lösbares neues Spielbrett entsteht */
      
-     /* Verlust des Abbruchkriterium durch Parallelisierung */
      
      for(x=0; (x < SpielbrettBreite) && (loesbar == 0); x++){
 		for(y=0; (y < SpielbrettHoehe) && (loesbar == 0); y++){   
@@ -196,16 +195,13 @@ static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int 
 		}
 	}
     
-    //TODO brett umdrehen
     
     
     
-    /* In der Hashtabelle speicher, wenn ein Spielbrett nicht loesbar ist */
+    /* In der Hashtabelle speichern, wenn ein Spielbrett nicht lösbar ist */
     if(loesbar==0)
     {
-        //TODO umgedrehtes brett in der hastabelle nachgucken
-        
-        // Kritischerbereich für omp
+        // Kritischer Bereich für omp
         #pragma omp critical (spielbrett_berechne_g_hash_add)
         {
             g_hash_table_add(bretter->spielbretterHashtables[bretter->aktuelleSpielbretter], (gpointer) spielbrett );
@@ -228,16 +224,17 @@ static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int 
 void spielbretter_berechne(spielbretter_t *bretter)
 {
     
-    /*Zähler für die anzahl der generierten Spielbretter*/
+    /*Zähler für die Anzahl der generierten Spielbretter*/
     long zaehler_bretter_gesamt = 0;
-    long zaehler_bretter_figuren; /* Zaehlt wie viel spielbretter für eine bestimmte figuren anzahl erstellt werden */
+    /* Zaehlt wie viel spielbretter für eine bestimmte Figurenanzahl erstellt werden */
+    long zaehler_bretter_figuren;
     long zaehlerLoesbareBretter = 0;
     long zaehlerLoesbareBretterGesamt = 0;
     
 
     /* time measurement variables */
-    struct timeval start_time;       /* time when program started                      */
-    struct timeval comp_time;        /* time when calculation completed                */
+    struct timeval start_time;       /* time when program started        */
+    struct timeval comp_time;        /* time when calculation completed    */
     struct timeval start_time_figur;      /* start zeit figuren durchlauf */
     struct timeval comp_time_figur;      /* endzeit vom figurenduchlauf */
     
@@ -301,8 +298,6 @@ void spielbretter_berechne(spielbretter_t *bretter)
         /* Iteration für die Dame über alle Felder und ein zusätzlicher Durchlauf für den Fall: keine Dame
          * für alle anderen Figuren analog!*/
          
-         
-         //TODO MPI aufteilung
         if(bretter->prozessNummer == 0)
         {
             printf("========== %d Figuren===============\n",maxFiguren );
@@ -310,7 +305,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
          
         for(int posDame=0; posDame<=anzFelder; posDame++)
         {	
-            /* MPI zuweisung der schleifen zu den Prozessen. */
+            /* MPI Zuweisung der Schleifen zu den Prozessen. */
             if(bretter->prozessNummer == (int) ((bretter->anzahlProzesse/(anzFelder+1.0)) * posDame))
             {
                 //printf(" Prozess %d berechnet posDame %d\n",bretter->prozessNummer, posDame );
@@ -513,10 +508,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                                                                                         
                                                                                         if(anzFiguren_Bauer2 == maxFiguren)
                                                                                         {
-                                                                                            // Bretter mit einer Figur in Hashtable speichern und nachher löschen besser als if-Abfrage?
-                                                                                            // Mischung, die if Abfrage kommt früher und spart Schleifendurchgaenge, es enstehen
-                                                                                            // aber trotzdem Bretter mit nur einer Figur
-                                                                                            // g_hash_table_insert(bretter->spielbretterHashtables[anzFiguren_Bauer2], (gpointer) spielbrett_Bauer2,(gpointer) 0 );
+                                                                                            /* Berechne Spielbrett und erhöhe Zähler, wenn lösbar */
                                                                                             zaehlerLoesbareBretter += spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
                                                                                         
                                                                                             
@@ -546,25 +538,19 @@ void spielbretter_berechne(spielbretter_t *bretter)
             }
         } /* Schleife Dame */
      
+        /* Statistikwert speichern */
+     
         bretter->anzahlBretter[maxFiguren] = zaehler_bretter_figuren;
         zaehler_bretter_gesamt += zaehler_bretter_figuren;
         bretter->loesbareBretter[maxFiguren] = zaehlerLoesbareBretter;
         zaehlerLoesbareBretterGesamt += zaehlerLoesbareBretter;
     
-        //TODO MPI kommunikation
-        //TODO löschen der nicht mehr benötigten hashtabellen
-        /* Statistikwert speichern */
+    
+        gettimeofday(&comp_time_figur, NULL);
+        bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
+        gettimeofday(&start_time_figur, NULL);
         
 
-        //if(bretter->prozessNummer == 0)
-        {
-            gettimeofday(&comp_time_figur, NULL);
-            bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
-            gettimeofday(&start_time_figur, NULL);
-        }
-        
-
-        
         MPI_Barrier(MPI_COMM_WORLD); 
         
         /* nicht mehr benötigte Hashtabellen freigeben */
@@ -575,6 +561,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->vorgaengerSpielbretter = temp;
         
         
+        /* Buffer und ihre Größe zum Empfangen der Spielbretter */
         sp_okt_t *spielbretterBuf[bretter->anzahlProzesse];
         unsigned int spielbretterBufSize[bretter->anzahlProzesse];
         
@@ -582,6 +569,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
         
         GHashTableIter iter;
         gpointer key, value;
+        
+        // TODO muss i nicht spielbretterBufSize sein ?
         
         int i = 0;
         g_hash_table_iter_init (&iter, bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
@@ -600,9 +589,9 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 spielbretterBufSize[prozess] = g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
             }
             
-            /* Große der Hashtabelle an alle senden */
+            /* Größe der Hashtabelle an alle senden */
             MPI_Bcast (&spielbretterBufSize[prozess],1 , MPI_UNSIGNED, prozess, MPI_COMM_WORLD);
-            /* Buffer für Daten empfang allozieren */
+            /* Buffer für Datenempfang allozieren */
             if(bretter->prozessNummer != prozess)
             {
                 spielbretterBuf[prozess] = malloc(spielbretterBufSize[prozess]* sizeof(sp_okt_t));
@@ -612,6 +601,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
             MPI_Bcast (spielbretterBuf[prozess], spielbretterBufSize[prozess], MPI_UNSIGNED_LONG, prozess, MPI_COMM_WORLD);
         }
         
+        
+        /* Schreiben der Buffer in die Hashtabelle */
         for(int prozess= 0; prozess < bretter->anzahlProzesse; prozess++)
         {
             if(bretter->prozessNummer != prozess)
@@ -621,12 +612,14 @@ void spielbretter_berechne(spielbretter_t *bretter)
                     g_hash_table_add(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter],(gpointer) spielbretterBuf[prozess][s]);
                 }            
             }
+            /* Speicher freigeben */
             free(spielbretterBuf[prozess]);
         }
         
     }
     
-    /* Bretter Zähler von Prozessen einsammeln */
+    /* Statistik */
+    /* Bretterzähler von Prozessen einsammeln */
     MPI_Reduce (&zaehlerLoesbareBretterGesamt, &bretter->loesbareBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce (&zaehler_bretter_gesamt, &bretter->anzahlBretterGesamt, 1, MPI_UNSIGNED_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
     
@@ -645,14 +638,14 @@ void spielbretter_berechne(spielbretter_t *bretter)
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitMin, 11, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitAvg, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     
-    /* summe der Zeiten zu duchschnit machen */
+    /* Summe der Zeiten zu Durchschnitt machen */
     for(int x = 0; x<=10; x++)
     {
         bretter->berechnungsZeitAvg[x] = bretter->berechnungsZeitAvg[x]/bretter->anzahlProzesse;
     }
     
     
-    /* Statistikwert speichern */
+    /* Speichern der Zeit für den nächsten Durchlauf */
     if(bretter->prozessNummer == 0)
     {   
         gettimeofday(&comp_time, NULL);
@@ -661,79 +654,29 @@ void spielbretter_berechne(spielbretter_t *bretter)
 }
 
 
-/**
- * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
- *
- */
-void spielbretter_berechne_alt(spielbretter_t *bretter)
+   
+/*
+GHashTableIter iter;
+gpointer key, value;
+
+g_hash_table_iter_init (&iter, hash_table);
+while (g_hash_table_iter_next (&iter, &key, &value))
 {
-    /* time measurement variables */
-    struct timeval start_time;       /* time when program started                      */
-    struct timeval comp_time;        /* time when calculation completed                */
-    struct timeval comp_time_1;      /* zeit vom letzten zwischenstand */
-    struct timeval comp_time_2;      /* vergleichszeit beim aktuellen zwischenstand */
-    
-    gettimeofday(&start_time, NULL); /* Starte Zeitmessung */
-    gettimeofday(&comp_time_1, NULL); 
-    
-    
-    printf("Beginn spielbretter_berechne\n");
-    
-    int anzahlFiguren;
-    bretter->loesbareBretterGesamt = 0;
-    long loesbareBretterTmp =0;
-    /* Reihenfolge der zu berechnenden Spielbretter nach Anzahl der Figuren (aufsteigend)*/
-    for(anzahlFiguren = 2; anzahlFiguren <= 10; anzahlFiguren++)
-    {
-        printf("\n====================================================================== \n");
-        printf("Berechne Spielbretter mit %2d Figuren \n", anzahlFiguren);
-        
-        
-        
-        //TODO openMP paralelisierung omp task
-        /*
-        GHashTableIter iter;
-        gpointer key, value;
-
-        g_hash_table_iter_init (&iter, hash_table);
-        while (g_hash_table_iter_next (&iter, &key, &value))
-        {
-            // do something with key and value
-        }
-         
-        #pragma omp parallel
-        {
-        #pragma omp single private(p)
-        {
-        p = listhead ;
-        Spawn call to process(p)
-        while (p) {
-        #pragma omp task
-        process (p)
-        p=next (p) ;
-        }
-        }
-        }
-        */
-        
-		//bretter->anzahlFiguren = anzahlFiguren;
-        loesbareBretterTmp = bretter->loesbareBretterGesamt;
-        //g_hash_table_foreach(bretter->spielbretterHashtables[anzahlFiguren], spielbrettBerechne,(gpointer) bretter);
-        
-        
-        
-        gettimeofday(&comp_time_2, NULL);
-        double time_zwischenstand = (comp_time_2.tv_sec - comp_time_1.tv_sec) + (comp_time_2.tv_usec - comp_time_1.tv_usec) * 1e-6 ;
-        printf("Aktuelle Laufzeit: %f \n",(comp_time_2.tv_sec - start_time.tv_sec) + (comp_time_2.tv_usec - start_time.tv_usec) * 1e-6 );
-        printf("Berechnungszeit:    %f s \n", time_zwischenstand);
-        printf("Lösbare Bretter: %ld von %d\n", (bretter->loesbareBretterGesamt-loesbareBretterTmp), g_hash_table_size(bretter->spielbretterHashtables[anzahlFiguren]));
-        printf("Löabare Bretter in Prozent: %f\n", ((bretter->loesbareBretterGesamt-loesbareBretterTmp)*100.0 /g_hash_table_size(bretter->spielbretterHashtables[anzahlFiguren])));
-        gettimeofday(&comp_time_1, NULL);
-        printf("====================================================================== \n \n");
-    }
-    
-    gettimeofday(&comp_time, NULL); /* Stoppe Zeitmessung */
-    double time = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
-	printf("Berechnungszeit:    %f s \n", time);
-
+    // do something with key and value
 }
+ 
+#pragma omp parallel
+{
+#pragma omp single private(p)
+{
+p = listhead ;
+Spawn call to process(p)
+while (p) {
+#pragma omp task
+process (p)
+p=next (p) ;
+}
+}
+}
+*/
+

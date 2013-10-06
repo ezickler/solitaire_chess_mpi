@@ -65,10 +65,13 @@ int main(int argc, char ** argv)
 	MPI_Comm_rank(MPI_COMM_WORLD, &(bretter.prozessNummer));
     AskParams(&option, argc, argv);
     
+    
+    
     if(option.numThreads>0)
     {
-        omp_set_num_threads(option.numThreads);
+        omp_set_num_threads(option.numThreads/4);
     }
+
 	
     if(bretter.prozessNummer == 0)
     {
@@ -93,5 +96,6 @@ int main(int argc, char ** argv)
     }
 
     MPI_Finalize();
+    
 	return EXIT_SUCCESS;	
 }

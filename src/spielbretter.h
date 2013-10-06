@@ -35,13 +35,6 @@ typedef struct spielbretter
 }spielbretter_t;
 
 
-/**
- * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
- *
- */
-void spielbretter_berechne_alt(spielbretter_t *bretter);
-
-
 
 /**
  * Erzeugt alle möglichen Spielbretter mit zwei bis zu 10 Spielfiguren

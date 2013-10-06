@@ -69,7 +69,7 @@ int main(int argc, char ** argv)
     
     if(option.numThreads>0)
     {
-        omp_set_num_threads(option.numThreads);
+        omp_set_num_threads(option.numThreads/4);
     }
 
 	

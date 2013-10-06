@@ -320,7 +320,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 }
                 
                 /* Iteration für den König */
-                //omp_set_nested(1);
+                omp_set_nested(1);
                 #pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
@@ -347,7 +347,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
                         
                         
                         /* Iteration für den Springer */
-                        //#pragma omp parallel for \
+                        #pragma omp parallel for \
+                            num_threads (4) \
                             private(anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                             schedule(dynamic)\
                             reduction (+: zaehlerLoesbareBretter, zaehler_bretter_figuren)

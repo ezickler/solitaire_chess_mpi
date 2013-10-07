@@ -24,7 +24,7 @@ if (MPI_FOUND)
 endif()
 
 
-set(VAMPIR_ENABLE Ture)
+set(VAMPIR_ENABLE true)
 
 IF(VAMPIR_ENABLE)
     message("[CONFIG] build program with vampir support")
@@ -37,8 +37,8 @@ IF(VAMPIR_ENABLE)
 #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -vt:hyb -L/$ENV{VT_ROOT}/lib -finstrument-functions-exclude-file-list=${CMAKE_CXX_INST_FILE_FILTER} -finstrument-functions-exclude-function-list=${CMAKE_CXX_INST_FUNC_FILTER} -DVTRACE")
 
     
-    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -vt:inst compinst -vt:cc mpicc -L/$ENV{VT_ROOT}/lib -DVTRACE")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -vt:inst compinst -vt:cc mpicc -L/$ENV{VT_ROOT}/lib -DVTRACE")
+    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -vt:mpi -vt:inst manual -vt:cc mpicc -DVTRACE")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -vt:mpi -vt:inst manual -vt:cc mpicc -DVTRACE")
 ENDIF(VAMPIR_ENABLE)
 
 

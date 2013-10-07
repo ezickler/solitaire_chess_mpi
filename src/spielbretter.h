@@ -9,23 +9,26 @@ typedef struct spielbretter
 	 */  
 	GHashTable* spielbretterHashtables[11]; 
     
-    /* variablen in den gespeichert ist in welcher Hashtabelle welche Bretter sind*/
+    /* Variablen, in denen gespeichert ist, in welcher Hashtabelle welche Bretter sind*/
     int aktuelleSpielbretter;
     int vorgaengerSpielbretter;
     
-    /* MPI Prozessanzahl und Przessnummer */
+    /* MPI Prozessanzahl und Prozessnummer */
     int prozessNummer;
     int anzahlProzesse;
+    
+    /* OMP Threads */
+    int nestedMax;
 	
     /* Anzahl der Bretter */
     long anzahlBretter[11];
     long anzahlBretterGesamt;
     
-    /* Anzahl loesbarer Bretter insgesammt */
+    /* Anzahl loöbarer Bretter insgesammt */
     long loesbareBretter[11];
     long loesbareBretterGesamt;
     
-    /* Zeiten zum lösen der Spielbretter */
+    /* Zeiten zum Lösen der Spielbretter */
     double berechnungsZeit[11];
     double berechnungsZeitMin[11];
     double berechnungsZeitMax[11];
@@ -33,13 +36,6 @@ typedef struct spielbretter
     double berechnungsZeitGesamt;
 	
 }spielbretter_t;
-
-
-/**
- * Berechnet alle Spielbretter aus den Hashtabellen der übergeben struct.
- *
- */
-void spielbretter_berechne_alt(spielbretter_t *bretter);
 
 
 

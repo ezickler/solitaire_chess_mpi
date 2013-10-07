@@ -227,16 +227,196 @@ Diese Art der Repräsentation orientiert sich an dem gängigen Standard für die
 Zwei weitere werden benötigt, um die Figurentypen zu speichern.
 Da wir aber ein deutlich kleineres Spielbrett betrachten, entschieden wir uns dafür nur eine Zahl zu benutzen.
 
+
+
 \subsection{Erzeugung der Spielbretter}
 
+Die Erzeugung erfolgt über ineinander verschachtelte for-Schleifen.
+Der naive Ansatz zählt für jede Figur jeweils von 0 bis Spielbrettgröße.
+Da aber zwischen den doppelten Figuren (Springer, Läufer, Turm, Bauer) nicht unterschieden wird, ist es möglich an dieser Stelle zu optimieren.
+So beginnt die jeweils zweite Figur die for-Schleifen erst ab der Position der jeweils ersten Figur zu durchlaufen, da ansonsten ein bereits erzeugtes Spielbrett erneut durchlaufen würde.
+Eine weitere Optimierung ist möglich, indem alle weiter innen liegenden Schleifendurchläufe abgeschnitten werden, sobald das betrachtete Feld nicht frei ist. Es wird unabhängig vom Typ der Figur niemals möglich sein, diese auf ein bereits belegtes Feld zu setzen.
 
-Pseudocode: for-schleifen
+\begin{lstlisting}[caption={Erzeugung der Spielbretter}, label={lst:example1}]
+//Schleife Dame
+for(posDame = 0; posDame <= anzahlFelder; posDame++)
+{	
+	if(positionDame<anzahlFelder)
+    {
+         setze Dame;
+         anzahlFiguren ++;
+    }
+    
+    //Schleife Koenig
+    for(posKoenig = 0; posKoenig <= anzFelder; posKoenig++)
+    {	
+    	 // uebernehmen der bisher gesetzen Figuren
+         spielbrettKoenig = spielbrettDame;
+         // uebernehmen der bisherigen Figurenanzahl
+         anzFigurenK = anzFigurenD;
+                    
+         if(!(anzFigurenK < maxFiguren))
+         {
+             setze keinen Koenig;
+         }
+                    
+                    
+         if(feldFrei(posKoenig, spielbrettKoenig))
+         {
+              if(posKoenig<anzFelder)
+              {
+                   setze Koenig;
+                   anzahlFiguren ++;
+              }
+              
+              //Schleife 1. Springer 	
+              for(posSpringer = 0; posSpringer <= anzFelder; posSpringer ++)
+              {
+              		if(!(anzFigurenS < maxFiguren))
+              		{
+              			setze keinen Springer;
+              		}
+              		if(feldFrei(posSpringer, spielbrettSpringer))
+         			{
+              			if(posSpringer < anzFelder)
+              			{
+                  			 setze Springer;
+                  			 anzahlFiguren ++;
+              			}
+              		
+              			//Schleife 2. Springer
+              			for(posSpringer2=posSpringer1; posSpringer2<=anzFelder; posSpringer2++)
+              			...
+              			
+              		 	 //Schleife 1. Laeufer
+           			 	 ...
+       				 	 //Schleife 2. Laeufer
+          				  ...
+               		 	 //Schleife 1. Turm
+           			 	 ...
+       				 	 //Schleife 2. Turm	          				 	 							 ...
+              		 	 //Schleife 1. Bauer
+       				 	 ... 
+              			 //Schleife 2. Bauer
+              			 for(Bauer2)
+              			 {
+              				if(! <)
+              				if(frei)
+              				{
+              					 if(<)
+              				 	 { 
+              				 	 	setze Bauer2;
+              				 	 }
+              				 	 
+              				}
+              			
+              			}
+              	 	}
+               }
+         }
+     }
+}
+\end{lstlisting}
+ 
+
+//TODO: Pseudocode überarbeiten
+//TODO: muss das abspeichern mit rein?
+      
+
 
 \subsection{Berechnung der Spielbretter}
+Um die bereits berechneten Lösungen weiter zu verwenden, findet die Berechnung in Abhängigkeit der auf dem Brett befindlichen Figurenanzahl statt.
+Zunächst werden alle Bretter mit einer Figur als lösbar vermerkt.
+Es findet nun eine ebenenweise Berechnung statt, bei der nach der Figurenanzahl aufgestiegen wird. So kann für jedes Spielbrett einer höheren Ebene überprüft werden, ob daraus ein lösbares Brett entstehen kann. Dies ist eine erhebliche Optimierung, da ohne diese Wiederverwendung im schlechtesten Fall noch acht weitere Berechnungen stattfinden müssten. 
 
-Pseudocode: Bitmaske und shiften für schlage Figur
+Für die Berechnung werden die Spielbretter nicht nur in der Oktaldarstellung sondern auch als Array vorgehalten. 
+Das hat den Vorteil, dass die Abfragen zur Überprüfung ob, eine Spielfigur sich nach einem Zug auch noch auf dem Spielbrett befindet, sehr viel übersichtlicher und verständlicher werden. 
+Denn eine für verschiedene Spielbrettgrößen passende Abfrage ist auf Oktalzahlen zu aufwändig.
+
+Es findet also zunächst eine Umwandlung in die Arraydarstellung statt.
+(siehe Listing~\ref{lst:example1})
+\begin{lstlisting}[caption={Umwandlung in Arraydarstellung}, label={lst:example1}]  
+// Berechnung der Arraydarstellung aus Oktaldarstellung einfacher fuer die 
+// Ueberpruefung der Spielbrettgrenzen*/
+for(x=0; x < SpielbrettBreite; x++)
+{
+    for(y=0; y < SpielbrettHoehe; y++)
+    {   
+		param.spielbrett_array[x][y] = 
+		(spielbrett >> ((x+(y*SpielbrettBreite)) * 3)) % 8;
+        }
+    }
+\end{lstlisting}
+
+
+Das daraus entstandene zweidimensionale Array wird nun also Feld für Feld überprüft, ob dort eine Figur steht. Ist dies der Fall wird berechnet, ob es für diese Figur mögliche Züge gibt, die zu einem lösbaren Brett führen.
+(siehe Listing~\ref{lst:example2})
+\begin{lstlisting}[caption={Berechnung eines Spielbrettes}, label={lst:example2}]
+ for(x=0; (x < SpielbrettBreite) && (loesbar == 0); x++)
+ {
+     for(y=0; (y < SpielbrettHoehe) && (loesbar == 0); y++)
+	 {   
+		switch(param.spielbrett_array[x][y]){
+			case DarstellungBauer:
+				loesbar= berechneBauer(&param, x, y);
+				break;
+			case DarstellungTurm:
+				loesbar = berechneTurm(&param, x, y);
+				break;ringer(&param, x, y);
+				break;
+			case DarstellungKoenig:
+				loesbar = berechneKoenig(&param, x, y);
+				break;
+			case DarstellungDame:
+				loesbar = berechneDame(&param, x, y);
+				break;
+		}
+	}
+ }
+\end{lstlisting}
+
+
+Das Schlagen einer Figur geschieht auf der Darstellung als Oktalzahl.
+Um die schlagende und die geschlagene Figur vom Brett zu löschen, wird die Oktalzahl mit einer Bitmaske aus Einsen verundet, die an den beiden entsprechenden Positionen eine 0 hat.
+Anschließend wird die Figur an die neue Position geschrieben. 
+
+
+(siehe Listing~\ref{lst:example3})
+\begin{lstlisting}[caption={Schlagen einer Figur}, label={lst:example3}]
+void schlageFigur()
+{
+einser_Bitmaske = 0xffffffffffffffffLL;
+
+// Spielfiguren, geschlagene und schlagende, von Spielbrett loeschen 
+// Von der Bitmaske wird "(7 << pos*3)" abgezogen, um an dieser Stelle 0 zu erzeugen 
+	neues_spielbrett = spielbrett & 
+	(einser_Bitmaske - (7 << pos*3) - (7 << neue_pos*3));
+	
+	// nach Schlagen Spielfigur neu  setzen 
+	neues_spielbrett += (DarstellungFigur << neue_pos*3);
+}
+
+\end{lstlisting}
+
+
 
 \subsection{Speicherung der Spielbretter}
+
+Die ursprüngliche Speicherung der Spielbretter erfolgte nach der Figurenanzahl in verschiedenen Hashtabellen.
+In diesen wurde hinterlegt, ob ein Spielbrett lösbar ist (1) oder nicht (0). Verwendet wurde hier ein directhash, da die Spielbrettrepräsentation bereits eindeutig ist.
+Aufgrund der enorm großen Anzahl an gültigen Spielbrettern ist das Speichern all dieser 64bit-Integer aber nicht ohne weiteres möglich.
+
+Also optimierten wir die Speicherung. Der nächste Schritt war die Verwendung der Hashtabelle als Set.
+Es wurden also nur noch die lösbaren Bretter gespeichert. Damit entfiel die Speicherung des Wertes, der aufgrund der Signaturen der verwendeten Bibliothek (glib) ebenfalls 64 bit groß gewesen wäre, obwohl wir nur ein Bit benötigt hätten.
+Im Laufe der Analyse stellte sich heraus, dass die Menge an lösbaren Bretter deutlich größer ist als die Menge der nicht lösbaren. Es gibt sogar Figurenanzahlen, bei denen Spielbretter lösbar sind(siehe Kapitel~\ref{Ergebnisse}).
+Daher wird die Hashtabelle inzwischen als Set für die Speicherung der nicht lösbaren Spielbretter verwendet.
+
+Bei einem 4x4-Spielbrett müssen von anfangs den 6.684.411.696 x 64bit x 2 = 855.604.697.088 bit inzwischen nur noch \\
+
+TODO: anzahl nicht lösbarer Bretter bei 4x4
+
+gespeichert werden. Das ist eine Verringerung um x Prozent.
+
 
 Hashtabelle als set
 \subsection{Parallelisierung}
@@ -247,6 +427,25 @@ Hashtabelle als set
 \chapter{Ergebnisse}
 \label{Ergebnisse}
 
+Anzahl der gültigen Spielbretter für ein 4x4-Brett = 6.684.411.696 :\\
+mit Figurenanzahl:  1 =         96 \\
+mit Figurenanzahl:  2 =       4.080 \\
+mit Figurenanzahl:  3 =     100.800 \\
+mit Figurenanzahl:  4 =    1.594.320 \\
+mit Figurenanzahl:  5 =   16.773.120 \\
+mit Figurenanzahl:  6 =  118.198.080 \\
+mit Figurenanzahl:  7 =  547.747.200 \\
+mit Figurenanzahl:  8 = 1.589.187.600 \\
+mit Figurenanzahl:  9 = 2.594.592.000 \\
+mit Figurenanzahl: 10 = 1.816.214.400 \\
+
+Anzahl lösbare Bretter 4x4\\
+
+Der Anteil an nicht lösbaren Spielbrettern wird bei größerer Spielbrettgröße immer kleiner. Das hängt damit zusammen, ob eine Dame auf dem Brett platziert ist oder nicht. Je mehr Figuren auf dem Brett stehen, umso größer ist die Wahrscheinlichkeit, dass sich auch die Dame dort befindet. Und die Wahrscheinlichkeit, dass ein Brett lösbar ist, wächst mit der Zahl der aufgestellten Figuren, wenn auch eine Dame gesetzt ist. 
+Das liegt an der großen Vielfalt an möglichen Zügen, die eine Dame hat.
+So sind die Spielbretter mit zehn Figuren in der Größe 4x4 immer lösbar.
+
+Wir können an dieser Stelle keinen formalen Beweis für die Korrektheit der Behauptung anführen, da jedoch die Menge der nicht lösbaren Bretter gleich blieb, unabhänig davon ob diejenigen mit zehn Figuren mitbetrachtet wurden oder nicht, brauchen diese also nicht mehr berechnet werden. 
 \section{Laufzeiten}
 
 \section{Lösungen pro Sekunde}

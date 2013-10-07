@@ -13,7 +13,7 @@
 #include <omp.h>
 #include <mpi.h>
 
-static void gibStatisticAus(spielbretter_t *bretter)
+static void gibStatistikAus(spielbretter_t *bretter)
 {
     printf("Berechnungszeit:    %f s \n", bretter->berechnungsZeitGesamt);
     printf("Bretter / Sekunde: %f \n", (bretter->anzahlBretterGesamt / bretter->berechnungsZeitGesamt) );
@@ -65,10 +65,22 @@ int main(int argc, char ** argv)
 	MPI_Comm_rank(MPI_COMM_WORLD, &(bretter.prozessNummer));
     AskParams(&option, argc, argv);
     
-    if(option.numThreads>0)
+    
+    
+    if(option.numThreads>3)
     {
-        omp_set_num_threads(option.numThreads);
+        /* Aufteilung bei mehr als einen Thread */
+        omp_set_num_threads(option.numThreads/4);
+        bretter.nestedMax = 4;
     }
+    else if(option.numThreads>0)
+    {
+        /* Garantiewrt nur ein Thread */
+        omp_set_num_threads(option.numThreads);
+        bretter.nestedMax = 1;
+    }
+        
+
 	
     if(bretter.prozessNummer == 0)
     {
@@ -89,9 +101,10 @@ int main(int argc, char ** argv)
     
     if(bretter.prozessNummer == 0)
     {
-        gibStatisticAus(&bretter);
+        gibStatistikAus(&bretter);
     }
 
     MPI_Finalize();
+    
 	return EXIT_SUCCESS;	
 }

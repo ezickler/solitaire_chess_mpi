@@ -67,10 +67,19 @@ int main(int argc, char ** argv)
     
     
     
-    if(option.numThreads>0)
+    if(option.numThreads>3)
     {
+        /* Aufteilung bei mehr als einen Thread */
         omp_set_num_threads(option.numThreads/4);
+        bretter.nestedMax = 4;
     }
+    else if(option.numThreads>0)
+    {
+        /* Garantiewrt nur ein Thread */
+        omp_set_num_threads(option.numThreads);
+        bretter.nestedMax = 1;
+    }
+        
 
 	
     if(bretter.prozessNummer == 0)

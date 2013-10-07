@@ -129,7 +129,7 @@ static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
  * @param anzahlSpielfiguren gpointer (eigentlich *int) 
  * 
  */
-static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter, int anzahlFiguren )
+static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter)
 {
     
     /* Zwischenspeicherung ob das Spielbrett bereits gelöst ist */
@@ -321,7 +321,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 
                 /* Iteration für den König */
                 omp_set_nested(1);
-                #pragma omp parallel for \
+               #pragma omp parallel for \
                     private(anzFiguren_Koenig, anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Koenig, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                     schedule(dynamic)\
                     reduction (+: zaehlerLoesbareBretter, zaehler_bretter_figuren)
@@ -347,8 +347,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
                         
                         
                         /* Iteration für den Springer */
-                        #pragma omp parallel for \
-                            num_threads (4) \
+                       #pragma omp parallel for \
+                            num_threads ( bretter->nestedMax ) \
                             private(anzFiguren_Springer1, anzFiguren_Springer2, anzFiguren_Laeufer1, anzFiguren_Laeufer2, anzFiguren_Turm1, anzFiguren_Turm2, anzFiguren_Bauer1, anzFiguren_Bauer2, spielbrett_Springer1, spielbrett_Springer2, spielbrett_Laeufer1, spielbrett_Laeufer2, spielbrett_Turm1, spielbrett_Turm2, spielbrett_Bauer1, spielbrett_Bauer2) \
                             schedule(dynamic)\
                             reduction (+: zaehlerLoesbareBretter, zaehler_bretter_figuren)
@@ -510,7 +510,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
                                                                                         if(anzFiguren_Bauer2 == maxFiguren)
                                                                                         {
                                                                                             /* Berechne Spielbrett und erhöhe Zähler, wenn lösbar */
-                                                                                            zaehlerLoesbareBretter += spielbrettBerechne(spielbrett_Bauer2, bretter, maxFiguren);
+                                                                                            zaehlerLoesbareBretter += spielbrettBerechne(spielbrett_Bauer2, bretter);
                                                                                         
                                                                                             
                                                                                             /* Zähler für die Statistik*/
@@ -640,11 +640,13 @@ void spielbretter_berechne(spielbretter_t *bretter)
     MPI_Reduce (bretter->berechnungsZeit, bretter->berechnungsZeitAvg, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     
     /* Summe der Zeiten zu Durchschnitt machen */
-    for(int x = 0; x<=10; x++)
-    {
-        bretter->berechnungsZeitAvg[x] = bretter->berechnungsZeitAvg[x]/bretter->anzahlProzesse;
+    if(bretter->prozessNummer == 0)
+    { 
+        for(int x = 0; x<=10; x++)
+        {
+            bretter->berechnungsZeitAvg[x] = bretter->berechnungsZeitAvg[x]/bretter->anzahlProzesse;
+        }
     }
-    
     
     /* Speichern der Zeit für den nächsten Durchlauf */
     if(bretter->prozessNummer == 0)

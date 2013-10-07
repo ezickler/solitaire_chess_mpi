@@ -16,6 +16,9 @@ typedef struct spielbretter
     /* MPI Prozessanzahl und Prozessnummer */
     int prozessNummer;
     int anzahlProzesse;
+    
+    /* OMP Threads */
+    int nestedMax;
 	
     /* Anzahl der Bretter */
     long anzahlBretter[11];

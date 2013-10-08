@@ -406,6 +406,7 @@ Eine weitere Optimierung hat dadurch stattgefunden, dass nur noch die aktuellen 
 
 \subsection{Parallelisierung}
 \subsection{Kommunikation}
+\includegraphics[scale=0.6]{MPI_Kommunikation}
 
 
 %Kapitel 3
@@ -433,16 +434,26 @@ So sind die Spielbretter mit zehn Figuren in der Größe 4x4 immer lösbar.
 Wir können an dieser Stelle keinen formalen Beweis für die Korrektheit der Behauptung anführen, da jedoch die Menge der nicht lösbaren Bretter gleich blieb, unabhänig davon ob diejenigen mit zehn Figuren mitbetrachtet wurden oder nicht, brauchen diese also nicht mehr berechnet werden. 
 
 \section{Laufzeiten}
+sequentielles Programm:\\
+\includegraphics[scale=0.6]{gprof}
 
 \section{Lösungen pro Sekunde}
 
 \section{Hashtablegröße}
+% Ist dieser Punkt wirklich wichtig/notwendig?
+% Arbeiten wir das nicht so schon ab?
+
+
+
+
+
+\section{Skalierbarkeit}
 
 \section{Speedup}
 
 Speedup mit MPI: 
 
-
+\includegraphics[scale=0.44]{speedup}
 
 \section{Lastenverteilung}
 
@@ -451,8 +462,26 @@ Speedup mit MPI:
 \chapter{Fazit}
 \label{Fazit}
 
-Das Projekt war eine sehr spannende und sehr lehrreiche Veranstaltung. Die vorbereitenden Vorlesungen...
 
+Das Praktikum hat wie kaum eine andere Veranstaltung gezeigt, worauf es bei der praktischen Lösung eines Problems ankommt.
+
+Wir haben Fehler gemacht, wie zum Beispiel "einfach drauf los" zu programmieren und erst nach und nach ein Konzept für das Programm zu entwickeln. Dadurch dass wir zu Beginn keine konkrete Vorstellung hatten, wo wir eigentlich hinwollten, war es schwierig einen passenden Zeitplan zu erstellen. 
+Inzwischen sind wir also um viele sehr wertvolle Erfahrungen reicher und wissen, wie man bei Null anfangen sollte. 
+Zum ersten Mal im Studium sollten wir ein selbst gewähltes Problem modellieren und auch lösen.
+Unsere Problemwahl haben wir nie bereut, denn Solitaire-Schach bietet viele Möglichkeiten, um sich als Informatiker damit auseinander zu setzen und hat uns sehr gefesselt.
+Die Entwicklung eines Algorithmus, der alle gültigen Startbretter erstellt und zwar nur diese, war ein sehr faszinierender und auch anspruchsvoller Prozess. Sie erforderte zu Beginn einiges an Abstraktionsvermögen, um mit der gewählten Oktaldarstellung erfolgreich arbeiten zu können.
+Auch die Notwendigkeit für Optimierungen forderte uns heraus. Zunächst zeichnete sich für das sequentielle Programm eine Laufzeit von 17 Tagen für ein 4x4-Spielbrett ab. 
+Diese haben wir inzwischen auf ungefähr eineinhalb Stunden reduzieren können. 
+Wir haben also die Aufgabenstellung erfüllt, die wir uns selbst gestellt haben und sind zufrieden mit unseren Ergebnissen.
+Unsere Kenntnisse in der C-Programmierung sind erheblich größer und detaillierter, als sie es zu Beginn waren. Gleiches gilt für die Parallelisierung mit MPI und OpenMP.
+Die Arbeit auf dem Cluster war sehr lerreich und auch über Jobskripte wissen wir nun einiges mehr. Schlussendlich war es sehr hilfreich mit git zu arbeiten.
+
+Kaum eine andere Veranstaltung war so anspruchsvoll und fordernd und zeitgleich so unglaublich spannend wie das Praktikum.
+Die kompetente und freundliche Betreuung hat es zu einem tollen Projekt gemacht.
+
+Einzig der späte Beginn mit der praktischen Umsetzung des eigenen Aufgabe war schade, denn wir hätten gern noch den anderen Lösungsansatz für unser Problem gebaut.
+Durch die knappe Zeit am Ende haben wir den mit Julian Kunkel entwickelten "Bottum-up-Ansatz" aber nicht weiter verfolgen können. Sonst wäre für jegliche Analyse keine Zeit mehr geblieben.
+ 
 
 
 \end{document}

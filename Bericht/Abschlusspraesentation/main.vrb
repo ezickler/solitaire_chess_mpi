@@ -1,0 +1,13 @@
+\par \begin{lstlisting}[caption={Erzeugung der Spielbretter}, label={lst:example1}]
+for(Dame von 0 bis 16)
+if( Feldfrei)
+for(Koenig von 0 bis 16)
+if( Feldfrei)
+for (Springer1 von 0 bis 16)
+if( Feldfrei)
+for (Springer2 von posSpringer1 bis 16)
+...
+for (Bauer2 von posBauer1 bis 16)
+Spielbrettberechnen
+\end{lstlisting}
+

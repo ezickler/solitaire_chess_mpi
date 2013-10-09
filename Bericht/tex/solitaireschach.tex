@@ -405,7 +405,16 @@ Inzwischen sind es aber nur noch: \\
 Eine weitere Optimierung hat dadurch stattgefunden, dass nur noch die aktuellen Bretter und die aus der vorherigen Ebene gespeichert werden und der Rest verworfen wird. Denn für die Berechnung ist jeweils nur das aktuelle Brett und die Information, welche Bretter bisher lösbar waren, notwendig.
 
 \subsection{Parallelisierung}
+Für die Parallelisierung haben wir sowohl MPI als auch OpenMP verwendet. Beides ließ sich sehr gut auf unsere verschachtelten for-Schleifen anwenden. Wir haben die außerste Schleife, die der Dame, für die MPI Aufteilung verwendedt. Damit ergibt sich hier als Grade der maximalen Parallelität die Anzahl der Felder + 1. Dies reichte für unser Cluster jedoch vollkommen, da wir für ein 4x4 und sogar für 3x3 Bretter alle 10 Knoten benutzen konnten. 
+Um aber auch alle Kerne auf den Knoten zu benutzen haben wir die nächsten beiden Schleifen mit OpenMP paralelisiert. Umgesetzt wurde dies mit der nested Funktion von OpenMP. Der collaps Behle war aufgrund der Abbruchbedingung, wenn das Feld schon belegt ist, nicht möglich. 
+
+
 \subsection{Kommunikation}
+Der eigentlich Knackpunkt war nach der Aufteilung die Kmmunikation. Erst die Speicherplatzoptimierung und vorallem die Möglichkeit die Spielbretter in der Reihenfolge der Anzahl ihrer spielfiguren zu erzeugen, machte uns eine eine effizient Kommunbikation möglich.
+Wenn wir alle Spielbretter hätten vorhalten müssen, dann wäre es uns nicht möglich gewesen jedem Knoten alle Spielbretter zur verfügung zu stellen. Sommit hätte es bei jedem nach Nachgucken, ob ein Spielbrett lösbar ist, zu einer Kommunikation kommen können, da dieser Teil der Daten auf einem anderen Knoten liegt. Durch die minimierung des Speicherbedarf war es uns jedoch möglich nach der Berechnung für eine Figurenanzahl die Daten aus dem letzten berechungsdurchlauf von allen an alle zu senden. So das für den nächste Durchlauf jeder Prozess auf alle vorherigen Ergebnisse zurückgreifen kann.  \\
+Hierzu war es nötig, das alle Prozess nach einem Durchlauf zunächst über eine Barrier synchronisiert werden. Anschließend musste jeder Prozess den anderen mitteilen wie viele Spielbretter er im Letzen Durchlauf als nicht losbar gespeichert hat und den anderen senden möchte. Darauf hin wir in jedem Prozess ein Buffer für die erwarten Spielbretter alloziert. Außerdem muss der inhalt des Hashsets in ein Buffer zum Snden übertragen werden.
+Zuqätzlich werden noch die Zähler für die Anzahl der errechnet Spielbretter vom Master Prozess eingesammelt um sie am Ende ausgeben zu können.
+ 
 \includegraphics[scale=0.6]{MPI_Kommunikation}
 
 

@@ -96,19 +96,16 @@ static inline void spielbretterArrayDestruct(char** array, int breite)
 
 
 /**
- * Erzeugt alle Spielbretter mit einer Figur und intialisiert diese mit
- * dem Value 1 (lösbar).
+ * Erzeugt alle Spielbretter mit einer Figur. 
+ * Setzt mitleriweiler nur noch die Zähler hoch.
  * 
  */
 static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
 {
-    sp_okt_t spielbrett;
     for(int pos = 0; pos < SpielfelderAnzahl; pos++)
     {
         for(int figur = 1; figur <7; figur++)
         {
-            spielbrett = (figur << pos*3);
-            //g_hash_table_insert(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter], (gpointer) spielbrett ,(gpointer) 1 );
             /* Zähler für Statistik */
             (bretter->anzahlBretter[1])++;
             (bretter->loesbareBretter[1])++;
@@ -124,9 +121,8 @@ static void spielbretterErzeugung1Figur(spielbretter_t *bretter)
  * sind!
  * Signatur nach GHRFunc() aus der gnome library 
  * 
- * @param spielbrett gpointer (eigentlich long long *)
- * @param loesbar gpointer (eigentlich int*)
- * @param anzahlSpielfiguren gpointer (eigentlich *int) 
+ * @param spielbrett sp_okt_t  zuberechnendes spielbrett
+ * @param bretter spielbretter * 
  * 
  */
 static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter)
@@ -194,9 +190,6 @@ static int spielbrettBerechne(sp_okt_t spielbrett, spielbretter_t *bretter)
 			}
 		}
 	}
-    
-    
-    
     
     /* In der Hashtabelle speichern, wenn ein Spielbrett nicht lösbar ist */
     if(loesbar==0)
@@ -300,7 +293,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
          
         if(bretter->prozessNummer == 0)
         {
-            printf("========== %d Figuren===============\n",maxFiguren );
+            printf("====== Beginne %2d Figuren =======",maxFiguren );
         }
          
         for(int posDame=0; posDame<=anzFelder; posDame++)
@@ -538,6 +531,8 @@ void spielbretter_berechne(spielbretter_t *bretter)
                 } /* Schleife König */
             }
         } /* Schleife Dame */
+        
+
      
         /* Statistikwert speichern */
      
@@ -551,7 +546,12 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->berechnungsZeit[maxFiguren] = (comp_time_figur.tv_sec - start_time_figur.tv_sec) + (comp_time_figur.tv_usec - start_time_figur.tv_usec) * 1e-6;
         gettimeofday(&start_time_figur, NULL);
         
-
+        if(bretter->prozessNummer == 0)
+        {
+            printf(" Fertig nach %8.3f ======\n",bretter->berechnungsZeit[maxFiguren] );
+        }
+        
+        /* Warten bis alle Prozess fertig sind */
         MPI_Barrier(MPI_COMM_WORLD); 
         
         /* nicht mehr benötigte Hashtabellen freigeben */
@@ -571,7 +571,6 @@ void spielbretter_berechne(spielbretter_t *bretter)
         GHashTableIter iter;
         gpointer key, value;
         
-        // TODO muss i nicht spielbretterBufSize sein ?
         
         int i = 0;
         g_hash_table_iter_init (&iter, bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
@@ -587,6 +586,7 @@ void spielbretter_berechne(spielbretter_t *bretter)
             
             if(bretter->prozessNummer == prozess)
             {
+                /* Größe des Buffer aus der Hashytabellen Größe ableiten */
                 spielbretterBufSize[prozess] = g_hash_table_size(bretter->spielbretterHashtables[bretter->vorgaengerSpielbretter]);
             }
             
@@ -628,6 +628,9 @@ void spielbretter_berechne(spielbretter_t *bretter)
     {
         MPI_Reduce (MPI_IN_PLACE, bretter->loesbareBretter, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         MPI_Reduce (MPI_IN_PLACE, bretter->anzahlBretter, 11, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+        /* Mehrfachzählen der 1 Figurenbretter rückgängig machen */
+        bretter->loesbareBretter[1] /= bretter->anzahlProzesse;
+        bretter->anzahlBretter[1] /= bretter->anzahlProzesse;
     }
     else
     {
@@ -655,31 +658,3 @@ void spielbretter_berechne(spielbretter_t *bretter)
         bretter->berechnungsZeitGesamt = (comp_time.tv_sec - start_time.tv_sec) + (comp_time.tv_usec - start_time.tv_usec) * 1e-6;
     }
 }
-
-
-   
-/*
-GHashTableIter iter;
-gpointer key, value;
-
-g_hash_table_iter_init (&iter, hash_table);
-while (g_hash_table_iter_next (&iter, &key, &value))
-{
-    // do something with key and value
-}
- 
-#pragma omp parallel
-{
-#pragma omp single private(p)
-{
-p = listhead ;
-Spawn call to process(p)
-while (p) {
-#pragma omp task
-process (p)
-p=next (p) ;
-}
-}
-}
-*/
-

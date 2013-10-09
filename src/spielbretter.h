@@ -49,9 +49,4 @@ typedef struct spielbretter
 void spielbretter_berechne(spielbretter_t *bretter);
 
 
-/**
- * Löscht alle übergebenen Spielbretter.
- */ 
-void spielbretter_destruct(spielbretter_t* bretter);
-
 #endif

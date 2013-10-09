@@ -17,8 +17,6 @@
  */
  
 sp_okt_t einser_Bitmaske = 0xffffffffffffffffLL;
-
-//TODO  zähler wie häufig bei andere prozessen nachgeguckt werden müsste
  
  
  /**
@@ -31,10 +29,6 @@ sp_okt_t einser_Bitmaske = 0xffffffffffffffffLL;
 	*neues_spielbrett = *spielbrett & ( einser_Bitmaske - (7 << pos*3) - (7 << neue_pos*3));
 	/* nach Schlagen Spielfigur neu  setzen */
 	*neues_spielbrett += (DarstellungFigur << neue_pos*3);
-    //~ if(DarstellungFigur == DarstellungKoenig)
-    //~ {
-        //~ //printf("%0*lo => %0*lo \n",SpielfelderAnzahl, *spielbrett, SpielfelderAnzahl, *neues_spielbrett);
-    //~ }
 }
 
 

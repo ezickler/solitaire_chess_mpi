@@ -9,7 +9,6 @@
 typedef struct options
 {
 	int     numThreads;            /* Anzahl der Threads                             */
-	int     method;         /* Sequentiell / MPI                              */
     int     spielbrettBreite;/* SpielbrettBreite                              */
     int     spielbrettHoehe;/* SpielbrettHoehe                                */
 } options_t;

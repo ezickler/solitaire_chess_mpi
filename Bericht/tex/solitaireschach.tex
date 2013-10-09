@@ -86,7 +86,7 @@
 		%Zweitgutachter: & Name des Zweitgutachters\\ \\
 		Betreuer: & Julian Kunkel \\
 		\\
-		Hamburg, den 30.09.2013
+		Hamburg, den 09.10.2013
 	\end{tabular}\par}
 \end{titlepage}
 
@@ -94,7 +94,8 @@
 
 \thispagestyle{empty}
 
-TODO: Hier kommt eine kurze Beschreibung der nachfolgenden Arbeit hin.
+Solitaire-Schach ist eine Solitairevariante, die ebenfalls allein aber nach Schachregeln gespielt wird. Ziel ist es, dass nur noch eine Figur auf dem Spielbrett übrig bleibt. In jedem Zug muss genau eine Figur geschlagen werden. Die Figuren sind normale Schachfiguren mit ihren üblichen Zugmöglichkeiten. Ausnahme ist nur der Bauer, da er hier in alle Richtungen ziehen kann. Die Startaufstellung auf einem 4x4 Schachbrett besteht aus einer beliebigen Kombination der folgenden Figuren: 1x Dame, 1x König, 2x Springer, 2x Läufer, 2x Turm und 2x Bauer. \\
+Unser Programm errechnet, wie viele dieser Startpositionen lösbar sind. Dies ist für Spielbretter bis zur Größe von 21 Feldern (3x7) möglich. Da es für ein 4x4 großes Spielbrett bereits 6,7 Milliarden gültiger Startbelegungen gibt, kann unser Programm auch mit verschiedenen Parallelisierungsstufen auf einem Cluster aufgerufen werden. Parallelisiert wurde mit MPI und OpenMP.
 
 %Inhaltsverzeichnis
 \tableofcontents
@@ -277,7 +278,6 @@ for(posDame = 0; posDame <= anzahlFelder; posDame++){
               			//Schleife 2. Springer
               			for( posSpringer2<=anzFelder){
               			...
-              			
               		 	 //Schleifen 1.+ 2. Laeufer
            			 	 ...
        				 	 //Schleifen 1. + 2. Turm
@@ -288,16 +288,17 @@ for(posDame = 0; posDame <= anzahlFelder; posDame++){
               			 for(Bauer2) {
               				if(! <)
               				if(feldFrei){
-              					 if(<){ 
-              				 	 	setze Bauer2;
-              				 	 	berechneSpielbrett;
-              				 	 }
-              				 }
+		      					 if(<){ 
+		      				 	 	setze Bauer2;
+		      				 	 	berechneSpielbrett;
+              					}
+              				}
               			}
-              	 	}
-               }
-         }
-     }
+              		}
+            	}
+        	}
+    	}
+	}
 }
 \end{lstlisting}
 
@@ -405,35 +406,27 @@ Inzwischen sind es aber nur noch: \\
 Eine weitere Optimierung hat dadurch stattgefunden, dass nur noch die aktuellen Bretter und die aus der vorherigen Ebene gespeichert werden und der Rest verworfen wird. Denn für die Berechnung ist jeweils nur das aktuelle Brett und die Information, welche Bretter bisher lösbar waren, notwendig.
 
 \subsection{Parallelisierung}
-Für die Parallelisierung haben wir sowohl MPI als auch OpenMP verwendet. Beides ließ sich sehr gut auf unsere verschachtelten for-Schleifen anwenden. Wir haben die außerste Schleife, die der Dame, für die MPI Aufteilung verwendedt. Damit ergibt sich hier als Grade der maximalen Parallelität die Anzahl der Felder + 1. Dies reichte für unser Cluster jedoch vollkommen, da wir für ein 4x4 und sogar für 3x3 Bretter alle 10 Knoten benutzen konnten. 
-Um aber auch alle Kerne auf den Knoten zu benutzen haben wir die nächsten beiden Schleifen mit OpenMP paralelisiert. Umgesetzt wurde dies mit der nested Funktion von OpenMP. Der collaps Behle war aufgrund der Abbruchbedingung, wenn das Feld schon belegt ist, nicht möglich. 
+Für die Parallelisierung haben wir sowohl MPI als auch OpenMP verwendet. Beides lies sich sehr gut auf unsere verschachtelten for-Schleifen anwenden. Wir haben die äußerste Schleife (die der Dame) für die MPI Aufteilung verwendet. Damit ergibt sich hier als Grad der maximalen Parallelität die Anzahl der Felder + 1. Dies reichte für unseren Cluster jedoch vollkommen, da wir für ein 4x4 und sogar für 3x3 Bretter alle 10 Knoten benutzen konnten. 
+Um aber auch alle Kerne auf den Knoten zu benutzen, haben wir die nächsten beiden Schleifen mit OpenMP parallelisiert. Umgesetzt wurde dies mit der nested Funktion von OpenMP. Die Benutzung des collapse-Befehls war aufgrund der Abbruchbedingung, ob das Feld schon belegt ist, nicht möglich.
 
 
 \subsection{Kommunikation}
-Der eigentlich Knackpunkt war nach der Aufteilung die Kmmunikation. Erst die Speicherplatzoptimierung und vorallem die Möglichkeit die Spielbretter in der Reihenfolge der Anzahl ihrer spielfiguren zu erzeugen, machte uns eine eine effizient Kommunbikation möglich.
-Wenn wir alle Spielbretter hätten vorhalten müssen, dann wäre es uns nicht möglich gewesen jedem Knoten alle Spielbretter zur verfügung zu stellen. Sommit hätte es bei jedem nach Nachgucken, ob ein Spielbrett lösbar ist, zu einer Kommunikation kommen können, da dieser Teil der Daten auf einem anderen Knoten liegt. Durch die minimierung des Speicherbedarf war es uns jedoch möglich nach der Berechnung für eine Figurenanzahl die Daten aus dem letzten berechungsdurchlauf von allen an alle zu senden. So das für den nächste Durchlauf jeder Prozess auf alle vorherigen Ergebnisse zurückgreifen kann.  \\
-Hierzu war es nötig, das alle Prozess nach einem Durchlauf zunächst über eine Barrier synchronisiert werden. Anschließend musste jeder Prozess den anderen mitteilen wie viele Spielbretter er im Letzen Durchlauf als nicht losbar gespeichert hat und den anderen senden möchte. Darauf hin wir in jedem Prozess ein Buffer für die erwarten Spielbretter alloziert. Außerdem muss der inhalt des Hashsets in ein Buffer zum Snden übertragen werden.
-Zuqätzlich werden noch die Zähler für die Anzahl der errechnet Spielbretter vom Master Prozess eingesammelt um sie am Ende ausgeben zu können.
+Der eigentlich Knackpunkt war nach der Aufteilung auf die Knoten die Kommunikation zwischen ihnen. Erst die Speicherplatzoptimierung und vorallem die Möglichkeit, die Spielbretter in der Reihenfolge der Anzahl ihrer spielfiguren zu erzeugen, machte uns eine eine effizient Kommunikation möglich.
+Wenn wir alle Spielbretter hätten vorhalten müssen, dann wäre es uns nicht möglich gewesen, jedem Knoten auf seinem Speicherplatz alle Spielbretter zur Verfügung zu stellen. Somit hätte es bei jedem Nachgucken, ob ein Spielbrett lösbar ist, zu einer Kommunikation kommen können und in vielen Fällen sogar müssen, da dieser Teil der Daten auf einem anderen Knoten liegt. Durch die Minimierung des Speicherbedarf war es uns jedoch möglich, nach der Berechnung für eine Figurenanzahl die Daten aus dem letzten Berechnungsdurchlauf von jedem Knoten an jeden anderen zu senden, sodass für den nächsten Durchlauf jeder Prozess auf alle vorherigen Ergebnisse zurückgreifen kann.  \\
+Hierzu war es nötig, dass alle Prozess nach einem Durchlauf zunächst über eine MPI-Barrier synchronisiert werden. Anschließend musste jeder Prozess den anderen mitteilen, wie viele Spielbretter er im letzen Durchlauf als nicht losbar gespeichert hat und den anderen senden möchte. Daraufhin wird in jedem Prozess ein Buffer für die erwarten Spielbretter alloziert. Außerdem muss der Inhalt des eigenen Hashsets in ein Buffer zum Senden übertragen werden.
+Zusätzlich werden noch die Zähler für die Anzahl der errechneten Spielbretter vom Master-Prozess eingesammelt, um sie am Ende ausgeben zu können.
  
-\includegraphics[scale=0.6]{MPI_Kommunikation}
+\includegraphics[scale=0.5]{MPI_Kommunikation}
 
 
 %Kapitel 3
 \chapter{Ergebnisse}
 \label{Ergebnisse}
 
+\includegraphics[scale=0.6]{output}
+\newline
+\newline
 Anzahl der gültigen Spielbretter für ein 4x4-Brett = 6.684.411.696 :\\
-mit Figurenanzahl:  1 =         96 \\
-mit Figurenanzahl:  2 =       4.080 \\
-mit Figurenanzahl:  3 =     100.800 \\
-mit Figurenanzahl:  4 =    1.594.320 \\
-mit Figurenanzahl:  5 =   16.773.120 \\
-mit Figurenanzahl:  6 =  118.198.080 \\
-mit Figurenanzahl:  7 =  547.747.200 \\
-mit Figurenanzahl:  8 = 1.589.187.600 \\
-mit Figurenanzahl:  9 = 2.594.592.000 \\
-mit Figurenanzahl: 10 = 1.816.214.400 \\
-
 Anzahl nicht lösbare Bretter bei 4x4: 1.047.721\\
 
 Der Anteil an nicht lösbaren Spielbrettern wird bei größerer Spielbrettgröße immer kleiner. Das hängt damit zusammen, ob eine Dame auf dem Brett platziert ist oder nicht. Je mehr Figuren auf dem Brett stehen, umso größer ist die Wahrscheinlichkeit, dass sich auch die Dame dort befindet. Und die Wahrscheinlichkeit, dass ein Brett lösbar ist, wächst mit der Zahl der aufgestellten Figuren, wenn auch eine Dame gesetzt ist. 
@@ -442,29 +435,46 @@ So sind die Spielbretter mit zehn Figuren in der Größe 4x4 immer lösbar.
 
 Wir können an dieser Stelle keinen formalen Beweis für die Korrektheit der Behauptung anführen, da jedoch die Menge der nicht lösbaren Bretter gleich blieb, unabhänig davon ob diejenigen mit zehn Figuren mitbetrachtet wurden oder nicht, brauchen diese also nicht mehr berechnet werden. 
 
-\section{Laufzeiten}
-sequentielles Programm:\\
+
+\section{Analyse}
+Im Profiling des Programms kann man sehr schön sehen, auf welchen Funktionen unsere Berechnung sich am stärksten stützt. Diese sind vorallem die Abfrage bei der Erzeugung, ob ein Feld frei ist und in der Berechnung die Funktion zum Schlagen einer Figur. 
+Bei diesen beiden Funktionen haben wir deshalb eine möglichst effiziente Implementierung gewählt. Es zeigt sich aber auch, dass das Umrechnen in ein Array viel Zeit kostet und man hier für weitere Optimierungen doch noch einmal versuchen könnte, die Berechnung vollständig auf den Oktalzahlen zu implementieren.
+\\
+Gprof des sequentiellen Programms:\\
+\\
 \includegraphics[scale=0.6]{gprof}
+\newline
+\newline
+\newline
+Profiling von vampiretrace des parallelen Programms:\\
+\includegraphics[scale=0.4]{vampirtrace-prof}
 
-\section{Lösungen pro Sekunde}
+Im Profiling der parallelisierten Variante ist auch zu sehen, dass eine gewisse Lastungleichheit eine Menge Zeit kostet. Hierbei scheint die Aufteilung bei OMP jedoch noch schlechter zu sein als bei MPI. Schön ist allerdings, dass der parallele Zugriff auf die glib  Hashtabelle, die eine kritischen Abschnitt für OpenMP darstellt, nicht so sehr ins Gewicht fällt. Dies war insbesondere bei den ersten sequentiellen Programmen ein ganz großes Problem.
+\newline
 
-\section{Hashtablegröße}
-% Ist dieser Punkt wirklich wichtig/notwendig?
-% Arbeiten wir das nicht so schon ab?
-
-
-
-
-
-\section{Skalierbarkeit}
+Sehr erfreulich finden wir auch unsere Ergebnisse hinsichtlich Laufzeit, Speicherbedarf und Skalierbarkeit. Wie zuvor schon erwähnt, haben wir die Laufzeit von unserem naivem Ansatz mit einer geschätzten Laufzeit von 17 Tagen auf eine Laufzeit von 93 min und in der parallelen Variant auf 191 sec reduziert. Auch bei dem Speicherbedarf sind wir von erwarteten 106 GByte auf eine Speicherbedarf von unter 10 MByte gekommen. 
+Und auch die Skalierbarkeit kann sich durchaus sehen lassen. Ihre Grenzen sind zwar abhängig von der Spielbrettgröße, es ist jedoch auch fraglich, ob sich ein weiterer Performancegewinn noch erzielen ließe, solange kleine und auch große Spielbretter betrachtet werden. Denn auf beispielsweise einem 2x3 Spielbrett würde die Kommunikation einen erheblichen größeren Anteil ausmachen als die eigentliche Berechnung. Damit bringt eine schlichte Erhöhung der Knotenanzahl und Threadanzahl vermutlich kaum noch Nutzen.
 
 \section{Speedup}
 
+In den ersten beiden Diagrammen läst sich gut erkennen, dass der Speedup durch MPI sehr gut ist, aber mit zunehmender Prozessanzahl der Kommunikationsaufwand steigt und sich der Speedup weiter vom Optiumum entfernt. Hinzu kommt sicher auch die nicht ganz optimale Lastverteilung.
+Der Speedup durch OpenMP ist hingegen nicht ganz so gut wie bie MPI. Dies wird an der Lastungleichheit und an dem gemeinseam Zugriff auf die Hashtabellen liegen. Trotzdem haben wir auch hiermit ein deutlichen Performancegewinn erzielt.\\
+
+\pagebreak
 Speedup mit MPI: 
 
-\includegraphics[scale=0.44]{speedup}
+\includegraphics[scale=0.9]{Laufzeitanalyse24t}
 
-\section{Lastenverteilung}
+\includegraphics[scale=0.9]{Laufzeitanalyse12t}
+
+\pagebreak
+Speedup mit OpenMP:
+
+\includegraphics[scale=0.9]{bretterprosec}
+
+\includegraphics[scale=0.9]{Laufzeitanalyseanzahlthreads}
+
+
 
 
 %Kapitel 4
@@ -489,7 +499,7 @@ Kaum eine andere Veranstaltung war so anspruchsvoll und fordernd und zeitgleich 
 Die kompetente und freundliche Betreuung hat es zu einem tollen Projekt gemacht.
 
 Einzig der späte Beginn mit der praktischen Umsetzung des eigenen Aufgabe war schade, denn wir hätten gern noch den anderen Lösungsansatz für unser Problem gebaut.
-Durch die knappe Zeit am Ende haben wir den mit Julian Kunkel entwickelten "Bottum-up-Ansatz" aber nicht weiter verfolgen können. Sonst wäre für jegliche Analyse keine Zeit mehr geblieben.
+Durch die knappe Zeit am Ende haben wir den mit Julian Kunkel entwickelten "Bottum-up-Ansatz" aber leider nicht weiter verfolgen können, sonst wäre für jegliche Analyse keine Zeit mehr geblieben.
  
 
 

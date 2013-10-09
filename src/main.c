@@ -13,6 +13,11 @@
 #include <omp.h>
 #include <mpi.h>
 
+
+/**
+ * Statistik Ausgabe
+ * 
+ */
 static void gibStatistikAus(spielbretter_t *bretter)
 {
     printf("Berechnungszeit:    %f s \n", bretter->berechnungsZeitGesamt);
@@ -30,9 +35,6 @@ static void gibStatistikAus(spielbretter_t *bretter)
     
     printf("Anteil der loesbaren Bretter in Prozent: %f\n", (((bretter->anzahlBretterGesamt - bretter->loesbareBretterGesamt)*100.0)/bretter->anzahlBretterGesamt));
 }
-
-
-
 
 /**
  *
@@ -54,8 +56,7 @@ int main(int argc, char ** argv)
         bretter.loesbareBretter[x]=0;
     }
 
-    
-    //TODO MPI init
+    /* MPI initialisierung */
     rc = MPI_Init(&argc,&argv);
    	if (rc != MPI_SUCCESS) {
      	printf ("Error starting MPI program. Terminating.\n");
@@ -63,6 +64,8 @@ int main(int argc, char ** argv)
 	}
     MPI_Comm_size(MPI_COMM_WORLD, &(bretter.anzahlProzesse));
 	MPI_Comm_rank(MPI_COMM_WORLD, &(bretter.prozessNummer));
+    
+    /* Parameter einlesen. */
     AskParams(&option, argc, argv);
     
     
@@ -75,13 +78,16 @@ int main(int argc, char ** argv)
     }
     else if(option.numThreads>0)
     {
-        /* Garantiewrt nur ein Thread */
+        /* Garantiert nur ein Thread*/
         omp_set_num_threads(option.numThreads);
         bretter.nestedMax = 1;
     }
+    else
+    {
+        bretter.nestedMax = 1;
+    }
         
-
-	
+        
     if(bretter.prozessNummer == 0)
     {
         printf ( "\n");
@@ -91,14 +97,14 @@ int main(int argc, char ** argv)
         printf ( "    Kira Duwe\n");
         printf ( "    Enno Zickler\n");
         printf ( "===============================================================\n"  );
-        printf ( "Starte Berechnung für %d x %d Spielbretter mit %d Threads in %d Prozessen. \n", option.spielbrettBreite, option.spielbrettHoehe,omp_get_max_threads(), bretter.anzahlProzesse);
+        printf ( "Starte Berechnung für %d x %d Spielbretter mit %d Threads in %d Prozessen. \n", option.spielbrettBreite, option.spielbrettHoehe,(omp_get_max_threads()*bretter.nestedMax), bretter.anzahlProzesse);
     }
 
-        
+    /* Berechung Starten */    
     spielbretter_berechne(&bretter);
     
     
-    
+    /* Ergebnis ausgeben */
     if(bretter.prozessNummer == 0)
     {
         gibStatistikAus(&bretter);

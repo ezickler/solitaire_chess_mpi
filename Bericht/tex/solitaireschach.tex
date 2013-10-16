@@ -166,7 +166,7 @@ Dort sind zwar noch die doppelten Felder enthalten, die dadurch entstehen, dass 
 Damit ergab sich die Frage, wie man die Spielbretter möglichst speichereffizient modellieren kann und wie eine sinnvolle Speicherverwaltung einer derart großen Menge aussehen könnte, die später auch noch für den parallelen Zugriff geeignet wäre.
 
 \subsection{Berechnung der Spielbretter}
-Um von einer gültigen Startbelegung zu der Aussage "Das Brett ist lösbar." zu kommen,braucht man mindestens einen im Maximalfall aber 9 Berechnungsschritte und zwar für jedes Spielbrett. Da die Zahl der möglichen Spielbretter ohnehin schon sehr groß ist, musste also eine Berechnung gefunden werden, die sehr effizient arbeitet.
+Um von einer gültigen Startbelegung zu der Aussage  "`Das Brett ist lösbar."' zu kommen,braucht man mindestens einen im Maximalfall aber 9 Berechnungsschritte und zwar für jedes Spielbrett. Da die Zahl der möglichen Spielbretter ohnehin schon sehr groß ist, musste also eine Berechnung gefunden werden, die sehr effizient arbeitet.
 
 
 \subsection{Lastungleichheit}
@@ -411,10 +411,12 @@ Um aber auch alle Kerne auf den Knoten zu benutzen, haben wir die nächsten beid
 
 
 \subsection{Kommunikation}
-Der eigentlich Knackpunkt war nach der Aufteilung auf die Knoten die Kommunikation zwischen ihnen. Erst die Speicherplatzoptimierung und vorallem die Möglichkeit, die Spielbretter in der Reihenfolge der Anzahl ihrer spielfiguren zu erzeugen, machte uns eine eine effizient Kommunikation möglich.
+Der eigentlich Knackpunkt war nach der Aufteilung auf die Knoten die Kommunikation zwischen ihnen. Erst die Speicherplatzoptimierung und vorallem die Möglichkeit, die Spielbretter in der Reihenfolge der Anzahl ihrer Spielfiguren zu erzeugen, machte uns eine eine effiziente Kommunikation möglich.
 Wenn wir alle Spielbretter hätten vorhalten müssen, dann wäre es uns nicht möglich gewesen, jedem Knoten auf seinem Speicherplatz alle Spielbretter zur Verfügung zu stellen. Somit hätte es bei jedem Nachgucken, ob ein Spielbrett lösbar ist, zu einer Kommunikation kommen können und in vielen Fällen sogar müssen, da dieser Teil der Daten auf einem anderen Knoten liegt. Durch die Minimierung des Speicherbedarf war es uns jedoch möglich, nach der Berechnung für eine Figurenanzahl die Daten aus dem letzten Berechnungsdurchlauf von jedem Knoten an jeden anderen zu senden, sodass für den nächsten Durchlauf jeder Prozess auf alle vorherigen Ergebnisse zurückgreifen kann.  \\
-Hierzu war es nötig, dass alle Prozess nach einem Durchlauf zunächst über eine MPI-Barrier synchronisiert werden. Anschließend musste jeder Prozess den anderen mitteilen, wie viele Spielbretter er im letzen Durchlauf als nicht losbar gespeichert hat und den anderen senden möchte. Daraufhin wird in jedem Prozess ein Buffer für die erwarten Spielbretter alloziert. Außerdem muss der Inhalt des eigenen Hashsets in ein Buffer zum Senden übertragen werden.
-Zusätzlich werden noch die Zähler für die Anzahl der errechneten Spielbretter vom Master-Prozess eingesammelt, um sie am Ende ausgeben zu können.
+Hierzu war es nötig, dass alle Prozesse nach einem Durchlauf zunächst über eine MPI-Barrier synchronisiert werden. Anschließend musste jeder Prozess den anderen mitteilen, wie viele Spielbretter er im letzen Durchlauf als nicht lösbar gespeichert hat und den anderen senden möchte. Daraufhin wird in jedem Prozess ein Buffer für die erwarten Spielbretter alloziert. Außerdem muss der Inhalt des eigenen Hashsets in ein Buffer zum Senden kopiert werden.
+Zusätzlich werden noch die Zähler für die Anzahl der errechneten Spielbretter vom Master-Prozess eingesammelt, um sie am Ende ausgeben zu können.\\
+\\
+\\
  
 \includegraphics[scale=0.5]{MPI_Kommunikation}
 
@@ -484,7 +486,7 @@ Speedup mit OpenMP:
 
 Das Praktikum hat wie kaum eine andere Veranstaltung gezeigt, worauf es bei der praktischen Lösung eines Problems ankommt.
 
-Wir haben Fehler gemacht, wie zum Beispiel "einfach drauf los" zu programmieren und erst nach und nach ein Konzept für das Programm zu entwickeln. Dadurch dass wir zu Beginn keine konkrete Vorstellung hatten, wo wir eigentlich hinwollten, war es schwierig einen passenden Zeitplan zu erstellen. 
+Wir haben Fehler gemacht, wie zum Beispiel "`einfach drauf los"' zu programmieren und erst nach und nach ein Konzept für das Programm zu entwickeln. Dadurch dass wir zu Beginn keine konkrete Vorstellung hatten, wo wir eigentlich hinwollten, war es schwierig einen passenden Zeitplan zu erstellen. 
 Inzwischen sind wir also um viele sehr wertvolle Erfahrungen reicher und wissen, wie man bei Null anfangen sollte. 
 Zum ersten Mal im Studium sollten wir ein selbst gewähltes Problem modellieren und auch lösen.
 Unsere Problemwahl haben wir nie bereut, denn Solitaire-Schach bietet viele Möglichkeiten, um sich als Informatiker damit auseinander zu setzen und hat uns sehr gefesselt.
@@ -499,7 +501,7 @@ Kaum eine andere Veranstaltung war so anspruchsvoll und fordernd und zeitgleich 
 Die kompetente und freundliche Betreuung hat es zu einem tollen Projekt gemacht.
 
 Einzig der späte Beginn mit der praktischen Umsetzung des eigenen Aufgabe war schade, denn wir hätten gern noch den anderen Lösungsansatz für unser Problem gebaut.
-Durch die knappe Zeit am Ende haben wir den mit Julian Kunkel entwickelten "Bottum-up-Ansatz" aber leider nicht weiter verfolgen können, sonst wäre für jegliche Analyse keine Zeit mehr geblieben.
+Durch die knappe Zeit am Ende haben wir den mit Julian Kunkel entwickelten "`Bottum-up-Ansatz"' aber leider nicht weiter verfolgen können, sonst wäre für jegliche Analyse keine Zeit mehr geblieben.
  
 
 
